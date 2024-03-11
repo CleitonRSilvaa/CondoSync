@@ -11,10 +11,6 @@ O sistema foi concebido com o objetivo primordial de aprimorar a comunicação e
 
 Ao integrar esses recursos, o sistema não apenas fortalece a comunicação entre os moradores e a administração do condomínio, mas também promove uma experiência de convivência mais confortável e tranquila para todos os envolvidos
 
-## 📦 Implantação
-
-Protótipo - [Figma](https://www.figma.com/file/ZXLAsaV2MWHmrzijG1K2Mk/PI5?type=design&node-id=0%3A1&mode=dev&t=VsnlpRrnK78ws8oF-1 ).
-
 ## 🚀 Começando
 
 Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
@@ -43,3 +39,7 @@ Antes de começar a instalação do software, certifique-se de ter os seguintes 
 Para contribuir responda o formulário abaixo:
 
 * [Pesquisa - Formulário](https://forms.office.com/r/bpEvNkh89S)
+
+## 📦 Implantação
+
+Protótipo - [Figma](https://www.figma.com/file/ZXLAsaV2MWHmrzijG1K2Mk/PI5?type=design&node-id=0%3A1&mode=dev&t=VsnlpRrnK78ws8oF-1 ).
