@@ -19,11 +19,13 @@ Essas instruções permitirão que você obtenha uma cópia do projeto em opera�
 
 ### 📋 Pré-requisitos
 
-De que coisas você precisa para instalar o software e como instalá-lo?
+Antes de começar a instalação do software, certifique-se de ter os seguintes itens:
 
-Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
-[Git](https://git-scm.com), [JAVA SDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html).
- Além disto é bom ter um editor para trabalhar com o código como [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=windows)
+* Git: É uma ferramenta de controle de versão amplamente utilizada para gerenciar projetos de software. Se você ainda não tiver o Git instalado, pode baixá-lo e instalá-lo a partir do site oficial: [Git - Download](https://git-scm.com).
+
+* JAVA SDK 17: O software é desenvolvido em Java e requer o JDK (Java Development Kit) na versão 17 ou superior. Certifique-se de ter o JDK 17 instalado em sua máquina. Você pode baixar e instalar a partir do site oficial da Oracle ou de outras fontes confiáveis [JAVA SDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html).
+
+* Editor de Código: Embora não seja obrigatório, é recomendável ter um editor de código para facilitar o desenvolvimento e a edição do software. Recomendamos o IntelliJ IDEA, que é uma IDE (Ambiente de Desenvolvimento Integrado) amplamente utilizada para o desenvolvimento Java. Você pode baixar e instalar o IntelliJ IDEA a partir do site oficial: [IntelliJ IDEA - Download](https://www.jetbrains.com/idea/download/#section=windows).
 
 ## ✒️ Autores
 
