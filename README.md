@@ -9,6 +9,8 @@ O sistema foi concebido com o objetivo primordial de aprimorar a comunicação e
 
 * Controle de Ocorrências de Moradores: Viabiliza o registro e acompanhamento de problemas ou ocorrências relatados pelos moradores ao administrador, possivelmente o síndico. Isso possibilita uma resposta ágil e eficiente, contribuindo para a resolução rápida de questões e para a manutenção de um ambiente residencial seguro e bem gerido.
 
+Ao integrar esses recursos, o sistema não apenas fortalece a comunicação entre os moradores e a administração do condomínio, mas também promove uma experiência de convivência mais confortável e tranquila para todos os envolvidos
+
 ## 🚀 Começando
 
 Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
@@ -26,4 +28,6 @@ Antes de começar, você vai precisar ter instalado em sua máquina as seguintes
 ## ✒️ Autores
 
 * **Cleiton Silva** - [Perfil](https://github.com/CleitonRSilvaa)
-* **Thiago Bellico(bellicoth)** - [Perfil](https://github.com/bellicoth)
+* **Thiago Bellico** - [Perfil](https://github.com/bellicoth)
+* **Barbara Vitoria** - [Perfil](https://github.com/BarbaraSts)
+* **Leonardo Oficial** - [Perfil](https://github.com/LeonardoOficial)
