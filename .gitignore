@@ -59,3 +59,9 @@ bin
 !**/src/test/**/build/
 ### VS Code ###
 .vscode/
+
+
+#### outros ####
+
+*.db
+
