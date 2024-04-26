@@ -45,7 +45,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Roler> roles;
+    private List<Role> roles;
 
     @CreationTimestamp
     private Instant creation;

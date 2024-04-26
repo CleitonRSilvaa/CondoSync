@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "rolers")
-public class Roler implements GrantedAuthority {
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
