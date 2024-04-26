@@ -46,7 +46,7 @@ public class Config {
 
     @Bean
     AuthenticationManager authenticationManager(UserService userService,
-                                                PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder);
@@ -66,18 +66,15 @@ public class Config {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-    // @formatter:off
-		return http
-			.cors(cors -> Customizer.withDefaults())
-			.csrf(csrf -> csrf.disable())
-			.formLogin(config -> config.disable())
-			.authorizeHttpRequests(authorize -> authorize
-				.requestMatchers("/**").permitAll()
-				.anyRequest().authenticated())
-
-		.build();
-
-  }
+        return http
+                .cors(cors -> Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .formLogin(config -> config.disable())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/**").permitAll()
+                        .anyRequest().authenticated())
+                .build();
+    }
 
 }
