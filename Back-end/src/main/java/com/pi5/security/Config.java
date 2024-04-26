@@ -1,5 +1,7 @@
 package com.pi5.security;
 
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import com.pi5.services.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +46,7 @@ public class Config {
 
     @Bean
     AuthenticationManager authenticationManager(UserService userService,
-            PasswordEncoder passwordEncoder) {
+                                                PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder);
