@@ -1,13 +1,13 @@
-package com.pi5;
+package com.CondoSync;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Pi5Application {
+public class CondoSyncApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Pi5Application.class, args);
+		SpringApplication.run(CondoSyncApplication.class, args);
 	}
 
 }

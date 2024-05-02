@@ -1,4 +1,4 @@
-package com.pi5.models;
+package com.CondoSync.models;
 
 import org.springframework.security.core.GrantedAuthority;
 

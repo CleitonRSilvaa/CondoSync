@@ -1,9 +1,10 @@
-package com.pi5.controllers;
+package com.CondoSync.controllers;
 
-import com.pi5.models.User;
-import com.pi5.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import com.CondoSync.models.User;
+import com.CondoSync.services.UserService;
 
 import java.util.List;
 import java.util.UUID;

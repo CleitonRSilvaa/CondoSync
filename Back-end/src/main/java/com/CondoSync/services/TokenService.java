@@ -1,6 +1,5 @@
-package com.pi5.services;
+package com.CondoSync.services;
 
-import com.pi5.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -9,6 +8,8 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+
+import com.CondoSync.models.User;
 
 import java.time.Duration;
 import java.time.Instant;

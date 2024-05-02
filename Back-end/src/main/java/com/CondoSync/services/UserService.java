@@ -1,12 +1,13 @@
-package com.pi5.services;
+package com.CondoSync.services;
 
-import com.pi5.models.User;
-import com.pi5.repositores.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.CondoSync.models.User;
+import com.CondoSync.repositores.UsersRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,11 +15,8 @@ import java.util.UUID;
 @Service
 public class UserService implements UserDetailsService {
 
-
     @Autowired
     private UsersRepository usersRepository;
-
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -1,4 +1,4 @@
-package com.pi5.models;
+package com.CondoSync.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
