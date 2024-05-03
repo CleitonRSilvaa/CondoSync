@@ -38,7 +38,10 @@ public class RoleService {
 
     public Role createRole(Role role) {
 
-        this.getRoleByNome(role.getNome());
+        if (this.existsByNome(role.getNome())) {
+
+            throw new ResourceAccessException("Role " + role.getNome() + " already exists");
+        }
 
         return roleRepository.save(role);
     }
@@ -59,8 +62,11 @@ public class RoleService {
 
     public void deleteRole(Role role) {
         this.getRoleById(role.getId());
-
         roleRepository.delete(role);
+    }
+
+    public boolean existsByNome(String nome) {
+        return roleRepository.existsByNome(nome);
     }
 
 }
