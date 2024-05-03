@@ -10,6 +10,7 @@ import com.CondoSync.models.User;
 import com.CondoSync.repositores.UsersRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -50,4 +51,13 @@ public class UserService implements UserDetailsService {
     public void deleteUser(User user) {
         usersRepository.delete(user);
     }
+
+    public boolean existsByUserName(String string) {
+        return usersRepository.existsByuserName(string);
+    }
+
+    public Optional<User> findById(UUID id) {
+        return usersRepository.findById(id);
+    }
+
 }
