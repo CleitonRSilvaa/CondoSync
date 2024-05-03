@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 self.addEventListener('install', event => {
     event.waitUntil(
         self.skipWaiting()
@@ -68,4 +69,5 @@ self.addEventListener('notificationclick', event => {
     event.waitUntil(
         clients.openWindow('https://example.com')
     );
+
 });

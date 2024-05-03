@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const baseUrl = "http://localhost:8020/api/v1/notifications";
 
 const registerServiceWorker = async () => {
