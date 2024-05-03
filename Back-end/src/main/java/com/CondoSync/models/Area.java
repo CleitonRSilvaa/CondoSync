@@ -1,7 +1,12 @@
 package com.CondoSync.models;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -36,7 +41,19 @@ public class Area {
     @NotBlank(message = "O descrição é obrigatoria")
     private String description;
 
+    @NotBlank(message = "O preço é obrigatorio")
+    @Column(nullable = false)
+    private BigDecimal price;
+
+    private boolean status;
+
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
     private List<Image> images;
+
+    @CreationTimestamp
+    private Instant creation;
+
+    @UpdateTimestamp
+    private Instant upudate;
 
 }
