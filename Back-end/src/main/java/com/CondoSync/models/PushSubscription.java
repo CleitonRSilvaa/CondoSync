@@ -35,8 +35,7 @@ public class PushSubscription {
     @Column(name = "subscription_id")
     private UUID id;
 
-    @Column(nullable = false)
-
+    @Column(nullable = false, length = 2500, unique = true)
     private String endpoint;
 
     @Column(nullable = true)
@@ -53,26 +52,17 @@ public class PushSubscription {
     @JsonIgnore
     private User user;
 
-    @Column(nullable = false, unique = true, length = 500)
-    @Size(max = 500)
-    private String hashKey;
-
     @CreationTimestamp
     private Instant creation;
 
     @UpdateTimestamp
     private Instant upudate;
 
-    @PrePersist
-    public void setHashKey() {
-        this.hashKey = String.join(auth, endpoint, p256dh).toLowerCase();
-    }
-
     @Override
     public String toString() {
         return "PushSubscription [auth=" + auth + ", creation=" + creation + ", endpoint=" + endpoint
                 + ", expirationTime="
-                + expirationTime + ", hashKey=" + hashKey + ", id=" + id + ", p256dh=" + p256dh + ", upudate=" + upudate
+                + expirationTime + ", id=" + id + ", p256dh=" + p256dh + ", upudate=" + upudate
                 + "]";
     }
 
