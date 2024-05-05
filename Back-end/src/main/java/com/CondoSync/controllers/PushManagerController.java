@@ -1,5 +1,7 @@
 package com.CondoSync.controllers;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import com.CondoSync.services.UserSubscriptionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("api/v1/push")
@@ -42,6 +45,17 @@ public class PushManagerController {
     public ResponseEntity<?> subResponseEntity(@RequestBody UserSubscriptionDTO userSubscriptionDTO) {
         return userSubscriptionService.saveSubscription(userSubscriptionDTO);
 
+    }
+
+    @PostMapping("/unsubscribe")
+    public ResponseEntity<?> unsubResponseEntity(@RequestBody UserSubscriptionDTO userSubscriptionDTO) {
+        return userSubscriptionService.deleteSubscription(userSubscriptionDTO);
+    }
+
+    @GetMapping("/subscriptions")
+    public ResponseEntity<?> getSubscriptions(@RequestParam UUID userId) {
+
+        return ResponseEntity.ok(userSubscriptionService.getSubscriptions(userId));
     }
 
 }
