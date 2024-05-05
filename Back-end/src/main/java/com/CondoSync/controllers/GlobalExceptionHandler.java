@@ -2,6 +2,7 @@ package com.CondoSync.controllers;
 
 import com.CondoSync.models.DTOs.ResponseDTO;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.validation.FieldError;
 
 import java.util.HashMap;
@@ -161,6 +163,41 @@ public class GlobalExceptionHandler {
         "Usuário não encontrado",
         "Usuário não encontrado");
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<ResponseDTO> handleConstraintViolationException(ConstraintViolationException ex) {
+
+    log.error("Erro de validação", ex);
+
+    Map<String, String> errors = new HashMap<>();
+    ex.getConstraintViolations().forEach((error) -> {
+      String fieldName = error.getPropertyPath().toString();
+      String errorMessage = error.getMessage();
+      errors.put(fieldName, errorMessage);
+    });
+
+    ResponseDTO apiError = new ResponseDTO(
+        HttpStatus.BAD_REQUEST.value(),
+        "Erro de validação",
+        "Um ou mais campos estão inválidos",
+        errors);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+
+  }
+
+  @ExceptionHandler(MissingServletRequestParameterException.class)
+  public ResponseEntity<ResponseDTO> handleMissingServletRequestParameterException(
+      MissingServletRequestParameterException ex) {
+
+    log.error("Erro de validação", ex);
+
+    ResponseDTO apiError = new ResponseDTO(
+        HttpStatus.BAD_REQUEST.value(),
+        "Erro de validação",
+        "Um ou mais campos estão inválidos");
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
 
   }
 
