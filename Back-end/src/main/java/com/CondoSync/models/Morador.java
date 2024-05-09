@@ -34,28 +34,28 @@ public final class Morador {
     @Column(name = "morador_id")
     private UUID id;
 
-    @Column(length = 11, nullable = false, unique = true)
     @NotBlank(message = "O CPF é obrigatorio")
-    private String Cpf;
+    @Column(length = 11, nullable = false, unique = true)
+    private String cpf;
 
-    @Column(length = 5, nullable = false)
-    private String Bloco;
+    @Column(length = 5, nullable = true)
+    private String bloco;
 
     @NotBlank(message = "O apartamento é obrigatorio")
     @Column(length = 11, nullable = false)
-    private String Apartamento;
+    private String apartamento;
 
     @Column(length = 11, nullable = false)
-    private String Celular;
+    private String celular;
 
     @Email
     @Column(length = 100, nullable = false, unique = true)
     @NotBlank(message = "O email é obrigatorio")
-    private String Email;
+    private String email;
 
     @NotBlank(message = "O nome é obrigatorio")
     @Column(length = 100, nullable = false)
-    private String Nome;
+    private String nome;
 
     @OneToOne
     @JoinColumn(name = "user_id")
