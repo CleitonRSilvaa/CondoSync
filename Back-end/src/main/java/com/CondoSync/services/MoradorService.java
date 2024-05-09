@@ -14,6 +14,12 @@ public class MoradorService {
     @Autowired
     private MoradorRepository moradorRepository;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
     public Optional<Morador> findByCpf(String cpf) {
         return moradorRepository.findByCpf(cpf);
     }
