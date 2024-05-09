@@ -32,25 +32,27 @@ public class DataInitializer implements CommandLineRunner {
 
         try {
 
-            List<Role> roles = new ArrayList<Role>();
-
             if (!roleService.existsByNome("ROLE_ADMIN")) {
-                var role = new Role("ROLE_ADMIN");
-                roleService.createRole(role);
-                roles.add(role);
-
+                roleService.createRole(new Role("ROLE_ADMIN"));
                 log.info("Role ROLE_ADMIN created");
-
-            } else {
-                roles.add(roleService.getRoleByNome("ROLE_ADMIN"));
+            }
+            if (!roleService.existsByNome("ROLE_USER")) {
+                roleService.createRole(new Role("ROLE_USER"));
+                log.info("Role ROLE_USER created");
+            }
+            if (!roleService.existsByNome("ROLE_GUEST")) {
+                roleService.createRole(new Role("ROLE_GUEST"));
+                log.info("Role ROLE_GUEST created");
+            }
+            if (!roleService.existsByNome("ROLE_MORADOR")) {
+                roleService.createRole(new Role("ROLE_MORADOR"));
+                log.info("Role ROLE_MORADOR created");
             }
 
-            if (!roleService.existsByNome("ROLE_USER"))
-                roleService.createRole(new Role("ROLE_USER"));
-            if (!roleService.existsByNome("ROLE_GUEST"))
-                roleService.createRole(new Role("ROLE_GUEST"));
-
             if (!userService.existsByUserName("admin")) {
+
+                List<Role> roles = new ArrayList<Role>();
+                roles.add(roleService.getRoleByNome("ROLE_ADMIN"));
                 User user = new User();
                 user.setFullName("CondoSync Admin");
                 user.setUserName("admin");
@@ -59,7 +61,6 @@ public class DataInitializer implements CommandLineRunner {
                 user.setInativa(false);
                 user.setRoles(roles);
                 userService.createUser(user);
-
                 log.info("Admin user created");
             }
 
