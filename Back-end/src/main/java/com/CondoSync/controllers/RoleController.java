@@ -5,9 +5,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.CondoSync.models.Role;
 import com.CondoSync.services.RoleService;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("api/v1/roles")
+@Validated
 public class RoleController {
 
     @Autowired
@@ -38,22 +42,22 @@ public class RoleController {
     }
 
     @PostMapping()
-    public Role createRole(@RequestBody Role role) {
+    public Role createRole(@RequestBody @Valid Role role) {
         return roleService.createRole(role);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public Role updateRole(@RequestBody Role role) {
+    public Role updateRole(@RequestBody @Valid Role role) {
         return roleService.updateRole(role);
     }
 
     @RequestMapping(method = RequestMethod.PATCH)
-    public Role patchRole(@RequestBody Role role) {
+    public Role patchRole(@RequestBody @Valid Role role) {
         return roleService.patchRole(role);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public void deleteRole(@RequestBody Role role) {
+    public void deleteRole(@RequestBody @Valid Role role) {
         roleService.deleteRole(role);
     }
 
