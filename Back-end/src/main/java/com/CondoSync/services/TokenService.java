@@ -40,4 +40,24 @@ public class TokenService {
 				claims);
 		return encoder.encode(encoderParameters).getTokenValue();
 	}
+
+	public String generateToken(User user) {
+		Instant now = Instant.now();
+
+		String scope = user.getRoles().stream().map(GrantedAuthority::getAuthority)
+				.collect(Collectors.joining(" "));
+
+		JwtClaimsSet claims = JwtClaimsSet.builder()
+				.issuer("self")
+				// .audience(Arrays.asList(clientKey))
+				.issuedAt(now)
+				.expiresAt(now.plus(Duration.ofMinutes(30)))
+				.subject(user.getUsername())
+				.claim("name", user.getFullName())
+				.claim("scope", scope).build();
+
+		JwtEncoderParameters encoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(),
+				claims);
+		return encoder.encode(encoderParameters).getTokenValue();
+	}
 }
