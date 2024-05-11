@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.CondoSync.models.User;
@@ -18,6 +19,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -58,6 +62,10 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> findById(UUID id) {
         return usersRepository.findById(id);
+    }
+
+    public String encodePassword(String senha) {
+        return passwordEncoder.encode(senha);
     }
 
 }
