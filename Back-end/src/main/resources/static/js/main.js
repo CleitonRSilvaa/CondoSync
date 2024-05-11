@@ -106,12 +106,10 @@ document
 		
 	} catch (error) {
 		$('#divPaiForms').empty();
-
-	  console.error("Erro ao enviar a requisição:", error);
 	  const divPaiForms = document.getElementById("divPaiForms");
 	  divPaiForms.insertAdjacentHTML(
 		"afterbegin",
-		criarMensagemDeErro("Erro ao fazer login, tente novamente mais tarde!")
+		criarMensagemDeErro("Erro ao fazer login." ,"Tente novamente mais tarde!")
 	  );
 	  return;
 	}finally
