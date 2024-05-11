@@ -28,7 +28,7 @@ public class DataInitializer implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) throws ValidateUserException {
 
         try {
 
@@ -64,7 +64,7 @@ public class DataInitializer implements CommandLineRunner {
                 log.info("Admin user created");
             }
 
-        } catch (Exception e) {
+        } catch (ValidateUserException e) {
             log.info("Error: " + e.getMessage());
         }
 
