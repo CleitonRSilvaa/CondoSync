@@ -5,6 +5,8 @@ import java.time.Instant;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -31,8 +33,10 @@ public class Image {
     @NotBlank
     private String name;
 
+    @JsonIgnore
     private Boolean defaultImg;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "area_id", nullable = false)
     private Area area;
@@ -42,10 +46,17 @@ public class Image {
         return "Image {id=" + id + ", url=" + path + "}";
     }
 
+    @JsonIgnore
     @CreationTimestamp
     private Instant creation;
 
+    @JsonIgnore
     @UpdateTimestamp
     private Instant upudate;
+
+    public Image(@NotBlank String path, @NotBlank String name) {
+        this.path = path;
+        this.name = name;
+    }
 
 }
