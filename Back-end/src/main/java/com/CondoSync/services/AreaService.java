@@ -42,6 +42,7 @@ public class AreaService {
         List<AreaDTO> areas = new ArrayList<>();
         for (var area : areaRepository.findAll()) {
             AreaDTO areaDTO = new AreaDTO();
+            areaDTO.setId(area.getId());
             areaDTO.setName(area.getName());
             areaDTO.setDescription(area.getDescription());
             areaDTO.setPrice(area.getPrice());
