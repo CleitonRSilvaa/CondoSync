@@ -16,7 +16,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,8 +43,8 @@ public class Area {
     @NotBlank(message = "O descrição é obrigatoria")
     private String description;
 
-    @NotBlank(message = "O preço é obrigatorio")
-    @Column(nullable = false)
+    @NotNull(message = "O preço é obrigatorio")
+    @DecimalMin(value = "0.0", inclusive = false, message = "O preço deve ser maior que zero")
     private BigDecimal price;
 
     private boolean status;
