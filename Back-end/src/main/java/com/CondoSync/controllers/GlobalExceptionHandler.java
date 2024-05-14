@@ -4,6 +4,7 @@ import com.CondoSync.components.ValidateUserException;
 import com.CondoSync.models.DTOs.ResponseDTO;
 
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.UnexpectedTypeException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -236,5 +237,19 @@ public class GlobalExceptionHandler {
         "Altere sua senha");
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
   }
+
+  // UnexpectedTypeException
+  // @ExceptionHandler(UnexpectedTypeException.class)
+  // public ResponseEntity<ResponseDTO> handleUnexpectedTypeException(
+  // UnexpectedTypeException ex) {
+
+  // Map<String, String> errors = new HashMap<>();
+
+  // ResponseDTO apiError = new ResponseDTO(
+  // HttpStatus.BAD_REQUEST.value(),
+  // "Erro de validação",
+  // "Erro de validação");
+  // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+  // }
 
 }
