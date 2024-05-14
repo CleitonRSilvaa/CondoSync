@@ -10,7 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
-
+    <link href="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro/build/vanilla-calendar.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-calendar-pro/build/vanilla-calendar.min.js" defer></script>
     <title>CondoSync:: Reserva</title>
     <style>
         @media (max-width: 800px) {
@@ -91,20 +92,17 @@
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <div class="mb-3 input-group-lg">
-                                                    <label for="exampleFormControlInput1" class="form-label fs-5">Escolha a
+                                                    <label for="data-reserva" class="form-label fs-5">Escolha a
                                                         data:</label>
                                                     <input type="date" class="form-control"
-                                                        id="exampleFormControlInput1" placeholder="name@example.com">
+                                                        id="data-reserva" placeholder="name@example.com">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="exampleFormControlInput1" class="form-label fs-5">Escolha o
                                                     espaço:</label>
-                                                <select class="form-select form-select-lg mb-3" aria-label="Default select example">
+                                                <select class="form-select form-select-lg mb-3" aria-label="Default select example" id="espacos">
                                                     <option selected></option>
-                                                    <option value="1">Churrasqueira</option>
-                                                    <option value="2">Piscina</option>
-                                                    <option value="3">Salão de Festa</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
@@ -128,13 +126,8 @@
                                                 
                                             </div>
                                             
-                                        </div>
-
-                                       
-                                    </div>
-
-                                
-                                   
+                                        </div>                                     
+                                    </div>                              
                                 </div>
                             </div>
                             <div class="card border  mt-3">
@@ -205,6 +198,154 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+
+        <script>
+
+            const baseUrl = 'http://localhost:8010';
+
+            document.addEventListener('DOMContentLoaded', () => {
+                loadDate();
+                loadCalendar();
+                getEspacos();
+            });
+             function loadDate(){
+                const startDate = document.getElementById('data-reserva');
+                const date_default = new Date();
+                date_default.setDate(date_default.getDate() + 1);
+                
+                const date_max = new Date();
+                date_max.setDate(date_max.getDate() + 60);
+
+                const date_min = new Date();
+                date_min.setDate(date_min.getDate() + 1);
+
+                // startDate.value = date_default.toISOString().split('T')[0]; 
+                startDate.min = date_default.toISOString().split('T')[0]; 
+                startDate.max = date_max.toISOString().split('T')[0];
+
+             }
+
+
+             function loadCalendar(){
+                const calendar = new VanillaCalendar({
+                    selector: "#myCalendar",
+                    onSelect: (data, elem) => {
+                        console.log(data, elem);
+                    }
+                });
+             }
+
+
+             function feachMy(url, method, body){
+                return fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    return data;
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+             }
+
+
+
+                function getReservas(){
+                    feachMy('http://localhost:8080/reservas', 'GET', {})
+                    .then(data => {
+                        console.log(data);
+                    });
+                }
+
+                function createReserva(){
+                    const reserva = {
+                        "data": "2022-05-04",
+                        "horario": "08:30 - 09:00",
+                        "espaco": "Churrasqueira"
+                    }
+                    feachMy('http://localhost:8080/reservas', 'POST', reserva)
+                    .then(data => {
+                        console.log(data);
+                    });
+                }
+
+                function deleteReserva(){
+                    feachMy('http://localhost:8080/reservas/1', 'DELETE', {})
+                    .then(data => {
+                        console.log(data);
+                    });
+                }
+
+                function updateReserva(){
+                    const reserva = {
+                        "data": "2022-05-04",
+                        "horario": "08:30 - 09:00",
+                        "espaco": "Churrasqueira"
+                    }
+                    feachMy('http://localhost:8080/reservas/1', 'PUT', reserva)
+                    .then(data => {
+                        console.log(data);
+                    });
+                }
+
+                function cancelReserva(){
+                    feachMy('http://localhost:8080/reservas/1/cancelar', 'PUT', {})
+                    .then(data => {
+                        console.log(data);
+                    });
+                }
+
+
+                function getEspacos(){
+                
+                    fetch(baseUrl+'/api/v1/area/list', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        const select = document.getElementById('espacos');
+                        data.forEach(espaco => {
+                            const option = document.createElement('option');
+                            option.value = espaco.id;
+                            option.text = espaco.name;
+                            select.appendChild(option);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+
+
+
+                }
+
+
+            
+            document.getElementById('espacos').addEventListener('change', (event) => {
+                console.log(event.target.value);
+            });
+
+            document.getElementById('data-reserva').addEventListener('change', (event) => {
+                console.log(event.target.value);
+            });
+               
+
+
+
+
+
+           </script>
+       
 
 
 </body>
