@@ -2,6 +2,7 @@ package com.CondoSync.models.DTOs;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.DecimalMin;
@@ -16,6 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class AreaDTO {
+
+    private UUID id;
 
     @NotBlank(message = "A nome é obrigatorio")
     @Size(min = 5, max = 100, message = "O nome deve ter entre 5 e 100 caracteres")
