@@ -52,6 +52,9 @@ public class Area {
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
     private List<Image> images;
 
+    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
+    private List<Horario> horarios; 
+
     @CreationTimestamp
     private Instant creation;
 
