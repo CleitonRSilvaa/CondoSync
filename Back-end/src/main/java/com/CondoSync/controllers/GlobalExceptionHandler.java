@@ -14,6 +14,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -262,6 +263,16 @@ public class GlobalExceptionHandler {
         "Um ou mais campos estão inválidos",
         errors);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+  }
+
+  // JwtValidationException
+  @ExceptionHandler(JwtValidationException.class)
+  public ResponseEntity<ResponseDTO> handleJwtValidationException(JwtValidationException ex) {
+    ResponseDTO apiError = new ResponseDTO(
+        HttpStatus.UNAUTHORIZED.value(),
+        ex.getMessage(),
+        "Token inválido");
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
   }
 
   // ResourceAccessException
