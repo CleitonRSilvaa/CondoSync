@@ -2,8 +2,12 @@ package com.CondoSync.models;
 
 import java.time.LocalTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,8 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -32,14 +34,22 @@ public class Horario {
     @Column(name = "horario_id")
     private Integer id;
 
-    @NotNull
-    private LocalTime  horaInicio;
-    @NotNull
-    private LocalTime  horaFim;
+    @NotNull(message = "O horario de inicio é obrigatorio")
+    @DateTimeFormat(pattern = "HH:mm")
+    private LocalTime horaInicio;
 
+    @NotNull(message = "O horario de fim é obrigatorio")
+    @DateTimeFormat(pattern = "HH:mm")
+    private LocalTime horaFim;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "area_id", nullable = false)
     private Area area;
+
+    @Override
+    public String toString() {
+        return "Horario [horaFim=" + horaFim + ", horaInicio=" + horaInicio + ", id=" + id + "]";
+    }
+
 }
