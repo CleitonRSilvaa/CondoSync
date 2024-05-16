@@ -77,7 +77,7 @@ public class HorarioService {
 
     public HorarioDTO findByAreaId(UUID id) {
         return new HorarioDTO(horarioRepository.findByAreaId(id)
-                .orElseThrow(() -> new EntityNotFoundException("Horario não encontrado para a area com id: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("Horario não encontrado para a area!")));
         // return new HorarioDTO(horarioRepository.findByAreaId(id).orElseThrow(() ->
         // new EntityNotFoundException("Horario não encontrado")));
 
