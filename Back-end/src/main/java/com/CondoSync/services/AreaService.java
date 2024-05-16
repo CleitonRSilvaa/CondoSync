@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.health.HealthProperties.Status;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +90,7 @@ public class AreaService {
         if (reservaAreaRepository.findByDataAndHoraInicioAndHoraFim(reservaMoradorDTO.getData(),
                 horario.getHoraInicio(), horario.getHoraFim()).isPresent()) {
             throw new IllegalArgumentException(
-                    "Já existe uma reserva cadastrada para a área com o mesmo horário de início ou fim");
+                    "Já existe uma reserva cadastrada para a área com o mesmo horário!");
         }
 
         // var morador = moradorService.findById(reservaMoradorDTO.getMoradorId());
