@@ -1,3 +1,5 @@
+import { saveLogin } from "./auth.js";
+
 (function ($) {
   "use strict";
   var fullHeight = function () {
@@ -63,7 +65,8 @@ async function postLogin(email, senha) {
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem("token", data.token);
-      window.location.href = "http://localhost:8011/Perfil/perfil.html";
+      saveLogin(data.token);
+      // window.location.href = "http://localhost:8011/Perfil/perfil.html";
     }
 
     if (response.status === 401) {
