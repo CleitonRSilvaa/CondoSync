@@ -1,6 +1,34 @@
 const baseUrl = "http://localhost:8010";
 
+import * as tokem from "/js/auth.js";
+
+function validateSecurity() {
+  if (!tokem.isLogged()) {
+    window.location.href = "../Login/login.html";
+  }
+  if (tokem.isExpiredToken()) {
+    alert("Sua sessão expirou!");
+    tokem.logout();
+  }
+  console.log("Validado");
+}
+
+function validaSessecion() {
+  // document.addEventListener("click", function (event) {
+  //   console.log("click", event.target);
+  //   validateSecurity();
+  // });
+  // document.addEventListener("input", function (event) {
+  //   console.log("input", event.target);
+  //   validateSecurity();
+  // });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  validateSecurity();
+
+  // console.log(tokem.getPayload());
+
   loadDate();
   loadCalendar();
   changeDesabilitarHorarios();
@@ -65,17 +93,6 @@ function getReservas() {
   });
 }
 
-function createReserva() {
-  const reserva = {
-    data: "2022-05-04",
-    horario: "08:30 - 09:00",
-    espaco: "Churrasqueira",
-  };
-  feachMy("http://localhost:8080/reservas", "POST", reserva).then((data) => {
-    console.log(data);
-  });
-}
-
 function deleteReserva() {
   feachMy("http://localhost:8080/reservas/1", "DELETE", {}).then((data) => {
     console.log(data);
@@ -101,16 +118,21 @@ function cancelReserva() {
   );
 }
 
-function getEspacos() {
+async function getEspacos() {
+  validateSecurity();
   showLoading();
-  fetch(baseUrl + "/api/v1/area/list", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
+  try {
+    const response = await fetch(baseUrl + "/api/v1/area/list", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + tokem.getToken(),
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
       const select = document.getElementById("espacos");
       select.innerHTML = "";
       const option = document.createElement("option");
@@ -124,24 +146,30 @@ function getEspacos() {
         option.text = espaco.name;
         select.appendChild(option);
       });
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    })
-    .finally(() => {
-      hideLoading();
-    });
+    } else {
+      showToast("Erro", "Erro ao buscar os espaços!", "bg-danger", 5000);
+    }
+  } catch (error) {
+    showToast("Erro", "Erro ao buscar os espaços!", "bg-danger", 5000);
+    console.error("Error:", error);
+  } finally {
+    hideLoading();
+  }
 }
 
 document.getElementById("data-reserva").addEventListener("change", (event) => {
+  validateSecurity();
   const data = event.target.value;
   if (data) {
     getEspacos();
     changeDesabilitarEspacos(false);
+    changeDesabilitarHorarios();
+    changeDesabilitaBntReservar();
   }
 });
 
 document.getElementById("espacos").addEventListener("change", (event) => {
+  validateSecurity();
   showLoading();
   const areaId = event.target.value;
   if (!areaId) {
@@ -184,6 +212,14 @@ function changeDesabilitaBntReservar(status = true) {
   data.disabled = status;
 }
 
+function changeClearData() {
+  const data = document.getElementById("data-reserva");
+  data.value = "";
+  changeDesabilitarHorarios();
+  changeDesabilitarEspacos();
+  changeDesabilitaBntReservar();
+}
+
 function showLoading() {
   document.getElementById("loading-reservar").style.display = "block";
 }
@@ -192,47 +228,87 @@ function hideLoading() {
   document.getElementById("loading-reservar").style.display = "none";
 }
 
-function getHorarios(areaId) {
-  fetch(baseUrl + "/api/v1/area/" + areaId + "/schedule", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      const status = response.status;
-      return response.json().then((data) => ({ data, status }));
-    })
-    .then((data) => {
+async function getHorarios(areaId) {
+  showLoading();
+  try {
+    const respose = await fetch(
+      baseUrl + "/api/v1/area/" + areaId + "/schedule",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokem.getToken(),
+        },
+      }
+    );
+
+    const data = await respose.json();
+    const select = document.getElementById("horarios");
+    select.innerHTML = "";
+    const option = document.createElement("option");
+    if (respose.ok) {
       const select = document.getElementById("horarios");
       select.innerHTML = "";
       const option = document.createElement("option");
-      if (data.status === 404) {
-        select.appendChild(option);
-        changeDesabilitarHorarios();
-        showToast(
-          "Opss!",
-          "Nenhum horário disponível para este espaço e data!",
-          "bg-warning",
-          7000
-        );
-        //alert("Nenhum horário disponível para este espaço");
-        changeDesabilitaBntReservar();
-        return;
-      }
-      data = data.data;
       option.value = data.id;
       option.text = data.horaInicio + " - " + data.horaFim;
       select.appendChild(option);
       changeDesabilitarHorarios(false);
       changeDesabilitaBntReservar(false);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    })
-    .finally(() => {
-      hideLoading();
-    });
+      return;
+    }
+
+    if (respose.status === 404) {
+      select.appendChild(option);
+      changeDesabilitarHorarios();
+      showToast("Opss!", data.error, "bg-warning", 7000);
+      changeDesabilitaBntReservar();
+      return;
+    } else {
+      showToast("Erro", "Erro ao buscar os horários!", "bg-danger", 7000);
+    }
+  } catch (error) {
+    showToast("Erro", "Erro ao buscar os horários!", "bg-danger", 7000);
+    console.error("Error:", error);
+  } finally {
+    hideLoading();
+  }
+
+  // .then((response) => {
+  //   const status = response.status;
+  //   return response.json().then((data) => ({ data, status }));
+  // })
+  // .then((data) => {
+  //   const select = document.getElementById("horarios");
+  //   select.innerHTML = "";
+  //   const option = document.createElement("option");
+  //   if (data.status === 404) {
+  //     select.appendChild(option);
+  //     changeDesabilitarHorarios();
+  //     showToast(
+  //       "Opss!",
+  //       "Nenhum horário disponível para este espaço e data!",
+  //       "bg-warning",
+  //       7000
+  //     );
+  //     //alert("Nenhum horário disponível para este espaço");
+  //     changeDesabilitaBntReservar();
+  //     return;
+  //   }
+  //   data = data.data;
+  //   option.value = data.id;
+  //   option.text = data.horaInicio + " - " + data.horaFim;
+  //   select.appendChild(option);
+  //   changeDesabilitarHorarios(false);
+  //   changeDesabilitaBntReservar(false);
+  // })
+  // .catch((error) => {
+  //   showToast("Erro", "Erro ao buscar os horários!", "bg-danger", 5000);
+  //   console.error("Error:", error);
+  // })
+  // .finally(() => {
+  //   hideLoading();
+  // });
 }
 
 function showToast(titulo, message, clss = "bg-primary", time = 5000) {
@@ -269,58 +345,69 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
   toast.show();
 }
 
-function saveReserva() {
-  const data = document.getElementById("data-reserva").value;
+async function saveReserva() {
+  validateSecurity();
+  const date = document.getElementById("data-reserva").value;
   const horario = document.getElementById("horarios").value;
   const espaco = document.getElementById("espacos").value;
 
   const reserva = {
     moradorId: "4c74ca58-c3d9-487c-a041-cb92d3fe4d53",
-    data: data,
+    data: date,
     horarioId: parseInt(horario),
     areaId: espaco,
   };
 
-  fetch(baseUrl + "/api/v1/area/reservation", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(reserva),
-  })
-    .then((response) => {
-      const status = response.status;
-      return response.json().then((data) => ({ data, status }));
-    })
-    .then((data) => {
-      if (data.status >= 200 && data.status < 300) {
-        showToast(
-          "Sucesso",
-          "Reserva realizada com sucesso!",
-          "bg-success",
-          5000
-        );
-      } else {
-        showToast("Erro", "Erro ao realizar a reserva!", "bg-danger", 5000);
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    })
-    .finally(() => {
-      hideLoading();
+  try {
+    const response = await fetch(baseUrl + "/api/v1/area/reservation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + tokem.getToken(),
+      },
+      body: JSON.stringify(reserva),
     });
+    const data = await response.json();
+    if (response.ok) {
+      showToast(
+        "Sucesso",
+        "Reserva realizada com sucesso!",
+        "bg-success",
+        7000
+      );
+      changeClearData();
+      return;
+    }
+    if (response.status === 401) {
+    }
+
+    if (response.status === 400 || response.status === 404) {
+      showToast("Atenção", data.message, "bg-warning", 7000);
+      return;
+    }
+    if (response.status >= 500) {
+      showToast("Erro", "Erro ao realizar a reserva!", "bg-danger", 7000);
+      return;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    showToast("Erro", "Erro ao realizar a reserva!", "bg-danger", 5000);
+  } finally {
+    hideLoading();
+  }
 }
 
 function updateToastClass(element, newClass) {
-  element.classList.remove("bg-primary", "bg-success", "bg-danger");
+  element.classList.remove(
+    "bg-primary",
+    "bg-success",
+    "bg-danger",
+    "bg-warning"
+  );
   element.classList.add(newClass);
 }
 
 document.getElementById("btn-reservar").addEventListener("click", function () {
   showLoading();
   saveReserva();
-  // setTimeout(function () {
-  //   hideLoading();
-  // }, 3000);
 });
