@@ -13,6 +13,7 @@ import com.CondoSync.models.User;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,8 +25,8 @@ public class TokenService {
 	public String generateToken(User user, Duration duration) {
 		Instant now = Instant.now();
 
-		String scope = user.getRoles().stream().map(GrantedAuthority::getAuthority)
-				.collect(Collectors.joining(" "));
+		List<String> scope = user.getRoles().stream().map(GrantedAuthority::getAuthority).toList();
+		// .collect(Collectors.joining(" "));
 
 		JwtClaimsSet claims = JwtClaimsSet.builder()
 				.issuer("self")
@@ -34,7 +35,7 @@ public class TokenService {
 				.expiresAt(now.plus(duration))
 				.subject(user.getUsername())
 				.claim("name", user.getFullName())
-				.claim("scope", scope).build();
+				.claim("roles", scope).build();
 
 		JwtEncoderParameters encoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(),
 				claims);
@@ -44,8 +45,9 @@ public class TokenService {
 	public String generateToken(User user) {
 		Instant now = Instant.now();
 
-		String scope = user.getRoles().stream().map(GrantedAuthority::getAuthority)
-				.collect(Collectors.joining(" "));
+		// String scope = user.getRoles().stream().map(GrantedAuthority::getAuthority)
+		// .collect(Collectors.joining(" "));
+		List<String> scope = user.getRoles().stream().map(GrantedAuthority::getAuthority).toList();
 
 		JwtClaimsSet claims = JwtClaimsSet.builder()
 				.issuer("self")
@@ -54,7 +56,7 @@ public class TokenService {
 				.expiresAt(now.plus(Duration.ofMinutes(30)))
 				.subject(user.getUsername())
 				.claim("name", user.getFullName())
-				.claim("scope", scope).build();
+				.claim("roles", scope).build();
 
 		JwtEncoderParameters encoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(),
 				claims);
