@@ -2,9 +2,11 @@ package com.CondoSync.models.DTOs;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.CondoSync.models.Morador;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.annotation.PostConstruct;
@@ -22,6 +24,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class MoradorDTO {
+
+    private UUID id;
 
     @CPF(message = "O CPF deve ser valido")
     @NotBlank(message = "O CPF é obrigatorio")
@@ -76,6 +80,17 @@ public class MoradorDTO {
     @JsonIgnore
     public boolean isSenhaValida() {
         return this.senha.equals(this.confirmacaoSenha);
+    }
+
+    public MoradorDTO(Morador morador) {
+        this.id = morador.getId();
+        this.cpf = morador.getCpf();
+        this.bloco = morador.getBloco();
+        this.apartamento = morador.getApartamento();
+        this.celular = morador.getCelular();
+        this.email = morador.getEmail();
+        this.nomeCompleto = morador.getNome();
+        this.rolesIds = morador.getRolesIds();
     }
 
 }
