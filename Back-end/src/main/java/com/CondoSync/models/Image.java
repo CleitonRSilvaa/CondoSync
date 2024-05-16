@@ -41,11 +41,6 @@ public class Image {
     @JoinColumn(name = "area_id", nullable = false)
     private Area area;
 
-    @Override
-    public String toString() {
-        return "Image {id=" + id + ", url=" + path + "}";
-    }
-
     @JsonIgnore
     @CreationTimestamp
     private Instant creation;
@@ -57,6 +52,11 @@ public class Image {
     public Image(@NotBlank String path, @NotBlank String name) {
         this.path = path;
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Image {id=" + id + ", url=" + path + "}";
     }
 
 }
