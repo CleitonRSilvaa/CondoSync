@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
+import jakarta.persistence.EntityNotFoundException;
 import com.CondoSync.models.Role;
 import com.CondoSync.repositores.RoleRepository;
 
@@ -26,13 +27,13 @@ public class RoleService {
     public Role getRoleById(Long id) {
 
         return roleRepository.findById(id).orElseThrow(
-                () -> new ResourceAccessException("Role with id " + id + " not found"));
+                () -> new EntityNotFoundException("Role with id " + id + " not found"));
     }
 
     public Role getRoleByNome(String nome) {
 
         var role = roleRepository.findByNome(nome)
-                .orElseThrow(() -> new ResourceAccessException("Role " + nome + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Role " + nome + " not found"));
         return role;
     }
 
@@ -40,7 +41,7 @@ public class RoleService {
 
         if (this.existsByNome(role.getNome())) {
 
-            throw new ResourceAccessException("Role " + role.getNome() + " already exists");
+            throw new EntityNotFoundException("Role " + role.getNome() + " already exists");
         }
 
         return roleRepository.save(role);
