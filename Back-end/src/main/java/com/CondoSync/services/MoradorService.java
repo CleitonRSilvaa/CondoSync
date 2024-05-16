@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +18,8 @@ import com.CondoSync.models.Role;
 import com.CondoSync.models.User;
 import com.CondoSync.models.DTOs.MoradorDTO;
 import com.CondoSync.repositores.MoradorRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class MoradorService {
@@ -36,6 +39,11 @@ public class MoradorService {
 
     public Optional<Morador> findByEmail(String email) {
         return moradorRepository.findByEmail(email);
+    }
+
+    public Morador findMoradorByEmail(String email) {
+        return moradorRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("Morador não encontrado com o email: " + email));
     }
 
     public Morador save(Morador morador) {
@@ -86,6 +94,22 @@ public class MoradorService {
         morador.setNome(moradorDTO.getNomeCompleto());
         morador.setUser(user);
         return moradorRepository.save(morador);
+    }
+
+    public Morador findById(UUID moradorId) {
+        return moradorRepository.findById(moradorId)
+                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
+
+    }
+
+    public List<MoradorDTO> listAll() {
+        List<MoradorDTO> moradores = new ArrayList<>();
+
+        for (var morador : moradorRepository.findAll()) {
+            MoradorDTO moradorDTO = new MoradorDTO(morador);
+            moradores.add(moradorDTO);
+        }
+        return moradores;
     }
 
 }
