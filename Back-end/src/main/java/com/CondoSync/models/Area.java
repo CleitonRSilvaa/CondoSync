@@ -53,12 +53,19 @@ public class Area {
     private List<Image> images;
 
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
-    private List<Horario> horarios; 
+    private List<Horario> horarios;
 
     @CreationTimestamp
     private Instant creation;
 
     @UpdateTimestamp
     private Instant upudate;
+
+    @Override
+    public String toString() {
+        return "Area [creation=" + creation + ", description=" + description + ", horarios=" + horarios + ", id=" + id
+                + ", images=" + images + ", name=" + name + ", price=" + price + ", status=" + status + ", upudate="
+                + upudate + "]";
+    }
 
 }
