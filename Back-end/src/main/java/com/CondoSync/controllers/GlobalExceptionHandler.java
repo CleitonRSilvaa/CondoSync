@@ -1,10 +1,10 @@
 package com.CondoSync.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import com.CondoSync.components.ValidateUserException;
 import com.CondoSync.models.DTOs.ResponseDTO;
 
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.UnexpectedTypeException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.validation.FieldError;
 
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler {
 
     Map<String, String> errors = new HashMap<>();
     ex.getBindingResult().getAllErrors().forEach((error) -> {
-      String fieldName = ((FieldError) error).getField();
+      String fieldName = ((FieldError) error).getField().toLowerCase();
       String errorMessage = error.getDefaultMessage();
       errors.put(fieldName, errorMessage);
     });
@@ -188,7 +189,7 @@ public class GlobalExceptionHandler {
 
     Map<String, String> errors = new HashMap<>();
     ex.getConstraintViolations().forEach((error) -> {
-      String fieldName = error.getPropertyPath().toString();
+      String fieldName = error.getPropertyPath().toString().toLowerCase();
       String errorMessage = error.getMessage();
       errors.put(fieldName, errorMessage);
     });
@@ -237,6 +238,39 @@ public class GlobalExceptionHandler {
         "Altere sua senha");
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
   }
+
+  // EntityNotFoundException
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<ResponseDTO> handleEntityNotFoundException(EntityNotFoundException ex) {
+
+    ResponseDTO apiError = new ResponseDTO(
+        HttpStatus.NOT_FOUND.value(),
+        ex.getMessage(),
+        "Recurso não encontrado");
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+  }
+
+  @ExceptionHandler(MissingPathVariableException.class)
+  public ResponseEntity<ResponseDTO> handleMissingPathVariableException(MissingPathVariableException ex) {
+
+    Map<String, String> errors = new HashMap<>();
+    errors.put(ex.getVariableName(), "O parâmetro " + ex.getVariableName() + " é obrigatório");
+
+    ResponseDTO apiError = new ResponseDTO(
+        HttpStatus.BAD_REQUEST.value(),
+        "Erro de validação",
+        "Um ou mais campos estão inválidos",
+        errors);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+  }
+
+  // ResourceAccessException
+
+  // @ExceptionHandler(ResourceAccessException.class)
+  // public ResponseEntity<ResponseDTO> handleResourceAccessException(
+  // ResourceAccessException ex) {
+
+  // }
 
   // UnexpectedTypeException
   // @ExceptionHandler(UnexpectedTypeException.class)
