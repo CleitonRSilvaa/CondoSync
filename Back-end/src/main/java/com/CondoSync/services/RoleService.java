@@ -3,12 +3,8 @@ package com.CondoSync.services;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
-
 import jakarta.persistence.EntityNotFoundException;
 import com.CondoSync.models.Role;
 import com.CondoSync.repositores.RoleRepository;
@@ -67,7 +63,9 @@ public class RoleService {
     }
 
     public boolean existsByNome(String nome) {
+        log.info("Checking if role {} exists", nome);
         return roleRepository.existsByNome(nome);
+
     }
 
 }
