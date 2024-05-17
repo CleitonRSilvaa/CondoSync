@@ -4,11 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,13 +14,11 @@ import com.CondoSync.models.DTOs.ReservaMoradorDTO;
 import com.CondoSync.services.AreaService;
 import com.CondoSync.services.HorarioService;
 import com.CondoSync.services.ReservaMoradorService;
+import com.CondoSync.services.UserService;
 
-import io.micrometer.core.ipc.http.HttpSender.Response;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("api/v1/reserva")
@@ -40,17 +34,30 @@ public class ReservaController {
     @Autowired
     private HorarioService horarioService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid ReservaMoradorDTO reservaMoradorDto) {
         return new ResponseEntity<>(areaService.reservarArea(reservaMoradorDto), HttpStatus.CREATED);
     }
 
-    // @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_USUARIO')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     @GetMapping("/list")
-    public ResponseEntity<?> listAll(@AuthenticationPrincipal UserDetails userDetails) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.err.println(userDetails.getUsername());
-        System.out.println(authentication.getName());
+    public ResponseEntity<?> listAll(JwtAuthenticationToken jwtAuthenticationToken) {
+        if (jwtAuthenticationToken == null) {
+            return new ResponseEntity<>("Usuário não autenticado", HttpStatus.UNAUTHORIZED);
+        }
+
+        System.out.println(jwtAuthenticationToken.getTokenAttributes());
+
+        var user = userService.findByUserName(jwtAuthenticationToken.getToken().getSubject());
+
+        // System.out.println(jwtAuthenticationToken.getTokenAttributes());
+        // System.out.println(jwtAuthenticationToken.getToken().getSubject());
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
+        // System.out.println(authentication);
         // if (!(authentication instanceof AnonymousAuthenticationToken)) {
         // String currentUserName = authentication.getName();
         // return new ResponseEntity<>(currentUserName, HttpStatus.OK);
