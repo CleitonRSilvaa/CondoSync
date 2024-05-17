@@ -1,7 +1,7 @@
 package com.CondoSync.components;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,34 +32,31 @@ public class DataInitializer implements CommandLineRunner {
 
         try {
 
-            if (!roleService.existsByNome("ROLE_ADMIN")) {
-                roleService.createRole(new Role("ROLE_ADMIN"));
-                log.info("Role ROLE_ADMIN created");
+            if (!roleService.existsByNome("ADMIN")) {
+                roleService.createRole(new Role("ADMIN"));
+                log.info("Role ADMIN created");
             }
-            if (!roleService.existsByNome("ROLE_USER")) {
-                roleService.createRole(new Role("ROLE_USER"));
-                log.info("Role ROLE_USER created");
+            if (!roleService.existsByNome("USER")) {
+                roleService.createRole(new Role("USER"));
+                log.info("Role USER created");
             }
-            if (!roleService.existsByNome("ROLE_GUEST")) {
-                roleService.createRole(new Role("ROLE_GUEST"));
-                log.info("Role ROLE_GUEST created");
+            if (!roleService.existsByNome("GUEST")) {
+                roleService.createRole(new Role("GUEST"));
+                log.info("Role GUEST created");
             }
-            if (!roleService.existsByNome("ROLE_MORADOR")) {
-                roleService.createRole(new Role("ROLE_MORADOR"));
-                log.info("Role ROLE_MORADOR created");
+            if (!roleService.existsByNome("MORADOR")) {
+                roleService.createRole(new Role("MORADOR"));
+                log.info("Role MORADOR created");
             }
 
             if (!userService.existsByUserName("admin")) {
-
-                List<Role> roles = new ArrayList<Role>();
-                roles.add(roleService.getRoleByNome("ROLE_ADMIN"));
                 User user = new User();
                 user.setFullName("CondoSync Admin");
                 user.setUserName("admin");
                 user.setHashPassword(passwordEncoder.encode("admin123"));
                 user.setStatus(true);
                 user.setInativa(false);
-                user.setRoles(roles);
+                user.setRoles(Set.of(roleService.getRoleByNome("ADMIN")));
                 userService.createUser(user);
                 log.info("Admin user created");
             }
