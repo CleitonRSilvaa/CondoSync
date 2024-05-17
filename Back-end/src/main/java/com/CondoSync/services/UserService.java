@@ -31,6 +31,10 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public Optional<User> findByUserName(String username) {
+        return usersRepository.findByuserName(username);
+    }
+
     public List<User> getUsers() {
         return usersRepository.findAll();
     }
