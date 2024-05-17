@@ -2,12 +2,8 @@ package com.CondoSync.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.CondoSync.models.User;
 import com.CondoSync.models.DTOs.MoradorDTO;
 import com.CondoSync.services.MoradorService;
-import com.CondoSync.services.RoleService;
-import com.CondoSync.services.UserService;
-
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
