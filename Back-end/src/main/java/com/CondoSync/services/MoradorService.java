@@ -72,7 +72,7 @@ public class MoradorService {
 
         Morador morador = new Morador();
         User user = new User();
-        List<Role> roles = new ArrayList<Role>();
+        Set<Role> roles = new HashSet<Role>();
 
         for (Long id : moradorDTO.getRolesIds()) {
             roles.add(roleService.getRoleById(id));
