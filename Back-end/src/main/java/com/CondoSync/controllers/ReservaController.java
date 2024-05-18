@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.CondoSync.models.User;
+
 import com.CondoSync.models.DTOs.ReservaMoradorDTO;
-import com.CondoSync.services.AreaService;
-import com.CondoSync.services.HorarioService;
 import com.CondoSync.services.ReservaMoradorService;
 import com.CondoSync.services.UserService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("api/v1/reserva")
@@ -29,45 +30,54 @@ public class ReservaController {
     private ReservaMoradorService reservaMoradorService;
 
     @Autowired
-    private AreaService areaService;
-
-    @Autowired
-    private HorarioService horarioService;
-
-    @Autowired
     private UserService userService;
 
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_MORADOR')")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid ReservaMoradorDTO reservaMoradorDto) {
-        return new ResponseEntity<>(areaService.reservarArea(reservaMoradorDto), HttpStatus.CREATED);
-    }
+    public ResponseEntity<?> register(
+            JwtAuthenticationToken jwtAuthenticationToken, @RequestBody ReservaMoradorDTO reservaMoradorDto) {
+        User user = userService.findByUserName(jwtAuthenticationToken.getToken().getSubject()).orElseThrow(
+                () -> new RuntimeException(
+                        "Usuário não encontrado: " + jwtAuthenticationToken.getToken().getSubject()));
 
-    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    @GetMapping("/list")
-    public ResponseEntity<?> listAll(JwtAuthenticationToken jwtAuthenticationToken) {
-        if (jwtAuthenticationToken == null) {
-            return new ResponseEntity<>("Usuário não autenticado", HttpStatus.UNAUTHORIZED);
-        }
-
-        System.out.println(jwtAuthenticationToken.getTokenAttributes());
-
-        var user = userService.findByUserName(jwtAuthenticationToken.getToken().getSubject());
-
-        // System.out.println(jwtAuthenticationToken.getTokenAttributes());
-        // System.out.println(jwtAuthenticationToken.getToken().getSubject());
-        // Authentication authentication =
-        // SecurityContextHolder.getContext().getAuthentication();
-        // System.out.println(authentication);
-        // if (!(authentication instanceof AnonymousAuthenticationToken)) {
-        // String currentUserName = authentication.getName();
-        // return new ResponseEntity<>(currentUserName, HttpStatus.OK);
-        // } else {
-        // return new ResponseEntity<>("Usuário não autenticado",
+        // if (!reservaMoradorDto.getNome().equals(user.getUsername())) {
+        // return new ResponseEntity<>("Usuário não autorizado",
         // HttpStatus.UNAUTHORIZED);
         // }
 
-        return new ResponseEntity<>("", HttpStatus.OK);
+        return new ResponseEntity<>(reservaMoradorDto, HttpStatus.CREATED);
 
+        // return new
+        // ResponseEntity<>(reservaMoradorService.reservarArea(reservaMoradorDto),
+        // HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_MORADOR')")
+    @GetMapping("/list/{userName}")
+    public ResponseEntity<?> listAll(JwtAuthenticationToken jwtAuthenticationToken, @PathVariable String userName) {
+        User user = userService.findByUserName(jwtAuthenticationToken.getToken().getSubject()).orElseThrow(
+                () -> new RuntimeException(
+                        "Usuário não encontrado: " + jwtAuthenticationToken.getToken().getSubject()));
+
+        if (!userName.equals(user.getUsername()) && !user.getAuthorities().toString().toUpperCase().contains("ADMIN")) {
+            return new ResponseEntity<>("Usuário não autorizado", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (user.getAuthorities().toString().toUpperCase().contains("ADMIN")) {
+            return new ResponseEntity<>(reservaMoradorService.listAll(), HttpStatus.OK);
+        } else {
+
+            return new ResponseEntity<>(reservaMoradorService.listAll(user), HttpStatus.OK);
+        }
+
+    }
+
+    @PostMapping("/reservation")
+    public ResponseEntity<?> reserve(@RequestBody @Valid ReservaMoradorDTO reservaMoradorDTO) {
+
+        return new ResponseEntity<>(reservaMoradorDTO, HttpStatus.CREATED);
+        // return new ResponseEntity<>(areaService.reservarArea(reservaMoradorDTO),
+        // HttpStatus.CREATED);
     }
 
 }
