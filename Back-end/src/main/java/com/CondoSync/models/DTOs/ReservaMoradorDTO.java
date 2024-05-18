@@ -6,19 +6,23 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ReservaMoradorDTO {
 
-    @NotNull(message = "O id do morador é obrigatorio")
-    @Schema(type = "string", format = "uuid", example = "123e4567-e89b-12d3-a456-426614174000", description = "Id do morador", required = true)
-    private UUID moradorId;
+    @Schema(type = "string", example = "joao", description = "Nome do usuario", required = true)
+    @NotNull(message = "O nome do usuario é obrigatorio")
+    private String userName;
 
     @NotNull(message = "O id da area é obrigatorio")
     @Schema(type = "integer", example = "1", description = "Id da area", required = true)
