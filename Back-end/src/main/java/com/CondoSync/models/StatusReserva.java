@@ -4,7 +4,8 @@ public enum StatusReserva {
     PENDENTE("Pendente"),
     APROVADA("Aprovada"),
     FINALIZADA("Finalizada"),
-    REJEITADA("Rejeitada");
+    REJEITADA("Rejeitada"),
+    CANCELADA("Cancelada");
 
     private final String status;
 
