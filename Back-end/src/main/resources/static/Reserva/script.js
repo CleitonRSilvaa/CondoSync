@@ -10,18 +10,6 @@ function validateSecurity() {
     alert("Sua sessão expirou!");
     tokem.logout();
   }
-  console.log("Validado");
-}
-
-function validaSessecion() {
-  // document.addEventListener("click", function (event) {
-  //   console.log("click", event.target);
-  //   validateSecurity();
-  // });
-  // document.addEventListener("input", function (event) {
-  //   console.log("input", event.target);
-  //   validateSecurity();
-  // });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -140,6 +128,14 @@ async function getEspacos() {
       option.text = "Selecione um espaço";
       select.appendChild(option);
 
+      if (data.length === 0) {
+        showToast("Opss!", "Nenhum espaço disponível !", "bg-warning", 7000);
+        changeDesabilitarEspacos();
+        changeDesabilitarHorarios();
+        changeDesabilitaBntReservar();
+        return;
+      }
+
       data.forEach((espaco) => {
         const option = document.createElement("option");
         option.value = espaco.id;
@@ -158,7 +154,6 @@ async function getEspacos() {
 }
 
 document.getElementById("data-reserva").addEventListener("change", (event) => {
-  validateSecurity();
   const data = event.target.value;
   if (data) {
     getEspacos();
@@ -169,7 +164,6 @@ document.getElementById("data-reserva").addEventListener("change", (event) => {
 });
 
 document.getElementById("espacos").addEventListener("change", (event) => {
-  validateSecurity();
   showLoading();
   const areaId = event.target.value;
   if (!areaId) {
@@ -229,10 +223,15 @@ function hideLoading() {
 }
 
 async function getHorarios(areaId) {
+  validateSecurity();
   showLoading();
   try {
+    const date = document.getElementById("data-reserva").value;
+
+    const params = new URLSearchParams({ data: date });
+
     const respose = await fetch(
-      baseUrl + "/api/v1/area/" + areaId + "/schedule",
+      `${baseUrl}/api/v1/area/${areaId}/schedules?${params.toString()}`,
       {
         method: "GET",
         headers: {
@@ -247,12 +246,24 @@ async function getHorarios(areaId) {
     select.innerHTML = "";
     const option = document.createElement("option");
     if (respose.ok) {
-      const select = document.getElementById("horarios");
-      select.innerHTML = "";
-      const option = document.createElement("option");
-      option.value = data.id;
-      option.text = data.horaInicio + " - " + data.horaFim;
-      select.appendChild(option);
+      if (data.length === 0) {
+        select.appendChild(option);
+        changeDesabilitarHorarios();
+        showToast(
+          "Opss!",
+          "Nenhum horário disponível para este espaço e data!",
+          "bg-warning",
+          7000
+        );
+        changeDesabilitaBntReservar();
+        return;
+      }
+      data.forEach((horario) => {
+        const option = document.createElement("option");
+        option.value = horario.id;
+        option.text = horario.horaInicio + " - " + horario.horaFim;
+        select.appendChild(option);
+      });
       changeDesabilitarHorarios(false);
       changeDesabilitaBntReservar(false);
       return;
@@ -352,7 +363,7 @@ async function saveReserva() {
   const espaco = document.getElementById("espacos").value;
 
   const reserva = {
-    moradorId: "4c74ca58-c3d9-487c-a041-cb92d3fe4d53",
+    userName: tokem.getUserName(),
     data: date,
     horarioId: parseInt(horario),
     areaId: espaco,
