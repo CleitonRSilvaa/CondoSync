@@ -55,6 +55,9 @@ public class Area {
     @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
     private List<Horario> horarios;
 
+    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
+    private List<ReservaMorador> reservasMoradores;
+
     @CreationTimestamp
     private Instant creation;
 
