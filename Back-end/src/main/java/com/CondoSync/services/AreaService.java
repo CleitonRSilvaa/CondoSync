@@ -14,7 +14,7 @@ import com.CondoSync.models.ReservaMorador;
 import com.CondoSync.models.StatusReserva;
 import com.CondoSync.models.Area;
 import com.CondoSync.models.DTOs.AreaDTO;
-import com.CondoSync.models.DTOs.ReservaMoradorDTO;
+import com.CondoSync.models.DTOs.NewReservaDTO;
 import com.CondoSync.repositores.AreaRepository;
 import com.CondoSync.repositores.ReservaAreaRepository;
 
