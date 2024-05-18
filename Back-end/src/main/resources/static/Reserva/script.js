@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadDate();
   loadCalendar();
+  getReservas();
   changeDesabilitarHorarios();
   changeDesabilitarEspacos();
   changeDesabilitaBntReservar();
@@ -75,29 +76,6 @@ function feachMy(url, method, body) {
     });
 }
 
-function getReservas() {
-  feachMy("http://localhost:8080/reservas", "GET", {}).then((data) => {
-    console.log(data);
-  });
-}
-
-function deleteReserva() {
-  feachMy("http://localhost:8080/reservas/1", "DELETE", {}).then((data) => {
-    console.log(data);
-  });
-}
-
-function updateReserva() {
-  const reserva = {
-    data: "2022-05-04",
-    horario: "08:30 - 09:00",
-    espaco: "Churrasqueira",
-  };
-  feachMy("http://localhost:8080/reservas/1", "PUT", reserva).then((data) => {
-    console.log(data);
-  });
-}
-
 function cancelReserva() {
   feachMy("http://localhost:8080/reservas/1/cancelar", "PUT", {}).then(
     (data) => {
@@ -151,6 +129,94 @@ async function getEspacos() {
   } finally {
     hideLoading();
   }
+}
+
+async function getReservas() {
+  validateSecurity();
+  showLoading();
+
+  try {
+    const params = new URLSearchParams({ userName: tokem.getUserName() });
+
+    const response = await fetch(
+      `${baseUrl}/api/v1/reserva/list?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokem.getToken(),
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      if (data.length === 0) {
+        document.getElementById("reservas-container").innerHTML =
+          "<p>Nenhuma reserva encontrada.</p>";
+        return;
+      }
+
+      buildTable(data);
+    } else {
+      showToast("Erro", "Erro ao buscar as reservas!", "bg-danger", 5000);
+    }
+  } catch (error) {
+    showToast("Erro", "Erro ao buscar as reservas!", "bg-danger", 5000);
+    console.error("Error:", error);
+  } finally {
+    hideLoading();
+  }
+}
+
+function buildTable(data) {
+  const container = document.getElementById("reservas-container");
+  const table = document.createElement("table");
+  table.className = "table table-striped table-hover";
+  table.innerHTML = `
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Área</th>
+        <th scope="col">Morador</th>
+        <th scope="col">Data</th>
+        <th scope="col">Horário</th>
+        <th scope="col">Status</th>
+        <th scope="col">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  `;
+
+  const tbody = table.querySelector("tbody");
+
+  let count = 1;
+  data.forEach((reserva) => {
+    const row = tbody.insertRow();
+    row.insertCell().textContent = count++;
+    row.insertCell().textContent = reserva.area;
+    row.insertCell().textContent = reserva.morador;
+    row.insertCell().textContent = reserva.data;
+    row.insertCell().textContent = reserva.horario;
+    row.insertCell().textContent = reserva.status;
+
+    const actionCell = row.insertCell();
+    if (reserva.status.toLowerCase() === "pendente") {
+      const button = document.createElement("button");
+      button.className = "btn btn-danger";
+      button.textContent = "Cancelar";
+      button.onclick = () => cancelarReserva(reserva.id);
+      actionCell.appendChild(button);
+    }
+  });
+
+  const div = document.createElement("div");
+  div.className = "table-responsive";
+  div.appendChild(table);
+  container.innerHTML = "";
+  container.appendChild(div);
 }
 
 document.getElementById("data-reserva").addEventListener("change", (event) => {
@@ -387,6 +453,7 @@ async function saveReserva() {
         7000
       );
       changeClearData();
+      getReservas();
       return;
     }
     if (response.status === 401) {
@@ -422,3 +489,41 @@ document.getElementById("btn-reservar").addEventListener("click", function () {
   showLoading();
   saveReserva();
 });
+
+async function cancelarReserva(reservaId) {
+  showLoading();
+  try {
+    const response = await fetch(
+      `${baseUrl}/api/v1/reserva/cancel/${reservaId}`,
+      {
+        method: "POST", // Ou "DELETE", dependendo de como sua API está configurada
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokem.getToken(),
+        },
+      }
+    );
+
+    if (response.ok) {
+      showToast(
+        "Sucesso",
+        "Reserva cancelada com sucesso!",
+        "bg-success",
+        7000
+      );
+      getReservas();
+      return;
+    }
+    if (response.status === 404) {
+      const data = await response.json();
+      showToast("Atenção", data.message, "bg-warning", 7000);
+    } else {
+      showToast("Erro", "Erro ao cancelar a reserva!", "bg-danger", 5000);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    showToast("Erro", "Erro ao cancelar a reserva!", "bg-danger", 5000);
+  } finally {
+    hideLoading();
+  }
+}
