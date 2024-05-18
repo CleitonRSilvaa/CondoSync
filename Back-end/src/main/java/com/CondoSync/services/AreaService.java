@@ -35,8 +35,8 @@ public class AreaService {
     @Autowired
     private ReservaAreaRepository reservaAreaRepository;
 
-    @Autowired
-    private ReservaMoradorService reservaMoradorService;
+    // @Autowired
+    // private ReservaMoradorService reservaMoradorService;
 
     public Area register(@Valid AreaDTO areaDTO) {
 
@@ -81,47 +81,49 @@ public class AreaService {
                 .orElseThrow(() -> new EntityNotFoundException("Area with id " + id + " not found"));
     }
 
-    public ResponseEntity<?> reservarArea(ReservaMoradorDTO reservaMoradorDTO) {
+    // public ResponseEntity<?> reservarArea(ReservaMoradorDTO reservaMoradorDTO) {
 
-        var area = findById(reservaMoradorDTO.getAreaId());
+    // var area = findById(reservaMoradorDTO.getAreaId());
 
-        var horario = horarioService.findById(reservaMoradorDTO.getHorarioId());
+    // var horario = horarioService.findById(reservaMoradorDTO.getHorarioId());
 
-        if (reservaAreaRepository.findByDataAndHoraInicioAndHoraFim(reservaMoradorDTO.getData(),
-                horario.getHoraInicio(), horario.getHoraFim()).isPresent()) {
-            throw new IllegalArgumentException(
-                    "Já existe uma reserva cadastrada para a área com o mesmo horário!");
-        }
+    // if
+    // (reservaAreaRepository.findByDataAndHoraInicioAndHoraFim(reservaMoradorDTO.getData(),
+    // horario.getHoraInicio(), horario.getHoraFim()).isPresent()) {
+    // throw new IllegalArgumentException(
+    // "Já existe uma reserva cadastrada para a área com o mesmo horário!");
+    // }
 
-        // var morador = moradorService.findById(reservaMoradorDTO.getMoradorId());
+    // // var morador = moradorService.findById(reservaMoradorDTO.getMoradorId());
 
-        var morador = moradorService.findMoradorByEmail("nome@example.com");
+    // var morador = moradorService.findMoradorByEmail("nome@example.com");
 
-        // if (area.getReservas().stream().anyMatch(r ->
-        // r.getHoraInicio().equals(horario.getHoraInicio())
-        // || r.getHoraFim().equals(horario.getHoraFim()))) {
-        // throw new IllegalArgumentException("Já existe uma reserva cadastrada para a
-        // área com id: "
-        // + area.getId() + " com o mesmo horário de início ou fim");
-        // }
+    // // if (area.getReservas().stream().anyMatch(r ->
+    // // r.getHoraInicio().equals(horario.getHoraInicio())
+    // // || r.getHoraFim().equals(horario.getHoraFim()))) {
+    // // throw new IllegalArgumentException("Já existe uma reserva cadastrada para
+    // a
+    // // área com id: "
+    // // + area.getId() + " com o mesmo horário de início ou fim");
+    // // }
 
-        Reserva reserva = new Reserva();
-        ReservaMorador reservaMorador = new ReservaMorador();
+    // Reserva reserva = new Reserva();
+    // ReservaMorador reservaMorador = new ReservaMorador();
 
-        reserva.setData(reservaMoradorDTO.getData());
-        reserva.setHoraInicio(horario.getHoraInicio());
-        reserva.setHoraFim(horario.getHoraFim());
-        reserva.setStatusReserva(StatusReserva.PENDENTE);
+    // reserva.setData(reservaMoradorDTO.getData());
+    // reserva.setHoraInicio(horario.getHoraInicio());
+    // reserva.setHoraFim(horario.getHoraFim());
+    // reserva.setStatusReserva(StatusReserva.PENDENTE);
 
-        reservaMorador.setMorador(morador);
-        reservaMorador.setReserva(reserva);
+    // reservaMorador.setMorador(morador);
+    // reservaMorador.setReserva(reserva);
 
-        reservaMoradorService.save(reservaMorador);
+    // reservaMoradorService.save(reservaMorador);
 
-        // areaRepository.save(area);
+    // // areaRepository.save(area);
 
-        return ResponseEntity.ok().build();
+    // return ResponseEntity.ok().build();
 
-    }
+    // }
 
 }
