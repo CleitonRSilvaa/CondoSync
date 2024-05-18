@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.CondoSync.models.User;
 import com.CondoSync.models.DTOs.AreaDTO;
 import com.CondoSync.models.DTOs.HorarioDTO;
-import com.CondoSync.models.DTOs.ReservaMoradorDTO;
+import com.CondoSync.models.DTOs.NewReservaDTO;
 import com.CondoSync.services.AreaService;
 import com.CondoSync.services.HorarioService;
 import com.CondoSync.services.ReservaMoradorService;
@@ -87,7 +87,7 @@ public class AreaController {
     }
 
     @PostMapping("/reservation")
-    public ResponseEntity<?> reserve(@RequestBody @Valid ReservaMoradorDTO reservaMoradorDTO,
+    public ResponseEntity<?> reserve(@RequestBody @Valid NewReservaDTO reservaMoradorDTO,
             JwtAuthenticationToken jwtAuthenticationToken) {
 
         User user = userService.findByUserName(jwtAuthenticationToken.getToken().getSubject()).orElseThrow(
