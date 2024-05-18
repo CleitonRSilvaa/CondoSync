@@ -8,11 +8,11 @@ export function saveLogin(jwt) {
 
 export function revogeToken() {
   localStorage.removeItem("token");
-  Window.location.href = "http://localhost:8011/Login/Login.html";
 }
 
 export function logout() {
   revogeToken();
+  window.location.href = "../Login/login.html";
 }
 
 export function getToken() {
@@ -26,7 +26,7 @@ export function isLogged() {
 export function getPayload() {
   const token = getToken();
   if (!token) {
-    Window.location.href = "http://localhost:8011/Login/Login.html";
+    window.location.href = "../Login/login.html";
   }
   return jose.decodeJwt(token);
 }
@@ -40,7 +40,15 @@ export function getRoles() {
 export function isExpiredToken() {
   const payload = getPayload();
   if (!payload) return true;
+  const dataExpiracao = new Date(payload.exp * 1000);
+  console.log("seu tempo de expiração é: " + dataExpiracao);
   return Date.now() >= payload.exp * 1000;
+}
+
+export function getUserName() {
+  const payload = getPayload();
+  if (!payload) return null;
+  return payload.sub;
 }
 
 // export function reloadToken() {
