@@ -41,4 +41,9 @@ public class ReservaMorador {
     @JoinColumn(name = "reserva_id", nullable = false)
     private Reserva reserva;
 
+    @NotNull(message = "A area é obrigatorio")
+    @ManyToOne
+    @JoinColumn(name = "area_id", nullable = false)
+    private Area area;
+
 }
