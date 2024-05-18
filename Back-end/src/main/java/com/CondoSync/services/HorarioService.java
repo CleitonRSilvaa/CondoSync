@@ -12,6 +12,7 @@ import com.CondoSync.repositores.HorarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class HorarioService {
         // área com id: " + horario.getArea().getId());
         // }
 
-        if (horarioRepository.findAllByAreaId(horario.getArea().getId()).stream()
+        if (horarioRepository.findAllByAreaIdOrderByHoraInicio(horario.getArea().getId()).stream()
                 .anyMatch(h -> h.getHoraInicio().equals(horario.getHoraInicio())
                         || h.getHoraFim().equals(horario.getHoraFim()))) {
             throw new IllegalArgumentException("Já existe um horário cadastrado para a área com id: "
@@ -84,12 +85,23 @@ public class HorarioService {
     }
 
     public List<HorarioDTO> findAllByAreaId(UUID id) {
-        return horarioRepository.findAllByAreaId(id).stream().map(HorarioDTO::new).collect(Collectors.toList());
+        return horarioRepository.findAllByAreaIdOrderByHoraInicio(id).stream().map(HorarioDTO::new).sorted(
+                (h1, h2) -> h1.getHoraInicio().compareTo(h2.getHoraInicio())).collect(Collectors.toList());
     }
 
-    public Object listAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listAll'");
+    public List<HorarioDTO> findAllByAreaIdAndDate(UUID id, String date) {
+        return horarioRepository.findAllByAreaIdOrderByHoraInicio(id).stream().map(HorarioDTO::new).sorted(
+                (h1, h2) -> h1.getHoraInicio().compareTo(h2.getHoraInicio())).collect(Collectors.toList());
+
+    }
+
+    public List<HorarioDTO> getAvailableHorarios(UUID areaId, Date data) {
+        return horarioRepository.findAvailableHorariosByAreaIdAndDate(areaId, data).stream().map(HorarioDTO::new)
+                .sorted((h1, h2) -> h1.getHoraInicio().compareTo(h2.getHoraInicio())).collect(Collectors.toList());
+    }
+
+    public List<HorarioDTO> listAll() {
+        return horarioRepository.findAll().stream().map(HorarioDTO::new).collect(Collectors.toList());
     }
 
 }
