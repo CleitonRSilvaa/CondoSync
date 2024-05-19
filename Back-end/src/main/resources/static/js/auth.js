@@ -12,7 +12,7 @@ export function revogeToken() {
 
 export function logout() {
   revogeToken();
-  window.location.href = "../Login/login.html";
+  window.location.href = "/Login/login.html";
 }
 
 export function getToken() {
@@ -26,7 +26,7 @@ export function isLogged() {
 export function getPayload() {
   const token = getToken();
   if (!token) {
-    window.location.href = "../Login/login.html";
+    window.location.href = "/Login/login.html";
   }
   return jose.decodeJwt(token);
 }
@@ -49,6 +49,16 @@ export function getUserName() {
   const payload = getPayload();
   if (!payload) return null;
   return payload.sub;
+}
+
+export function validateSecurity() {
+  if (!isLogged()) {
+    window.location.href = "../Login/login.html";
+  }
+  if (isExpiredToken()) {
+    alert("Sua sessão expirou!");
+    logout();
+  }
 }
 
 // export function reloadToken() {
