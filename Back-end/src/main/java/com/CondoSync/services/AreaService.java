@@ -16,7 +16,7 @@ import com.CondoSync.models.Area;
 import com.CondoSync.models.DTOs.AreaDTO;
 import com.CondoSync.models.DTOs.NewReservaDTO;
 import com.CondoSync.repositores.AreaRepository;
-import com.CondoSync.repositores.ReservaAreaRepository;
+import com.CondoSync.repositores.ReservaRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -33,7 +33,7 @@ public class AreaService {
     private MoradorService moradorService;
 
     @Autowired
-    private ReservaAreaRepository reservaAreaRepository;
+    private ReservaRepository reservaAreaRepository;
 
     // @Autowired
     // private ReservaMoradorService reservaMoradorService;
