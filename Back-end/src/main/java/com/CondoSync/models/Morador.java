@@ -70,6 +70,9 @@ public final class Morador {
     @OneToMany(mappedBy = "morador", fetch = FetchType.LAZY)
     private List<ReservaMorador> reservas;
 
+    @OneToMany(mappedBy = "morador", fetch = FetchType.LAZY)
+    private List<OcorrenciaMoradore> ocorrencias;
+
     @CreationTimestamp
     private Instant creation;
 
