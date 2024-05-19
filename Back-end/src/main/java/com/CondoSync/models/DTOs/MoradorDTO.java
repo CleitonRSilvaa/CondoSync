@@ -38,6 +38,13 @@ public class MoradorDTO {
     @Size(min = 1, max = 3, message = "O apartamento deve ter entre 2 e 5 caracteres")
     private String apartamento;
 
+    @Min(value = 1, message = "O andar deve ser maior que zero")
+    @Max(value = 200, message = "O andar deve ser menor que 20")
+    private Integer andar;
+
+    @Size(min = 1, max = 20, message = "A torre deve ter 1 caracter")
+    private String torre;
+
     private String celular;
 
     @Email(message = "O email deve ser valido")
