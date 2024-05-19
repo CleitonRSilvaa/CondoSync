@@ -98,6 +98,8 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
 
   toastContainer.appendChild(toastEl);
 
+  toastEl.scrollIntoView({ behavior: "smooth", block: "end" });
+
   const toast = new bootstrap.Toast(toastEl);
   toast.show();
 }
