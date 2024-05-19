@@ -46,6 +46,11 @@ public class MoradorService {
                 () -> new EntityNotFoundException("Morador não encontrado com o email: " + email));
     }
 
+    public MoradorDTO findProfiler(String email) {
+        var morador = findMoradorByEmail(email);
+        return new MoradorDTO(morador);
+    }
+
     public Morador save(Morador morador) {
         return moradorRepository.save(morador);
     }
