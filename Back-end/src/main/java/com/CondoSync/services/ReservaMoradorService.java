@@ -15,7 +15,7 @@ import com.CondoSync.models.StatusReserva;
 import com.CondoSync.models.User;
 import com.CondoSync.models.DTOs.NewReservaDTO;
 import com.CondoSync.models.DTOs.ReservaDTO;
-import com.CondoSync.repositores.ReservaAreaRepository;
+import com.CondoSync.repositores.ReservaRepository;
 import com.CondoSync.repositores.ReservaMoradorRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -28,7 +28,7 @@ public class ReservaMoradorService {
     private ReservaMoradorRepository reservaMoradorRepository;
 
     @Autowired
-    private ReservaAreaRepository reservaAreaRepository;
+    private ReservaRepository reservaAreaRepository;
 
     @Autowired
     private AreaService areaService;
