@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // console.log(tokem.getPayload());
 
   loadDate();
-  loadCalendar();
   getReservas();
   changeDesabilitarHorarios();
   changeDesabilitarEspacos();
@@ -47,41 +46,6 @@ function loadDate() {
   // startDate.value = date_default.toISOString().split('T')[0];
   startDate.min = date_default.toISOString().split("T")[0];
   startDate.max = date_max.toISOString().split("T")[0];
-}
-
-function loadCalendar() {
-  const calendar = new VanillaCalendar({
-    selector: "#myCalendar",
-    onSelect: (data, elem) => {
-      console.log(data, elem);
-    },
-  });
-}
-
-function feachMy(url, method, body) {
-  return fetch(url, {
-    method: method,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Success:", data);
-      return data;
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-}
-
-function cancelReserva() {
-  feachMy("http://localhost:8080/reservas/1/cancelar", "PUT", {}).then(
-    (data) => {
-      console.log(data);
-    }
-  );
 }
 
 async function getEspacos() {
@@ -153,8 +117,12 @@ async function getReservas() {
 
     if (response.ok) {
       if (data.length === 0) {
-        document.getElementById("reservas-container").innerHTML =
-          "<p>Nenhuma reserva encontrada.</p>";
+        const container = document.getElementById("reservas-container");
+        const p = document.createElement("p");
+        p.textContent = "Nenhuma reserva encontrada!";
+        p.classList.add("text-center", "text-uppercase", "fw-bold");
+        container.innerHTML = "";
+        container.appendChild(p);
         return;
       }
 
@@ -281,11 +249,11 @@ function changeClearData() {
 }
 
 function showLoading() {
-  document.getElementById("loading-reservar").style.display = "block";
+  document.getElementById("loading").style.display = "block";
 }
 
 function hideLoading() {
-  document.getElementById("loading-reservar").style.display = "none";
+  document.getElementById("loading").style.display = "none";
 }
 
 async function getHorarios(areaId) {
@@ -350,48 +318,11 @@ async function getHorarios(areaId) {
   } finally {
     hideLoading();
   }
-
-  // .then((response) => {
-  //   const status = response.status;
-  //   return response.json().then((data) => ({ data, status }));
-  // })
-  // .then((data) => {
-  //   const select = document.getElementById("horarios");
-  //   select.innerHTML = "";
-  //   const option = document.createElement("option");
-  //   if (data.status === 404) {
-  //     select.appendChild(option);
-  //     changeDesabilitarHorarios();
-  //     showToast(
-  //       "Opss!",
-  //       "Nenhum horário disponível para este espaço e data!",
-  //       "bg-warning",
-  //       7000
-  //     );
-  //     //alert("Nenhum horário disponível para este espaço");
-  //     changeDesabilitaBntReservar();
-  //     return;
-  //   }
-  //   data = data.data;
-  //   option.value = data.id;
-  //   option.text = data.horaInicio + " - " + data.horaFim;
-  //   select.appendChild(option);
-  //   changeDesabilitarHorarios(false);
-  //   changeDesabilitaBntReservar(false);
-  // })
-  // .catch((error) => {
-  //   showToast("Erro", "Erro ao buscar os horários!", "bg-danger", 5000);
-  //   console.error("Error:", error);
-  // })
-  // .finally(() => {
-  //   hideLoading();
-  // });
 }
 
 function showToast(titulo, message, clss = "bg-primary", time = 5000) {
   const toastContainer = document.getElementById("toastContainer");
 
-  // Cria um novo elemento toast
   const toastEl = document.createElement("div");
   toastEl.className = `toast align-items-center text-white border-0 ${clss}`;
   toastEl.setAttribute("role", "alert");
@@ -399,7 +330,6 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
   toastEl.setAttribute("aria-atomic", "true");
   toastEl.dataset.bsDelay = time;
 
-  // HTML interno do toast
   toastEl.innerHTML = `
       <div class="toast-header">
         <span class="text-primary"><i class="fa-solid fa-circle-info fa-lg"></i></span>
@@ -414,10 +344,8 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
       </div>
     `;
 
-  // Adiciona o toast ao contêiner
   toastContainer.appendChild(toastEl);
 
-  // Inicializa e mostra o toast
   const toast = new bootstrap.Toast(toastEl);
   toast.show();
 }
@@ -491,6 +419,7 @@ document.getElementById("btn-reservar").addEventListener("click", function () {
 });
 
 async function cancelarReserva(reservaId) {
+  validateSecurity();
   showLoading();
   try {
     const response = await fetch(
