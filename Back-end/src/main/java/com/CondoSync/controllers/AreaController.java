@@ -94,7 +94,7 @@ public class AreaController {
                 () -> new RuntimeException(
                         "Usuário não encontrado: " + jwtAuthenticationToken.getToken().getSubject()));
 
-        return new ResponseEntity<>(reservaMoradorService.reservarArea(reservaMoradorDTO),
+        return new ResponseEntity<>(reservaMoradorService.reservarArea(reservaMoradorDTO, user.getUsername()),
                 HttpStatus.CREATED);
     }
 
