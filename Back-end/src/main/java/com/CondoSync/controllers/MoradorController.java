@@ -62,4 +62,10 @@ public class MoradorController {
 
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @GetMapping("/list")
+    public ResponseEntity<?> listAll() {
+        return new ResponseEntity<>(moradorService.listAll(), HttpStatus.OK);
+    }
+
 }
