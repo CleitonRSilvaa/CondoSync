@@ -87,4 +87,21 @@ public final class Morador {
         return rolesIds;
     }
 
+    @Override
+    public String toString() {
+        return "Morador{" +
+                "id=" + id +
+                ", cpf='" + cpf + '\'' +
+                ", bloco='" + bloco + '\'' +
+                ", apartamento='" + apartamento + '\'' +
+                ", celular='" + celular + '\'' +
+                ", email='" + email + '\'' +
+                ", nome='" + nome + '\'' +
+                ", user=" + user +
+                ", reservas=" + reservas +
+                ", ocorrencias=" + ocorrencias +
+                ", creation=" + creation +
+                ", upudate=" + upudate +
+                '}';
+    }
 }
