@@ -10,6 +10,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.7/jquery.inputmask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/6.2.2/imask.min.js"></script>
+
+
+    <script type="module" src="/js/auth.js"></script>
+    <script type="module" src="script.js"></script>
     <title>CondoSync:: Cadastro Morador</title>
 
 
@@ -70,80 +77,98 @@
                                     <h1 class="text-center">Cadastro de Morador</h1>
                                     <hr>
 
-                                    <form class="row g-3">
+                                    <form id="create-morador" class="row g-3">
                                         <div class="col-md-6">
-                                            <label for="" class="form-label">Nome:</label>
-                                            <input type="text" class="form-control" id="" placeholder="Thiago">
+                                            <label for="nome" class="form-label">Nome:</label>
+                                            <input type="text" class="form-control" id="nome" placeholder="Thiago">
+                                            <div class="invalid-feedback" id="nome-error"></div>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="" class="form-label">Sobrenome:</label>
-                                            <input type="text" class="form-control" id="" placeholder="Bellico">
+                                            <label for="sobrenome" class="form-label">Sobrenome:</label>
+                                            <input type="text" class="form-control" id="sobrenome" placeholder="Bellico">
+                                            <div class="invalid-feedback" id="sobrenome-error"></div>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="" class="form-label">CPF:</label>
-                                            <input type="text" class="form-control" id="" placeholder="111.111.111-11">
+                                            <label for="data-nascimento" class="form-label">Data Nascimento:</label>
+                                            <input type="date" class="form-control" id="dataNascimento">
+                                            <div class="invalid-feedback" id="dataNascimento-error"></div>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="" class="form-label">RG:</label>
-                                            <input type="text" class="form-control" id="" placeholder="11.111.111-.">
+                                            <label for="cpf" class="form-label">CPF:</label>
+                                            <input type="text" class="form-control" id="cpf" placeholder="111.111.111-11">
+                                            <div class="invalid-feedback" id="cpf-error"></div>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="" class="form-label">E-mail:</label>
-                                            <input type="text" class="form-control" id="" placeholder="teste@teste.com">
+                                            <label for="rg" class="form-label">RG:</label>
+                                            <input type="text" class="form-control" id="rg" placeholder="11.111.111-.">
+                                            <div class="invalid-feedback" id="rg-error"></div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label for="" class="form-label">Apartamento:</label>
-                                            <input type="text" class="form-control" id="" placeholder="204">
+                                        <div class="col-md-4">
+                                            <label for="apartamento" class="form-label">Torre:</label>
+                                            <input type="text" class="form-control" id="torre" placeholder="204">
+                                            <div class="invalid-feedback" id="torre-error"></div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label for="" class="form-label">Bloco:</label>
-                                            <input type="text" class="form-control" id="" placeholder="Bloco B">
+                                        <div class="col-md-4">
+                                            <label for="bloco" class="form-label">Bloco:</label>
+                                            <input type="text" class="form-control" id="bloco" placeholder="Bloco B">
+                                            <div class="invalid-feedback" id="bloco-error"></div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label for="" class="form-label">Senha:</label>
-                                            <input type="text" class="form-control" id="" placeholder="123Abc">
+                                        <div class="col-md-4">
+                                            <label for="apartamento" class="form-label">Apartamento:</label>
+                                            <input type="text" class="form-control" id="apartamento" placeholder="204">
+                                            <div class="invalid-feedback" id="apartamento-error"></div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label for="" class="form-label">Confirmar Senha:</label>
-                                            <input type="text" class="form-control" id="" placeholder="123Abc">
+
+                                        <div class="col-md-4">
+                                            <label for="email" class="form-label">E-mail:</label>
+                                            <input type="email" class="form-control" id="email" placeholder="teste@teste.com">
+                                            <div class="invalid-feedback" id="email-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="senha" class="form-label">Senha:</label>
+                                            <input type="password" class="form-control" id="senha" placeholder="123Abc">
+                                            <div class="invalid-feedback" id="senha-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="confirmar-senha" class="form-label">Confirmar Senha:</label>
+                                            <input type="password" class="form-control" id="confirmarSenha" placeholder="123Abc">
+                                            <div class="invalid-feedback" id="confirmarSenha-error"></div>
                                         </div>
                                         <div class="col-12">
-                                            <button type="submit" class="btn btn-primary">Cadastrar Morador</button>
+                                            <button type="submit" class="btn btn-primary">Cadastrar Morador
+                                            </button>
                                         </div>
-                                    </form>
+
 
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="container-fluid">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="col-lg-12 mt-3">
-                            <div class="card border">
-                                <div class="card-body">
-                                    <!-- Conteúdo do card aqui -->
+                    <div class="container-fluid">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-lg-12 mt-3">
+                                <div class="card border">
+                                    <div class="card-body">
+                                        <!-- Conteúdo do card aqui -->
 
-                                    <h3 class="text-center">Lista de Moradores</h3>
-                                    <hr>
+                                        <h3 class="text-center">Lista de Moradores</h3>
+                                        <hr>
 
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Id</th>
-                                                    <th scope="col">Nome</th>
-                                                    <th scope="col">Apartamento</th>
-                                                    <th scope="col">Bloco</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col"></th>
-                                                    <th scope="col"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Id</th>
+                                                        <th scope="col">Nome</th>
+                                                        <th scope="col">Apartamento</th>
+                                                        <th scope="col">Bloco</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col"></th>
+                                                        <th scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <!-- <tbody>
                                                 <tr>
                                                     <th scope="row">1</th>
                                                     <td>Thiago Soares</td>
@@ -199,75 +224,76 @@
                                                     <td><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">Alterar
                                                             Dados</button></td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
+                                            </tbody> -->
+                                            </table>
+                                        </div>
+
+
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Alterar Cadastro Morador</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Alterar Cadastro Morador</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
 
-                        <form class="row g-3">
+                            <!-- <form class="row g-3">
                             <div class="col-md-6">
                                 <label for="" class="form-label">Nome:</label>
-                                <input type="text" class="form-control" id="" placeholder="Thiago">
+                                <input type="text" class="form-control" id="1">
                             </div>
                             <div class="col-md-6">
                                 <label for="" class="form-label">Sobrenome:</label>
-                                <input type="text" class="form-control" id="" placeholder="Bellico">
+                                <input type="text" class="form-control" id="2" placeholder="Bellico">
                             </div>
                             <div class="col-md-4">
                                 <label for="" class="form-label">CPF:</label>
-                                <input type="text" class="form-control" id="" placeholder="111.111.111-11">
+                                <input type="text" class="form-control" id="3" placeholder="111.111.111-11">
                             </div>
                             <div class="col-md-4">
                                 <label for="" class="form-label">RG:</label>
-                                <input type="text" class="form-control" id="" placeholder="11.111.111-.">
+                                <input type="text" class="form-control" id="4" placeholder="11.111.111-.">
                             </div>
                             <div class="col-md-4">
                                 <label for="" class="form-label">E-mail:</label>
-                                <input type="text" class="form-control" id="" placeholder="teste@teste.com">
+                                <input type="text" class="form-control" id="5" placeholder="teste@teste.com">
                             </div>
                             <div class="col-md-6">
                                 <label for="" class="form-label">Apartamento:</label>
-                                <input type="text" class="form-control" id="" placeholder="204">
+                                <input type="text" class="form-control" id="4" placeholder="204">
                             </div>
                             <div class="col-md-6">
                                 <label for="" class="form-label">Bloco:</label>
-                                <input type="text" class="form-control" id="" placeholder="Bloco B">
+                                <input type="text" class="form-control" id="5" placeholder="Bloco B">
                             </div>
                             <div class="col-md-6">
                                 <label for="" class="form-label">Senha:</label>
-                                <input type="text" class="form-control" id="" placeholder="123Abc">
+                                <input type="text" class="form-control" id="6" placeholder="123Abc">
                             </div>
                             <div class="col-md-6">
                                 <label for="" class="form-label">Confirmar Senha:</label>
-                                <input type="text" class="form-control" id="" placeholder="123Abc">
+                                <input type="text" class="form-control" id="6" placeholder="123Abc">
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Alterar</button>
                             </div>
-                        </form>
+                        </form> -->
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 
 </body>
