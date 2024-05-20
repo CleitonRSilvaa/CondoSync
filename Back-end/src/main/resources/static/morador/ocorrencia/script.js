@@ -135,7 +135,7 @@ async function getOcorrencias() {
 }
 
 function buildTable(data) {
-  const container = document.getElementById("reservas-container");
+  const container = document.getElementById("ocorrencias-container");
   const table = document.createElement("table");
   table.className = "table table-striped table-hover";
   table.innerHTML = `
