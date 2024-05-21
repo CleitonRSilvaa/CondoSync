@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.CondoSync.components.ValidateUserException;
@@ -21,6 +22,9 @@ import com.CondoSync.repositores.MoradorRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
 @Service
 public class MoradorService {
@@ -60,7 +64,16 @@ public class MoradorService {
     public Morador register(MoradorDTO moradorDTO) {
 
         moradorDTO.validateRolesIds();
-        if (!moradorDTO.isSenhaValida()) {
+
+        @NotBlank(message = "A senha é obrigatorio")
+        @Size(min = 5, max = 100, message = "A senha deve ter entre 5 e 100 caracteres")
+        String senha = moradorDTO.getSenha();
+
+        @NotBlank(message = "A senha de confirmação é obrigatorio")
+        @Size(min = 5, max = 100, message = "A senha de confirmação deve ter entre 5 e 100 caracteres")
+        String senhaConfirmacao = moradorDTO.getConfirmacaoSenha();
+
+        if (!senha.equals(senhaConfirmacao)) {
             throw new IllegalArgumentException("As senhas não conferem");
         }
 
@@ -77,7 +90,6 @@ public class MoradorService {
             throw new ValidateUserException("Um registro com os mesmos dados já existe.", dHashMap);
         }
 
-        Morador morador = new Morador();
         User user = new User();
         Set<Role> roles = new HashSet<Role>();
 
@@ -88,18 +100,17 @@ public class MoradorService {
         user.setFullName(moradorDTO.getNomeCompleto());
         user.setUserName(moradorDTO.getEmail());
         user.setHashPassword(userService.encodePassword(moradorDTO.getSenha()));
+
         user.setStatus(true);
         user.setInativa(false);
         user.setRoles(roles);
-        userService.createUser(user);
 
-        morador.setCpf(moradorDTO.getCpf());
-        morador.setBloco(moradorDTO.getBloco());
-        morador.setApartamento(moradorDTO.getApartamento());
-        morador.setCelular(moradorDTO.getCelular());
-        morador.setEmail(moradorDTO.getEmail());
-        morador.setNome(moradorDTO.getNomeCompleto());
+        Morador morador = new Morador(moradorDTO);
+        morador.setAtivo(true);
         morador.setUser(user);
+
+        // userService.createUser(user);
+
         return moradorRepository.save(morador);
     }
 
@@ -117,6 +128,71 @@ public class MoradorService {
             moradores.add(moradorDTO);
         }
         return moradores;
+    }
+
+    @Transactional
+    public MoradorDTO update(UUID moradorId, MoradorDTO moradorDTO) {
+        Morador morador = findById(moradorId);
+
+        if (findByCpf(moradorDTO.getCpf()).isPresent() && !moradorDTO.getCpf().equals(morador.getCpf())) {
+            throw new DataIntegrityViolationException("CPF já cadastrado");
+        }
+
+        if (findByEmail(moradorDTO.getEmail()).isPresent() && !moradorDTO.getEmail().equals(morador.getEmail())) {
+            throw new DataIntegrityViolationException("Email já cadastrado");
+        }
+
+        if (!moradorDTO.getSenha().isEmpty() && !moradorDTO.getConfirmacaoSenha().isEmpty()) {
+            if (!moradorDTO.getSenha().equals(moradorDTO.getConfirmacaoSenha())) {
+                throw new IllegalArgumentException("As senhas não conferem");
+            }
+            if (moradorDTO.getSenha().length() < 5 || moradorDTO.getSenha().length() > 100) {
+                throw new IllegalArgumentException("A senha deve ter entre 5 e 100 caracteres");
+            }
+            if (moradorDTO.getConfirmacaoSenha().length() < 5 || moradorDTO.getConfirmacaoSenha().length() > 100) {
+                throw new IllegalArgumentException("A senha de confirmação deve ter entre 5 e 100 caracteres");
+            }
+            User user = morador.getUser();
+            user.setHashPassword(userService.encodePassword(moradorDTO.getSenha()));
+            var pass = userService.matchesPassword(moradorDTO.getSenha(), user.getHashPassword());
+            if (!pass) {
+                throw new IllegalArgumentException("Senha inválida");
+            }
+            userService.updateUser(user);
+
+        }
+
+        morador.setCpf(moradorDTO.getCpf());
+        morador.setBloco(moradorDTO.getBloco());
+        morador.setApartamento(moradorDTO.getApartamento());
+        morador.setCelular(moradorDTO.getCelular());
+        morador.setEmail(moradorDTO.getEmail());
+        morador.setNome(moradorDTO.getNomeCompleto());
+        morador.setDataNascimento(moradorDTO.getDataNascimento());
+        morador.setTorre(moradorDTO.getTorre());
+        morador.setRg(moradorDTO.getRg());
+
+        return new MoradorDTO(moradorRepository.save(morador));
+    }
+
+    @Transactional
+    public ResponseEntity<?> delete(UUID moradorId) {
+        Morador morador = findById(moradorId);
+        moradorRepository.delete(morador);
+        return ResponseEntity.ok().build();
+    }
+
+    @Transactional
+    public ResponseEntity<?> changeStatus(UUID moradorId) {
+        Morador morador = findById(moradorId);
+        User user = morador.getUser();
+        System.out.println(user);
+
+        user.setStatus(!user.isStatus());
+        morador.setAtivo(!morador.isAtivo());
+        moradorRepository.save(morador);
+        userService.updateUser(user);
+        return ResponseEntity.ok().build();
     }
 
 }
