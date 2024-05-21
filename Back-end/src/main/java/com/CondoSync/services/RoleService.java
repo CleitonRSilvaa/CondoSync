@@ -35,11 +35,6 @@ public class RoleService {
 
     public Role createRole(Role role) {
 
-        if (this.existsByNome(role.getNome())) {
-
-            throw new EntityNotFoundException("Role " + role.getNome() + " already exists");
-        }
-
         return roleRepository.save(role);
     }
 
