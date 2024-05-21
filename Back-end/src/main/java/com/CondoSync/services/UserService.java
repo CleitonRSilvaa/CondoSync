@@ -72,14 +72,33 @@ public class UserService implements UserDetailsService {
     // }
     // }
 
+    @Transactional
     public User updateUser(User user) {
-        return usersRepository.save(user);
+        try {
+            var userSave = usersRepository.save(user);
+            log.info("User updated successfully");
+            return userSave;
+        } catch (PersistenceException pe) {
+            log.error("Failed to update user: {}", pe.getMessage());
+            throw pe;
+        }
+
     }
 
+    @Transactional
     public User patchUser(User user) {
-        return usersRepository.save(user);
+        try {
+            var userSave = usersRepository.save(user);
+            log.info("User updated successfully");
+            return userSave;
+        } catch (PersistenceException pe) {
+            log.error("Failed to update user: {}", pe.getMessage());
+            throw pe;
+        }
+
     }
 
+    @Transactional
     public void deleteUser(User user) {
         usersRepository.delete(user);
     }
@@ -94,6 +113,10 @@ public class UserService implements UserDetailsService {
 
     public String encodePassword(String senha) {
         return passwordEncoder.encode(senha);
+    }
+
+    public boolean matchesPassword(String senha, String hashSenha) {
+        return passwordEncoder.matches(senha, hashSenha);
     }
 
 }
