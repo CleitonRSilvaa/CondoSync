@@ -83,12 +83,42 @@ public class ReservaMoradorService {
         return reservas;
     }
 
-    public List<Reserva> listAll(User user) {
+    public List<ReservaDTO> listAll(User user) {
 
         var morador = moradorService.findMoradorByEmail(user.getUsername());
 
         var reservasMoradores = reservaMoradorRepository.findByMorador_Id(morador.getId());
-        return reservasMoradores.stream().map(ReservaMorador::getReserva).toList();
+
+        List<ReservaDTO> reservas = new ArrayList<>();
+
+        for (ReservaMorador reservaMorador : reservasMoradores) {
+
+            var r = new ReservaDTO();
+            r.setId(reservaMorador.getId());
+            r.setArea(reservaMorador.getArea().getName());
+            r.setMorador(reservaMorador.getMorador().getNome());
+            r.setData(reservaMorador.getReserva().getData());
+            r.setHorario(
+                    reservaMorador.getReserva().getHoraInicio() + " - " + reservaMorador.getReserva().getHoraFim());
+            r.setStatus(reservaMorador.getReserva().getStatusReserva().getStatus());
+
+            reservas.add(r);
+        }
+
+        reservas.sort((r1, r2) -> {
+            // Primeiro, compara o status
+            if (r1.getStatus().equals(StatusReserva.PENDENTE.getStatus())
+                    && !r2.getStatus().equals(StatusReserva.PENDENTE.getStatus())) {
+                return -1;
+            } else if (!r1.getStatus().equals(StatusReserva.PENDENTE.getStatus())
+                    && r2.getStatus().equals(StatusReserva.PENDENTE.getStatus())) {
+                return 1;
+            } else {
+                return r1.getData().compareTo(r2.getData());
+            }
+        });
+
+        return reservas;
 
     }
 
@@ -112,7 +142,7 @@ public class ReservaMoradorService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<?> reservarArea(NewReservaDTO reservaMoradorDTO) {
+    public ResponseEntity<?> reservarArea(NewReservaDTO reservaMoradorDTO, String email) {
 
         var horario = horarioService.findById(reservaMoradorDTO.getHorarioId());
 
@@ -122,7 +152,7 @@ public class ReservaMoradorService {
                     "Já existe uma reserva cadastrada para a área com o mesmo horário!");
         }
 
-        var morador = moradorService.findMoradorByEmail("nome@example.com");
+        var morador = moradorService.findMoradorByEmail(email);
 
         var area = areaService.findById(reservaMoradorDTO.getAreaId());
 
