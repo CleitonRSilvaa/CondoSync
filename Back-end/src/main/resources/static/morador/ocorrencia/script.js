@@ -81,7 +81,24 @@ async function saveOcorrencia() {
     }
 
     if (response.status === 400 || response.status === 404) {
-      showToast("Atenção", data.message, "bg-warning", 7000);
+      function juntarTextos(dataObject) {
+        let mensagens = "";
+        for (const key in dataObject) {
+          if (dataObject.hasOwnProperty(key)) {
+            mensagens += dataObject[key] + "<br>";
+          }
+        }
+        return mensagens.trim();
+      }
+
+      const length = juntarTextos(data.data).length > 0;
+
+      showToast(
+        data.error,
+        length ? juntarTextos(data.data) : data.message,
+        "bg-warning",
+        5000
+      );
       return;
     }
     if (response.status >= 500) {
@@ -89,7 +106,6 @@ async function saveOcorrencia() {
       return;
     }
   } catch (error) {
-    console.error("Error:", error);
     showToast("Erro", "Erro ao registrar a ocorrência!", "bg-danger", 5000);
   } finally {
     hideLoading();
@@ -121,14 +137,12 @@ async function getOcorrencias() {
         container.appendChild(p);
         return;
       }
-      console.log(data);
       buildTable(data);
     } else {
       showToast("Erro", "Erro ao buscar as ocorrencias!", "bg-danger", 5000);
     }
   } catch (error) {
     showToast("Erro", "Erro ao buscar as ocorrencias!", "bg-danger", 5000);
-    console.error("Error:", error);
   } finally {
     hideLoading();
   }
@@ -215,12 +229,30 @@ async function cancelarOcorencia(reservaId) {
     }
     if (response.status === 404 || response.status === 400) {
       const data = await response.json();
-      showToast("Atenção", data.message, "bg-warning", 7000);
+
+      function juntarTextos(dataObject) {
+        let mensagens = "";
+        for (const key in dataObject) {
+          if (dataObject.hasOwnProperty(key)) {
+            mensagens += dataObject[key] + "<br>";
+          }
+        }
+        return mensagens.trim();
+      }
+
+      const length = juntarTextos(data.data).length > 0;
+
+      showToast(
+        data.error,
+        length ? juntarTextos(data.data) : data.message,
+        "bg-warning",
+        5000
+      );
+      return;
     } else {
       showToast("Erro", "Erro ao cancelar a ocorrência!", "bg-danger", 5000);
     }
   } catch (error) {
-    console.error("Error:", error);
     showToast("Erro", "Erro ao cancelar a ocorrência!", "bg-danger", 5000);
   } finally {
     hideLoading();
@@ -228,7 +260,6 @@ async function cancelarOcorencia(reservaId) {
 }
 
 function exibirDetalhes(ocorrencia) {
-  console.log(ocorrencia);
   const modalAreaText = document.getElementById("texte-ocorencia-descricao");
   const modalTitle = document.getElementById("texte-ocorencia-title");
   const modalAreaTextResolution = document.getElementById(
