@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +24,7 @@ public class AreaDTO {
     private String name;
 
     @NotBlank(message = "A descrição é obrigatoria")
-    @Size(min = 5, max = 100, message = "A descrição deve ter entre 5 e 100 caracteres")
+    @Size(min = 5, max = 200, message = "A descrição deve ter entre 5 e 100 caracteres")
     private String description;
 
     @NotNull(message = "O preço é obrigatorio")
