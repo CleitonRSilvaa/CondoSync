@@ -1,4 +1,15 @@
-import { saveLogin } from "./auth.js";
+import * as token from "/js/auth.js";
+
+if (token.isLogged()) {
+  if (token.getScope().includes("ADMIN")) {
+    window.location.href = "/admin/index.html";
+  }
+  if (token.getScope().includes("MORADOR")) {
+    window.location.href = "/morador/index.html";
+  }
+}
+
+const baseUrl = "http://192.168.0.115:8010";
 
 (function ($) {
   "use strict";
@@ -53,7 +64,7 @@ async function postLogin(email, senha) {
     password: senha,
   };
   try {
-    const response = await fetch("http://localhost:8010/api/v1/login", {
+    const response = await fetch(`${baseUrl}/api/v1/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -64,9 +75,7 @@ async function postLogin(email, senha) {
 
     if (response.ok) {
       const data = await response.json();
-      localStorage.setItem("token", data.token);
-      saveLogin(data.token);
-      // window.location.href = "http://localhost:8011/Perfil/perfil.html";
+      token.saveLogin(data.token);
     }
 
     if (response.status === 401) {
@@ -105,6 +114,7 @@ async function postLogin(email, senha) {
       "afterbegin",
       criarMensagemDeErro("Erro ao fazer login.", "Tente novamente mais tarde!")
     );
+    console.error(error);
     return;
   } finally {
     const bnt = document.getElementById("btn-login");
