@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.CondoSync.models.Horario;
+import com.CondoSync.models.StatusReserva;
 
 public interface HorarioRepository extends JpaRepository<Horario, Integer> {
 
@@ -20,5 +21,19 @@ public interface HorarioRepository extends JpaRepository<Horario, Integer> {
     @Query("SELECT h FROM Horario h WHERE h.area.id = :areaId AND NOT EXISTS " +
             "(SELECT r FROM Reserva r WHERE r.data = :data AND r.horaInicio = h.horaInicio AND r.horaFim = h.horaFim)")
     List<Horario> findAvailableHorariosByAreaIdAndDate(@Param("areaId") UUID areaId, @Param("data") Date data);
+
+    @Query("SELECT h FROM Horario h WHERE h.area.id = :areaId AND NOT EXISTS " +
+            "(SELECT r FROM Reserva r WHERE r.data = :data AND r.horaInicio = h.horaInicio AND r.horaFim = h.horaFim and r.statusReserva != :statusReserva)")
+    List<Horario> findAvailableOrCanceledHorariosByAreaIdAndDate(@Param("areaId") UUID areaId,
+            @Param("data") Date data,
+            @Param("statusReserva") StatusReserva statusReserva);
+
+    // @Query("SELECT h FROM Horario h WHERE h.area.id = :areaId AND (NOT EXISTS ("
+    // +
+    // "SELECT r FROM Reserva r WHERE r.data = :data AND r.horaInicio = h.horaInicio
+    // AND r.horaFim = h.horaFim AND r.statusReserva != 'CANCELADA'))")
+    // List<Horario> findAvailableOrCanceledHorariosByAreaIdAndDate(@Param("areaId")
+    // UUID areaId,
+    // @Param("data") Date data);
 
 }
