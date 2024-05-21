@@ -16,16 +16,11 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css"
     />
-
+    <link rel="stylesheet" href="/css/loading.css" />
+    <script type="module" src="/js/auth.js"></script>
     <title>CondoSync:: Mural de Avisos</title>
 
     <style>
-      @media (max-width: 800px) {
-        .imgLogo {
-          display: none;
-        }
-      }
-
       .custom-carousel {
         width: 75%;
         /* Ajuste conforme necessário */
@@ -38,6 +33,21 @@
   </head>
 
   <body style="background-color: rgb(230, 219, 219)">
+    <div id="loading" class="loading-overlay" style="display: none">
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="spinner-border text-light" role="status">
+          <span class="sr-only"></span>
+        </div>
+      </div>
+    </div>
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+      <div
+        id="toastContainer"
+        class="toast-container position-absolute top-0 end-0 p-3"
+        style="z-index: 11"
+      ></div>
+    </div>
+
     <div class="container-fluid">
       <div class="row flex-nowrap">
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
@@ -50,15 +60,17 @@
               id="menu"
             >
               <li class="nav-item">
-                <a href="#" class="nav-link align-middle px-0">
+                <a
+                  href="/morador/perfil/index.html"
+                  class="nav-link align-middle px-0"
+                >
                   <i class="fs-4 bi-house"></i>
                   <span class="ms-1 d-none d-sm-inline">Meu apartamento</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
-                  data-bs-toggle="collapse"
+                  href="/morador/mural/index.html"
                   class="nav-link px-0 align-middle"
                 >
                   <i class="fs-4 bi-info-circle"></i>
@@ -66,15 +78,17 @@
                 </a>
               </li>
               <li>
-                <a href="#" class="nav-link px-0 align-middle">
+                <a
+                  href="/morador/financeiro/index.html"
+                  class="nav-link px-0 align-middle"
+                >
                   <i class="fs-4 bi-cash-stack"></i>
                   <span class="ms-1 d-none d-sm-inline">Financeiro</span></a
                 >
               </li>
               <li>
                 <a
-                  href="#"
-                  data-bs-toggle="collapse"
+                  href="/morador/Ocorrencia/index.html"
                   class="nav-link px-0 align-middle"
                 >
                   <i class="fs-4 bi-tools"></i>
@@ -83,8 +97,7 @@
               </li>
               <li>
                 <a
-                  href="#"
-                  data-bs-toggle="collapse"
+                  href="/morador/espaco-agendamento/index.html"
                   class="nav-link px-0 align-middle"
                 >
                   <i class="fs-4 bi-calendar-event"></i>
