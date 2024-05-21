@@ -29,24 +29,14 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws ValidateUserException {
-
         try {
-
-            if (!roleService.existsByNome("ADMIN")) {
-                roleService.createRole(new Role("ADMIN"));
-                log.info("Role ADMIN created");
-            }
-            if (!roleService.existsByNome("USER")) {
-                roleService.createRole(new Role("USER"));
-                log.info("Role USER created");
-            }
-            if (!roleService.existsByNome("GUEST")) {
-                roleService.createRole(new Role("GUEST"));
-                log.info("Role GUEST created");
-            }
-            if (!roleService.existsByNome("MORADOR")) {
-                roleService.createRole(new Role("MORADOR"));
-                log.info("Role MORADOR created");
+            String[] roles = { "ADMIN", "USER", "GUEST", "MORADOR" };
+            for (String roleName : roles) {
+                if (!roleService.existsByNome(roleName)) {
+                    Role newRole = new Role(roleName);
+                    roleService.createRole(newRole);
+                    log.info("Role {} created", roleName);
+                }
             }
 
             if (!userService.existsByUserName("admin")) {
@@ -56,15 +46,14 @@ public class DataInitializer implements CommandLineRunner {
                 user.setHashPassword(passwordEncoder.encode("admin123"));
                 user.setStatus(true);
                 user.setInativa(false);
-                user.setRoles(Set.of(roleService.getRoleByNome("ADMIN")));
+                Role adminRole = roleService.getRoleByNome("ADMIN");
+                user.setRoles(Set.of(adminRole));
                 userService.createUser(user);
                 log.info("Admin user created");
             }
-
-        } catch (ValidateUserException e) {
-            log.info("Error: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("Error initializing data: {}", e.getMessage(), e);
         }
-
     }
 
 }
