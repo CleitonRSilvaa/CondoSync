@@ -48,11 +48,10 @@ public class ReservaController {
         // HttpStatus.UNAUTHORIZED);
         // }
 
-        return new ResponseEntity<>(reservaMoradorDto, HttpStatus.CREATED);
+        // return new ResponseEntity<>(reservaMoradorDto, HttpStatus.CREATED);
 
-        // return new
-        // ResponseEntity<>(reservaMoradorService.reservarArea(reservaMoradorDto),
-        // HttpStatus.CREATED);
+        return new ResponseEntity<>(reservaMoradorService.reservarArea(reservaMoradorDto, user.getUsername()),
+                HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_MORADOR')")
@@ -63,9 +62,11 @@ public class ReservaController {
                 () -> new UsernameNotFoundException(
                         "Usuário não encontrado: " + jwtAuthenticationToken.getToken().getSubject()));
 
-        if (!userName.equals(user.getUsername()) && !user.getAuthorities().toString().toUpperCase().contains("ADMIN")) {
-            return new ResponseEntity<>("Usuário não autorizado", HttpStatus.UNAUTHORIZED);
-        }
+        // if (!userName.equals(user.getUsername()) &&
+        // !user.getAuthorities().toString().toUpperCase().contains("ADMIN")) {
+        // return new ResponseEntity<>("Usuário não autorizado",
+        // HttpStatus.UNAUTHORIZED);
+        // }
 
         if (user.getAuthorities().toString().toUpperCase().contains("ADMIN")) {
             return new ResponseEntity<>(reservaMoradorService.listAll(), HttpStatus.OK);
@@ -79,13 +80,15 @@ public class ReservaController {
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_MORADOR')")
     @PostMapping("/cancel/{id}")
     public ResponseEntity<?> cancel(JwtAuthenticationToken jwtAuthenticationToken, @PathVariable Integer id) {
+
         User user = userService.findByUserName(jwtAuthenticationToken.getToken().getSubject()).orElseThrow(
-                () -> new RuntimeException(
+                () -> new UsernameNotFoundException(
                         "Usuário não encontrado: " + jwtAuthenticationToken.getToken().getSubject()));
 
-        if (!user.getAuthorities().toString().toUpperCase().contains("ADMIN")) {
-            return new ResponseEntity<>("Usuário não autorizado", HttpStatus.UNAUTHORIZED);
-        }
+        // if (!user.getAuthorities().toString().toUpperCase().contains("ADMIN")) {
+        // return new ResponseEntity<>("Usuário não autorizado",
+        // HttpStatus.UNAUTHORIZED);
+        // }
 
         return reservaMoradorService.cancelarReserva(id);
     }
