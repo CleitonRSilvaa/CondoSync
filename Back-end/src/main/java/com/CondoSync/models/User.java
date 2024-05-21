@@ -28,6 +28,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id", updatable = false, nullable = false)
     private UUID id;
 
     @NonNull
@@ -45,8 +46,7 @@ public class User implements UserDetails {
 
     private LocalDateTime datahashSenhaUpdate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    // @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
