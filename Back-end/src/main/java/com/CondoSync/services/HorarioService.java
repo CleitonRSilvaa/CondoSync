@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.CondoSync.models.Area;
 import com.CondoSync.models.Horario;
+import com.CondoSync.models.StatusReserva;
 import com.CondoSync.models.DTOs.HorarioDTO;
 import com.CondoSync.repositores.AreaRepository;
 import com.CondoSync.repositores.HorarioRepository;
@@ -96,7 +97,8 @@ public class HorarioService {
     }
 
     public List<HorarioDTO> getAvailableHorarios(UUID areaId, Date data) {
-        return horarioRepository.findAvailableHorariosByAreaIdAndDate(areaId, data).stream().map(HorarioDTO::new)
+        return horarioRepository.findAvailableOrCanceledHorariosByAreaIdAndDate(areaId, data, StatusReserva.CANCELADA)
+                .stream().map(HorarioDTO::new)
                 .sorted((h1, h2) -> h1.getHoraInicio().compareTo(h2.getHoraInicio())).collect(Collectors.toList());
     }
 
