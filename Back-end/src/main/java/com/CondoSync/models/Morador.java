@@ -51,7 +51,7 @@ public final class Morador {
     @Column(length = 11, nullable = false)
     private String apartamento;
 
-    @Column(length = 11, nullable = false)
+    @Column(length = 11, nullable = true)
     private String celular;
 
     @Email
