@@ -20,6 +20,7 @@ import com.CondoSync.models.DTOs.MoradorDTO;
 import com.CondoSync.repositores.MoradorRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class MoradorService {
@@ -55,6 +56,7 @@ public class MoradorService {
         return moradorRepository.save(morador);
     }
 
+    @Transactional
     public Morador register(MoradorDTO moradorDTO) {
 
         moradorDTO.validateRolesIds();
