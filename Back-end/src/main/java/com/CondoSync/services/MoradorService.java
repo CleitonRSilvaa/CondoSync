@@ -135,11 +135,11 @@ public class MoradorService {
         Morador morador = findById(moradorId);
 
         if (findByCpf(moradorDTO.getCpf()).isPresent() && !moradorDTO.getCpf().equals(morador.getCpf())) {
-            throw new DataIntegrityViolationException("CPF já cadastrado");
+            throw new IllegalArgumentException("CPF já cadastrado por outro morador");
         }
 
         if (findByEmail(moradorDTO.getEmail()).isPresent() && !moradorDTO.getEmail().equals(morador.getEmail())) {
-            throw new DataIntegrityViolationException("Email já cadastrado");
+            throw new IllegalArgumentException("Email já cadastrado por outro morador");
         }
 
         if (!moradorDTO.getSenha().isEmpty() && !moradorDTO.getConfirmacaoSenha().isEmpty()) {
