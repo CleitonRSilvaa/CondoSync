@@ -7,10 +7,12 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import com.CondoSync.models.Morador;
 import com.CondoSync.models.User;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,8 +21,15 @@ public class TokenService {
 	@Autowired
 	private JwtEncoder jwtEncoder;
 
+	@Autowired
+	MoradorService moradorService;
+
 	public String generateToken(User user, Duration duration) {
 		Instant now = Instant.now();
+
+		UUID id = moradorService.findByEmail(user.getUsername())
+				.map(Morador::getId)
+				.orElse(user.getId());
 
 		String roles = user.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
@@ -31,6 +40,7 @@ public class TokenService {
 				.issuedAt(now)
 				.expiresAt(now.plus(duration))
 				.subject(user.getUsername())
+				.claim("id", id)
 				.claim("name", user.getFullName())
 				.claim("scope", roles)
 				.build();
@@ -52,5 +62,9 @@ public class TokenService {
 				.build();
 
 		return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+	}
+
+	class IdHolder {
+		UUID id;
 	}
 }
