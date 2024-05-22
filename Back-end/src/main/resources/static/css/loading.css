@@ -24,3 +24,10 @@
     display: none;
   }
 }
+
+#toastContainer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1052; /* Maior que o z-index do loading-overlay */
+}

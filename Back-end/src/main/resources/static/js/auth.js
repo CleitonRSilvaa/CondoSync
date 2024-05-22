@@ -2,14 +2,14 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.3.0/index.b
 
 export function saveLogin(jwt) {
   const token = jose.decodeJwt(jwt);
-  localStorage.setItem("token", jwt);
+  sessionStorage.setItem("token", jwt);
 
   console.log("Token salvo com sucesso!");
   if (token) {
     console.log("Token decodificado: ", token);
     if (token.scope.includes("ADMIN")) {
       console.log("Usuário é administrador!");
-      window.location.href = "/admin/gerenciar-moradores.html";
+      window.location.href = "/admin/index.html";
     }
     if (token.scope.includes("MORADOR")) {
       console.log("Usuário é morador!");
@@ -19,7 +19,7 @@ export function saveLogin(jwt) {
 }
 
 export function revogeToken() {
-  localStorage.removeItem("token");
+  sessionStorage.removeItem("token");
 }
 
 export function logout() {
@@ -28,11 +28,11 @@ export function logout() {
 }
 
 export function getToken() {
-  return localStorage.getItem("token");
+  return sessionStorage.getItem("token");
 }
 
 export function isLogged() {
-  return !!localStorage.getItem("token") && !isExpiredToken();
+  return !!sessionStorage.getItem("token") && !isExpiredToken();
 }
 
 export function getPayload() {
