@@ -113,12 +113,32 @@ public class OcorrenciaMoradorService {
 
     }
 
-
     public ResponseEntity<?> updateOcorrenciaMorador(Integer id, OcorrenciaMorador ocorrenciaMorador) {
         OcorrenciaMorador ocorrenciaMorador2 = ocorrenciaMoradorRepository.findById(id).get();
         ocorrenciaMorador2.setMorador(ocorrenciaMorador.getMorador());
         ocorrenciaMorador2.setOcorrencia(ocorrenciaMorador.getOcorrencia());
         return ResponseEntity.ok().body(ocorrenciaMoradorRepository.save(ocorrenciaMorador2));
+    }
+
+    public ResponseEntity<?> getAllOcorrenciaMorador() {
+        var resultList = ocorrenciaMoradorRepository.findAll().stream()
+                .map(OcorrenciaMorador::getOcorrencia)
+                .map(OcorenciaDTO::new)
+                .sorted(
+                        (o1, o2) -> {
+                            if (o1.getStatus().equals(StatusOcorrencia.ABERTO.getStatus())
+                                    && !o2.getStatus().equals(StatusOcorrencia.ABERTO.getStatus())) {
+                                return -1;
+                            } else if (!o1.getStatus().equals(StatusOcorrencia.ABERTO.getStatus())
+                                    && o2.getStatus().equals(StatusOcorrencia.ABERTO.getStatus())) {
+                                return 1;
+                            } else {
+                                return o1.getCreation().compareTo(o2.getCreation());
+                            }
+                        })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(resultList);
     }
 
 }
