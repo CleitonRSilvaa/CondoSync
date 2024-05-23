@@ -9,7 +9,7 @@ if (token.isLogged()) {
   }
 }
 
-const baseUrl = "http://192.168.0.115:8010";
+const baseUrl = "http://localhost:8010";
 
 (function ($) {
   "use strict";
