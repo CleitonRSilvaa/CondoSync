@@ -57,7 +57,17 @@ public class OcorrenciaController {
                 () -> new UsernameNotFoundException(
                         "Usuário não encontrado: " + jwtAuthenticationToken.getToken().getSubject()));
 
-        return new ResponseEntity<>(ocorrenciaMoradorService.cancelOcorrenciaMorador(id, user.getUsername()), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(ocorrenciaMoradorService.cancelOcorrenciaMorador(id, user.getUsername()),
+                HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<?> listAll(JwtAuthenticationToken jwtAuthenticationToken) {
+        User user = userService.findByUserName(jwtAuthenticationToken.getToken().getSubject()).orElseThrow(
+                () -> new UsernameNotFoundException(
+                        "Usuário não encontrado: " + jwtAuthenticationToken.getToken().getSubject()));
+
+        return new ResponseEntity<>(ocorrenciaMoradorService.getAllOcorrenciaMorador(), HttpStatus.OK);
     }
 
 }
