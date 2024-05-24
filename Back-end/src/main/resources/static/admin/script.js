@@ -2,7 +2,7 @@ import zod from "https://cdn.jsdelivr.net/npm/zod@3.23.8/+esm";
 
 import * as token from "/js/auth.js";
 
-const baseUrl = "http://192.168.0.115:8010";
+const baseUrl = "http://localhost:8010";
 
 document.addEventListener("DOMContentLoaded", function () {
   IMask(document.getElementById("cpf"), {
