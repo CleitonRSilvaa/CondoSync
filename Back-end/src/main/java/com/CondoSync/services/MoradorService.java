@@ -1,15 +1,14 @@
 package com.CondoSync.services;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
 
 @Service
 public class MoradorService {
@@ -121,13 +119,12 @@ public class MoradorService {
     }
 
     public List<MoradorDTO> listAll() {
-        List<MoradorDTO> moradores = new ArrayList<>();
 
-        for (var morador : moradorRepository.findAll()) {
-            MoradorDTO moradorDTO = new MoradorDTO(morador);
-            moradores.add(moradorDTO);
-        }
-        return moradores;
+        return moradorRepository.findAll().stream()
+                .map(morador -> new MoradorDTO(morador))
+                .sorted((m1, m2) -> m1.getNomeCompleto().compareTo(m2.getNomeCompleto()))
+                .collect(Collectors.toList());
+
     }
 
     @Transactional
