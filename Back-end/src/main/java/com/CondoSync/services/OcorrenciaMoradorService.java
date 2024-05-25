@@ -1,7 +1,7 @@
 package com.CondoSync.services;
 
 import java.util.stream.Collectors;
-
+import java.util.Comparator;
 import java.util.List;
 
 import com.CondoSync.repositores.OcorrenciaRepository;
@@ -15,6 +15,7 @@ import com.CondoSync.models.Ocorrencia;
 import com.CondoSync.models.OcorrenciaMorador;
 import com.CondoSync.models.StatusOcorrencia;
 import com.CondoSync.models.DTOs.OcorenciaDTO;
+import com.CondoSync.models.DTOs.OcorrenciaResolucaoDTO;
 import com.CondoSync.repositores.OcorrenciaMoradorRepository;
 
 @Service
@@ -114,31 +115,45 @@ public class OcorrenciaMoradorService {
     }
 
     public ResponseEntity<?> updateOcorrenciaMorador(Integer id, OcorrenciaMorador ocorrenciaMorador) {
-        OcorrenciaMorador ocorrenciaMorador2 = ocorrenciaMoradorRepository.findById(id).get();
+        OcorrenciaMorador ocorrenciaMorador2 = ocorrenciaMoradorRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Ocorrencia não encontrada!"));
         ocorrenciaMorador2.setMorador(ocorrenciaMorador.getMorador());
         ocorrenciaMorador2.setOcorrencia(ocorrenciaMorador.getOcorrencia());
         return ResponseEntity.ok().body(ocorrenciaMoradorRepository.save(ocorrenciaMorador2));
     }
 
-    public ResponseEntity<?> getAllOcorrenciaMorador() {
+    public List<?> getAllOcorrenciaMorador() {
         var resultList = ocorrenciaMoradorRepository.findAll().stream()
-                .map(OcorrenciaMorador::getOcorrencia)
                 .map(OcorenciaDTO::new)
-                .sorted(
-                        (o1, o2) -> {
-                            if (o1.getStatus().equals(StatusOcorrencia.ABERTO.getStatus())
-                                    && !o2.getStatus().equals(StatusOcorrencia.ABERTO.getStatus())) {
-                                return -1;
-                            } else if (!o1.getStatus().equals(StatusOcorrencia.ABERTO.getStatus())
-                                    && o2.getStatus().equals(StatusOcorrencia.ABERTO.getStatus())) {
-                                return 1;
-                            } else {
-                                return o1.getCreation().compareTo(o2.getCreation());
-                            }
-                        })
+                .sorted(Comparator
+                        .comparing((OcorenciaDTO o) -> o.getStatus().equals(StatusOcorrencia.ABERTO.getStatus()) ? 0
+                                : o.getStatus().equals(StatusOcorrencia.EM_ANDAMENTO.getStatus()) ? 1 : 2)
+                        .thenComparing(OcorenciaDTO::getCreation))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(resultList);
+        return resultList;
+    }
+
+    public ResponseEntity<?> updateOcorrenciaMoradorResolucao(Integer id, OcorrenciaResolucaoDTO ocorenciaDTO) {
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Ocorrencia não encontrada!"));
+
+        if (!ocorrencia.getStatus().equals(StatusOcorrencia.ABERTO)
+                && ocorenciaDTO.getStatus().equals(StatusOcorrencia.ABERTO)) {
+            throw new IllegalArgumentException("Ocorrencia não pode voltar para aberto");
+        }
+
+        if (ocorrencia.getStatus().equals(StatusOcorrencia.ABERTO)
+                && ocorenciaDTO.getStatus().equals(StatusOcorrencia.ABERTO)) {
+            ocorrencia.setStatus(StatusOcorrencia.EM_ANDAMENTO);
+
+        } else {
+            ocorrencia.setStatus(ocorenciaDTO.getStatus());
+
+        }
+
+        ocorrencia.setResolution(ocorenciaDTO.getResolution());
+        return ResponseEntity.ok().body(ocorrenciaRepository.save(ocorrencia));
     }
 
 }
