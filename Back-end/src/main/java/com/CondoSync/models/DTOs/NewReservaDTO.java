@@ -1,5 +1,6 @@
 package com.CondoSync.models.DTOs;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -35,6 +36,6 @@ public class NewReservaDTO {
     @NotNull(message = "A data é obrigatorio")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Schema(type = "string", pattern = "yyyy-MM-dd", example = "2021-12-31", description = "Data da reserva no formato yyyy-MM-dd", required = true)
-    private Date data;
+    private LocalDate data;
 
 }
