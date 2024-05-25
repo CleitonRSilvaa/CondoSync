@@ -3,6 +3,7 @@ package com.CondoSync.models.DTOs;
 import java.util.Date;
 
 import com.CondoSync.models.Ocorrencia;
+import com.CondoSync.models.OcorrenciaMorador;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
@@ -28,12 +29,13 @@ public class OcorenciaDTO {
 
   private String status;
 
-
   @Max(value = 1000, message = "A resolução deve ter no maximo 1000 caracteres")
   private String resolution;
 
   @JsonFormat(pattern = "dd/MM/yyyy")
   private Date creation;
+
+  private MoradorSimplesDTO morador;
 
   public OcorenciaDTO(Ocorrencia ocorrencia) {
     this.id = ocorrencia.getId();
@@ -42,5 +44,16 @@ public class OcorenciaDTO {
     this.status = ocorrencia.getStatus().getStatus();
     this.resolution = ocorrencia.getResolution();
     this.creation = Date.from(ocorrencia.getCreation());
+  }
+
+  public OcorenciaDTO(OcorrenciaMorador OcorrenciaMorador) {
+    Ocorrencia ocorrencia = OcorrenciaMorador.getOcorrencia();
+    this.id = ocorrencia.getId();
+    this.title = ocorrencia.getTitle();
+    this.description = ocorrencia.getDescription();
+    this.status = ocorrencia.getStatus().getStatus();
+    this.resolution = ocorrencia.getResolution();
+    this.creation = Date.from(ocorrencia.getCreation());
+    this.morador = new MoradorSimplesDTO(OcorrenciaMorador.getMorador());
   }
 }
