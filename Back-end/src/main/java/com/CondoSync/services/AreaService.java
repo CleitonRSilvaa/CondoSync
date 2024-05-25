@@ -3,18 +3,14 @@ package com.CondoSync.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.CondoSync.models.Image;
-import com.CondoSync.models.Reserva;
-import com.CondoSync.models.ReservaMorador;
-import com.CondoSync.models.StatusReserva;
 import com.CondoSync.models.Area;
 import com.CondoSync.models.DTOs.AreaDTO;
-import com.CondoSync.models.DTOs.NewReservaDTO;
 import com.CondoSync.repositores.AreaRepository;
 import com.CondoSync.repositores.ReservaRepository;
 
@@ -59,20 +55,23 @@ public class AreaService {
     }
 
     public List<AreaDTO> listAll() {
-        List<AreaDTO> areas = new ArrayList<>();
-        for (var area : areaRepository.findAll()) {
-            AreaDTO areaDTO = new AreaDTO();
-            areaDTO.setId(area.getId());
-            areaDTO.setName(area.getName());
-            areaDTO.setDescription(area.getDescription());
-            areaDTO.setPrice(area.getPrice());
-            var Images = new ArrayList<AreaDTO.Image>();
-            for (var img : area.getImages()) {
-                Images.add(new AreaDTO.Image(img.getPath(), img.getName()));
-            }
-            areaDTO.setImages(Images);
-            areas.add(areaDTO);
-        }
+        List<AreaDTO> areas = areaRepository.findAllByOrderByNameAsc().stream()
+                .map(area -> {
+                    AreaDTO areaDTO = new AreaDTO();
+                    areaDTO.setId(area.getId());
+                    areaDTO.setName(area.getName());
+                    areaDTO.setDescription(area.getDescription());
+                    areaDTO.setPrice(area.getPrice());
+
+                    List<AreaDTO.Image> images = area.getImages().stream()
+                            .map(img -> new AreaDTO.Image(img.getPath(), img.getName()))
+                            .collect(Collectors.toList());
+                    areaDTO.setImages(images);
+
+                    return areaDTO;
+                })
+                .collect(Collectors.toList());
+
         return areas;
     }
 
