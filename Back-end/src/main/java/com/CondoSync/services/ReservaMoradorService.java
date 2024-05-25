@@ -1,12 +1,14 @@
 package com.CondoSync.services;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.CondoSync.models.Reserva;
@@ -20,8 +22,10 @@ import com.CondoSync.repositores.ReservaMoradorRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class ReservaMoradorService {
 
     @Autowired
@@ -47,78 +51,66 @@ public class ReservaMoradorService {
         return reservaMoradorRepository.save(reservaMorador);
     }
 
-    public List<ReservaDTO> listAll() {
+    public List<ReservaDTO> getAllReservas() {
+        return reservaMoradorRepository.findAll().stream()
+                .map(reservaMorador -> {
+                    ReservaDTO r = new ReservaDTO();
+                    r.setId(reservaMorador.getId());
+                    r.setArea(reservaMorador.getArea().getName());
+                    r.setMorador(reservaMorador.getMorador().getNome());
+                    r.setData(reservaMorador.getReserva().getData());
+                    r.setHorario(
+                            reservaMorador.getReserva().getHoraInicio() + " - "
+                                    + reservaMorador.getReserva().getHoraFim());
+                    r.setStatus(reservaMorador.getReserva().getStatusReserva().getStatus());
 
-        var reservasMoradores = reservaMoradorRepository.findAll();
+                    return r;
+                })
+                .sorted((r1, r2) -> {
+                    // Prioridade ao status "Pendente"
+                    int statusComparison = r1.getStatus().equals(StatusReserva.PENDENTE.getStatus())
+                            ? (r2.getStatus().equals(StatusReserva.PENDENTE.getStatus()) ? 0 : -1)
+                            : (r2.getStatus().equals(StatusReserva.PENDENTE.getStatus()) ? 1 : 0);
 
-        List<ReservaDTO> reservas = new ArrayList<>();
-
-        for (ReservaMorador reservaMorador : reservasMoradores) {
-
-            var r = new ReservaDTO();
-            r.setId(reservaMorador.getId());
-            r.setArea(reservaMorador.getArea().getName());
-            r.setMorador(reservaMorador.getMorador().getNome());
-            r.setData(reservaMorador.getReserva().getData());
-            r.setHorario(
-                    reservaMorador.getReserva().getHoraInicio() + " - " + reservaMorador.getReserva().getHoraFim());
-            r.setStatus(reservaMorador.getReserva().getStatusReserva().getStatus());
-
-            reservas.add(r);
-        }
-
-        reservas.sort((r1, r2) -> {
-            // Primeiro, compara o status
-            if (r1.getStatus().equals(StatusReserva.PENDENTE.getStatus())
-                    && !r2.getStatus().equals(StatusReserva.PENDENTE.getStatus())) {
-                return -1;
-            } else if (!r1.getStatus().equals(StatusReserva.PENDENTE.getStatus())
-                    && r2.getStatus().equals(StatusReserva.PENDENTE.getStatus())) {
-                return 1;
-            } else {
-                return r1.getData().compareTo(r2.getData());
-            }
-        });
-
-        return reservas;
+                    if (statusComparison != 0) {
+                        return statusComparison;
+                    }
+                    // Se o status for o mesmo, ordenar por data de forma decrescente
+                    return r2.getData().compareTo(r1.getData());
+                })
+                .collect(Collectors.toList());
     }
 
     public List<ReservaDTO> listAll(User user) {
 
         var morador = moradorService.findMoradorByEmail(user.getUsername());
 
-        var reservasMoradores = reservaMoradorRepository.findByMorador_Id(morador.getId());
+        return reservaMoradorRepository.findByMorador_Id(morador.getId()).stream()
+                .map(reservaMorador -> {
+                    ReservaDTO r = new ReservaDTO();
+                    r.setId(reservaMorador.getId());
+                    r.setArea(reservaMorador.getArea().getName());
+                    r.setMorador(reservaMorador.getMorador().getNome());
+                    r.setData(reservaMorador.getReserva().getData());
+                    r.setHorario(
+                            reservaMorador.getReserva().getHoraInicio() + " - "
+                                    + reservaMorador.getReserva().getHoraFim());
+                    r.setStatus(reservaMorador.getReserva().getStatusReserva().getStatus());
 
-        List<ReservaDTO> reservas = new ArrayList<>();
+                    return r;
+                })
+                .sorted((r1, r2) -> {
 
-        for (ReservaMorador reservaMorador : reservasMoradores) {
+                    int statusComparison = r1.getStatus().equals(StatusReserva.PENDENTE.getStatus())
+                            ? (r2.getStatus().equals(StatusReserva.PENDENTE.getStatus()) ? 0 : -1)
+                            : (r2.getStatus().equals(StatusReserva.PENDENTE.getStatus()) ? 1 : 0);
 
-            var r = new ReservaDTO();
-            r.setId(reservaMorador.getId());
-            r.setArea(reservaMorador.getArea().getName());
-            r.setMorador(reservaMorador.getMorador().getNome());
-            r.setData(reservaMorador.getReserva().getData());
-            r.setHorario(
-                    reservaMorador.getReserva().getHoraInicio() + " - " + reservaMorador.getReserva().getHoraFim());
-            r.setStatus(reservaMorador.getReserva().getStatusReserva().getStatus());
-
-            reservas.add(r);
-        }
-
-        reservas.sort((r1, r2) -> {
-            // Primeiro, compara o status
-            if (r1.getStatus().equals(StatusReserva.PENDENTE.getStatus())
-                    && !r2.getStatus().equals(StatusReserva.PENDENTE.getStatus())) {
-                return -1;
-            } else if (!r1.getStatus().equals(StatusReserva.PENDENTE.getStatus())
-                    && r2.getStatus().equals(StatusReserva.PENDENTE.getStatus())) {
-                return 1;
-            } else {
-                return r1.getData().compareTo(r2.getData());
-            }
-        });
-
-        return reservas;
+                    if (statusComparison != 0) {
+                        return statusComparison;
+                    }
+                    return r2.getData().compareTo(r1.getData());
+                })
+                .collect(Collectors.toList());
 
     }
 
@@ -131,7 +123,7 @@ public class ReservaMoradorService {
             throw new IllegalArgumentException("Reserva já cancelada!");
         }
 
-        if (reservaMorador.getReserva().getData().before(Date.from(new Date().toInstant()))) {
+        if (reservaMorador.getReserva().getData().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Não é possível cancelar uma reserva passada!");
         }
 
@@ -171,6 +163,29 @@ public class ReservaMoradorService {
         reservaMoradorRepository.save(reservaMorador);
 
         return ResponseEntity.ok().build();
+
+    }
+
+    @Async
+    @Scheduled(fixedRate = 30000)
+    public void atualizarStatusReservas() {
+        LocalDateTime agora = LocalDateTime.now();
+        List<Reserva> reservas = reservaAreaRepository.findAllByStatusReserva(StatusReserva.PENDENTE);
+
+        reservas.forEach(reserva -> {
+
+            LocalDateTime dataHoraFim = reserva.getData().atTime(reserva.getHoraFim());
+
+            if (dataHoraFim.isBefore(agora) && reserva.getStatusReserva().equals(StatusReserva.PENDENTE)) {
+                reserva.setStatusReserva(StatusReserva.CANCELADA);
+                reservaAreaRepository.save(reserva);
+            }
+            if (dataHoraFim.isBefore(agora) && reserva.getStatusReserva().equals(StatusReserva.APROVADA)) {
+                reserva.setStatusReserva(StatusReserva.FINALIZADA);
+                reservaAreaRepository.save(reserva);
+            }
+
+        });
 
     }
 
