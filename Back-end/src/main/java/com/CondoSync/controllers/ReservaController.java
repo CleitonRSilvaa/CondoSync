@@ -69,7 +69,7 @@ public class ReservaController {
         // }
 
         if (user.getAuthorities().toString().toUpperCase().contains("ADMIN")) {
-            return new ResponseEntity<>(reservaMoradorService.listAll(), HttpStatus.OK);
+            return new ResponseEntity<>(reservaMoradorService.getAllReservas(), HttpStatus.OK);
         } else {
 
             return new ResponseEntity<>(reservaMoradorService.listAll(user), HttpStatus.OK);
