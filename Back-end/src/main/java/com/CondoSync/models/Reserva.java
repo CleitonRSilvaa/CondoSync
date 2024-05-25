@@ -1,6 +1,7 @@
 package com.CondoSync.models;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -37,7 +38,7 @@ public class Reserva {
     private Integer id;
 
     @Column(name = "data_reserva")
-    private Date data;
+    private LocalDate data;
 
     @NotNull(message = "O horario de inicio é obrigatorio")
     @DateTimeFormat(pattern = "HH:mm")
@@ -54,5 +55,11 @@ public class Reserva {
 
     @UpdateTimestamp
     private Instant upudate;
+
+    @Override
+    public String toString() {
+        return "Reserva [id=" + id + ", data=" + data + ", horaInicio=" + horaInicio + ", horaFim=" + horaFim
+                + ", statusReserva=" + statusReserva + ", creation=" + creation + ", upudate=" + upudate + "]";
+    }
 
 }
