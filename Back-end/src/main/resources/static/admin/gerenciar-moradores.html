@@ -2,305 +2,305 @@
 <html lang="pt-br">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.7/jquery.inputmask.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/6.2.2/imask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.7/jquery.inputmask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/6.2.2/imask.min.js"></script>
 
-  <link rel="stylesheet" href="/css/loading.css" />
-  <script type="module" src="/js/auth.js"></script>
-  <script type="module" src="script.js"></script>
-  <title>CondoSync:: Cadastro Morador</title>
+    <link rel="stylesheet" href="/css/loading.css" />
+    <script type="module" src="/js/auth.js"></script>
+    <script type="module" src="/js/script-manage-morador.js"></script>
+    <title>CondoSync:: Cadastro Morador</title>
 </head>
 
 <body style="background-color: rgb(230, 219, 219)">
-  <div id="loading" class="loading-overlay" style="display: none">
-    <div class="d-flex justify-content-center align-items-center h-100">
-      <div class="spinner-border text-light" role="status">
-        <span class="sr-only"></span>
-      </div>
+    <div id="loading" class="loading-overlay" style="display: none">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="spinner-border text-light" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
     </div>
-  </div>
-  <div aria-live="polite" aria-atomic="true" class="position-relative">
-    <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3"></div>
-  </div>
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3"></div>
+    </div>
 
-  <div class="container-fluid">
-    <div class="row flex-nowrap">
-      <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-          <a href="/admin/index.html" class="nav-link align-middle px-0">
-            <img src="../imagens/Logo_ADM.png" alt="" class="img-fluid imgLogo" />
-          </a>
-          <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-            <li class="nav-item">
-              <a href="/admin/gerenciar-moradores.html" class="nav-link align-middle px-0">
-                <i class="fs-4 bi-house"></i>
-                <span class="ms-1 d-none d-sm-inline"> Cadastro Morador</span>
-              </a>
-            </li>
-            <li>
-              <a href="/admin/gerenciar-ocorrencias.html" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-tools"></i>
-                <span class="ms-1 d-none d-sm-inline">Ocorrência</span></a>
-            </li>
-          </ul>
-          <hr />
-          <div class="dropdown pb-4">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-              id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle" />
-              <span class="d-none d-sm-inline mx-1">bellicoth</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-              <li><a class="dropdown-item" href="#">Configurações</a></li>
-              <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-              <li>
-                <a class="dropdown-item" href="#" onclick="logout()">Sair</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="col py-3">
-        <div class="container-fluid">
-          <div class="row justify-content-center align-items-center">
-            <div class="col-lg-12 mt-3">
-              <div class="card border">
-                <div class="card-body">
-                  <!-- Conteúdo do card aqui -->
-
-                  <h1 class="text-center">Cadastro de Morador</h1>
-                  <hr />
-
-                  <form id="create-morador" class="row g-3">
-                    <div class="col-md-6">
-                      <label for="nome" class="form-label">Nome:</label>
-                      <input type="text" class="form-control" id="nome" placeholder="Thiago" />
-                      <div class="invalid-feedback" id="nome-error"></div>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <a href="/admin/index.html" class="nav-link align-middle px-0">
+                        <img src="../imagens/Logo_ADM.png" alt="" class="img-fluid imgLogo" />
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="/admin/gerenciar-moradores.html" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi-house"></i>
+                                <span class="ms-1 d-none d-sm-inline">Cadastro Moradores</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/admin/gerenciar-ocorrencias.html" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-tools"></i>
+                                <span class="ms-1 d-none d-sm-inline">Ocorrências</span></a>
+                        </li>
+                        <li>
+                            <a href="/admin/gerenciar-reservas.html" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-calendar-event"></i>
+                                <span class="ms-1 d-none d-sm-inline">Agendamentos</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <hr />
+                    <div class="dropdown pb-4">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle" />
+                            <span class="d-none d-sm-inline mx-1">bellicoth</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                            <li><a class="dropdown-item" href="#">Configurações</a></li>
+                            <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" onclick="logout()">Sair</a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col-md-6">
-                      <label for="sobrenome" class="form-label">Sobrenome:</label>
-                      <input type="text" class="form-control" id="sobrenome" placeholder="Bellico" />
-                      <div class="invalid-feedback" id="sobrenome-error"></div>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="data-nascimento" class="form-label">Data Nascimento:</label>
-                      <input type="date" class="form-control" id="dataNascimento" />
-                      <div class="invalid-feedback" id="dataNascimento-error"></div>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="cpf" class="form-label">CPF:</label>
-                      <input type="text" class="form-control" id="cpf" placeholder="111.111.111-11" />
-                      <div class="invalid-feedback" id="cpf-error"></div>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="rg" class="form-label">RG:</label>
-                      <input type="text" class="form-control" id="rg" placeholder="11.111.111-." />
-                      <div class="invalid-feedback" id="rg-error"></div>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="apartamento" class="form-label">Torre:</label>
-                      <input type="text" class="form-control" id="torre" placeholder="204" />
-                      <div class="invalid-feedback" id="torre-error"></div>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="bloco" class="form-label">Bloco:</label>
-                      <input type="text" class="form-control" id="bloco" placeholder="Bloco B" />
-                      <div class="invalid-feedback" id="bloco-error"></div>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="apartamento" class="form-label">Apartamento:</label>
-                      <input type="text" class="form-control" id="apartamento" placeholder="204" />
-                      <div class="invalid-feedback" id="apartamento-error"></div>
-                    </div>
-
-                    <div class="col-md-4">
-                      <label for="email" class="form-label">E-mail:</label>
-                      <input type="text" class="form-control" id="email" placeholder="teste@teste.com" />
-                      <div class="invalid-feedback" id="email-error"></div>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="senha" class="form-label">Senha:</label>
-                      <input type="password" class="form-control" id="senha" placeholder="123Abc" />
-                      <div class="invalid-feedback" id="senha-error"></div>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="confirmar-senha" class="form-label">Confirmar Senha:</label>
-                      <input type="password" class="form-control" id="confirmacaoSenha" placeholder="123Abc" />
-                      <div class="invalid-feedback" id="confirmacaoSenha-error"></div>
-                    </div>
-                    <div class="col-12">
-                      <button type="submit" class="btn btn-primary">
-                        Cadastrar Morador
-                      </button>
-                    </div>
-                  </form>
                 </div>
-              </div>
             </div>
-          </div>
+            <div class="col py-3">
+                <div class="container-fluid">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-lg-12 mt-3">
+                            <div class="card border">
+                                <div class="card-body">
+                                    <!-- Conteúdo do card aqui -->
 
-          <div class="col-lg-12 mt-3">
-            <div class="card border">
-              <div class="card-body">
-                <!-- Conteúdo do card aqui -->
+                                    <h1 class="text-center">Cadastro de Morador</h1>
+                                    <hr />
 
-                <h3 class="text-center">Lista de Moradores</h3>
-                <hr />
+                                    <form id="create-morador" class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="nome" class="form-label">Nome:</label>
+                                            <input type="text" class="form-control" id="nome" placeholder="Thiago" />
+                                            <div class="invalid-feedback" id="nome-error"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="sobrenome" class="form-label">Sobrenome:</label>
+                                            <input type="text" class="form-control" id="sobrenome" placeholder="Bellico" />
+                                            <div class="invalid-feedback" id="sobrenome-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="data-nascimento" class="form-label">Data Nascimento:</label>
+                                            <input type="date" class="form-control" id="dataNascimento" />
+                                            <div class="invalid-feedback" id="dataNascimento-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="cpf" class="form-label">CPF:</label>
+                                            <input type="text" class="form-control" id="cpf" placeholder="111.111.111-11" />
+                                            <div class="invalid-feedback" id="cpf-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="rg" class="form-label">RG:</label>
+                                            <input type="text" class="form-control" id="rg" placeholder="11.111.111-." />
+                                            <div class="invalid-feedback" id="rg-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="apartamento" class="form-label">Torre:</label>
+                                            <input type="text" class="form-control" id="torre" placeholder="204" />
+                                            <div class="invalid-feedback" id="torre-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="bloco" class="form-label">Bloco:</label>
+                                            <input type="text" class="form-control" id="bloco" placeholder="Bloco B" />
+                                            <div class="invalid-feedback" id="bloco-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="apartamento" class="form-label">Apartamento:</label>
+                                            <input type="text" class="form-control" id="apartamento" placeholder="204" />
+                                            <div class="invalid-feedback" id="apartamento-error"></div>
+                                        </div>
 
-                <div id="moradores-container" class="container-fluid">
-                  <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">Id</th>
-                          <th scope="col">Nome</th>
-                          <th scope="col">Apartamento</th>
-                          <th scope="col">Bloco</th>
-                          <th scope="col">Status</th>
-                          <th scope="col"></th>
-                          <th scope="col"></th>
-                        </tr>
-                      </thead>
-                    </table>
-                  </div>
+                                        <div class="col-md-4">
+                                            <label for="email" class="form-label">E-mail:</label>
+                                            <input type="text" class="form-control" id="email" placeholder="teste@teste.com" />
+                                            <div class="invalid-feedback" id="email-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="senha" class="form-label">Senha:</label>
+                                            <input type="password" class="form-control" id="senha" placeholder="123Abc" />
+                                            <div class="invalid-feedback" id="senha-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="confirmar-senha" class="form-label">Confirmar Senha:</label>
+                                            <input type="password" class="form-control" id="confirmacaoSenha" placeholder="123Abc" />
+                                            <div class="invalid-feedback" id="confirmacaoSenha-error"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary">
+                                                Cadastrar Morador
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 mt-3">
+                        <div class="card border">
+                            <div class="card-body">
+                                <!-- Conteúdo do card aqui -->
+
+                                <h3 class="text-center">Lista de Moradores</h3>
+                                <hr />
+
+                                <div id="moradores-container" class="container-fluid">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Id</th>
+                                                    <th scope="col">Nome</th>
+                                                    <th scope="col">Apartamento</th>
+                                                    <th scope="col">Bloco</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col"></th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-          aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                    Alterar Cadastro Morador
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editar-morador">
+                                    <div class="d-flex row">
+                                        <input type="hidden" id="id-morador-editar" />
+                                        <div class="col-md-6 pt-3">
+                                            <label for="nome-editar">Nome:</label>
+                                            <input type="text" class="form-control" id="nome-editar" placeholder="Thiago" />
+                                            <div class="invalid-feedback" id="nome-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-6 pt-3">
+                                            <label for="sobrenome-editar">Sobrenome:</label>
+                                            <input type="text" class="form-control" id="sobrenome-editar" placeholder="Bellico" />
+                                            <div class="invalid-feedback" id="sobrenome-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-4 pt-3">
+                                            <label for="data-nascimento-editar">Data Nascimento:</label>
+                                            <input type="date" class="form-control" id="dataNascimento-editar" />
+                                            <div class="invalid-feedback" id="dataNascimento-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-4 pt-3">
+                                            <label for="cpf-editar">CPF:</label>
+                                            <input type="text" class="form-control" id="cpf-editar" placeholder="111.111.111-11" />
+                                            <div class="invalid-feedback" id="cpf-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-4 pt-3">
+                                            <label for="rg-editar">RG:</label>
+                                            <input type="text" class="form-control" id="rg-editar" placeholder="11.111.111-." />
+                                            <div class="invalid-feedback" id="rg-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-12 pt-3">
+                                            <label for="email-editar">E-mail:</label>
+                                            <input type="text" class="form-control" id="email-editar" placeholder="teste@teste.com" />
+                                            <div class="invalid-feedback" id="email-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-4 pt-3">
+                                            <label for="torre-editar">Torre:</label>
+                                            <input type="text" class="form-control" id="torre-editar" placeholder="204" />
+                                            <div class="invalid-feedback" id="torre-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-4 pt-3">
+                                            <label for="apartamento-editar">Apartamento:</label>
+                                            <input type="text" class="form-control" id="apartamento-editar" placeholder="204" />
+                                            <div class="invalid-feedback" id="apartamento-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-4 pt-3">
+                                            <label for="bloco-editar">Bloco:</label>
+                                            <input type="text" class="form-control" id="bloco-editar" placeholder="Bloco B" />
+                                            <div class="invalid-feedback" id="bloco-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-6 pt-3">
+                                            <label for="senha-editar">Senha:</label>
+                                            <input type="password" class="form-control" id="senha-editar" placeholder="123Abc" />
+                                            <div class="invalid-feedback" id="senha-editar-error"></div>
+                                        </div>
+                                        <div class="col-md-6 pt-3">
+                                            <label for="confirmarSenha-editar">Confirmar Senha:</label>
+                                            <input type="password" class="form-control" id="confirmacaoSenha-editar" placeholder="123Abc" />
+                                            <div class="invalid-feedback" id="confirmacaoSenha-editar-error"></div>
+                                        </div>
+
+                                        <div class="modal-footer pt-3 mt-3">
+                                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">
+                                                Fechar
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                Alterar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirme-chamge-status-modal" tabindex="-1" aria-labelledby="confirme-chamge-status-modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                  Alterar Cadastro Morador
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form id="editar-morador">
-                  <div class="d-flex row">
-                    <input type="hidden" id="id-morador-editar" />
-                    <div class="col-md-6 pt-3">
-                      <label for="nome-editar">Nome:</label>
-                      <input type="text" class="form-control" id="nome-editar" placeholder="Thiago" />
-                      <div class="invalid-feedback" id="nome-editar-error"></div>
-                    </div>
-                    <div class="col-md-6 pt-3">
-                      <label for="sobrenome-editar">Sobrenome:</label>
-                      <input type="text" class="form-control" id="sobrenome-editar" placeholder="Bellico" />
-                      <div class="invalid-feedback" id="sobrenome-editar-error"></div>
-                    </div>
-                    <div class="col-md-4 pt-3">
-                      <label for="data-nascimento-editar">Data Nascimento:</label>
-                      <input type="date" class="form-control" id="dataNascimento-editar" />
-                      <div class="invalid-feedback" id="dataNascimento-editar-error"></div>
-                    </div>
-                    <div class="col-md-4 pt-3">
-                      <label for="cpf-editar">CPF:</label>
-                      <input type="text" class="form-control" id="cpf-editar" placeholder="111.111.111-11" />
-                      <div class="invalid-feedback" id="cpf-editar-error"></div>
-                    </div>
-                    <div class="col-md-4 pt-3">
-                      <label for="rg-editar">RG:</label>
-                      <input type="text" class="form-control" id="rg-editar" placeholder="11.111.111-." />
-                      <div class="invalid-feedback" id="rg-editar-error"></div>
-                    </div>
-                    <div class="col-md-12 pt-3">
-                      <label for="email-editar">E-mail:</label>
-                      <input type="text" class="form-control" id="email-editar" placeholder="teste@teste.com" />
-                      <div class="invalid-feedback" id="email-editar-error"></div>
-                    </div>
-                    <div class="col-md-4 pt-3">
-                      <label for="torre-editar">Torre:</label>
-                      <input type="text" class="form-control" id="torre-editar" placeholder="204" />
-                      <div class="invalid-feedback" id="torre-editar-error"></div>
-                    </div>
-                    <div class="col-md-4 pt-3">
-                      <label for="apartamento-editar">Apartamento:</label>
-                      <input type="text" class="form-control" id="apartamento-editar" placeholder="204" />
-                      <div class="invalid-feedback" id="apartamento-editar-error"></div>
-                    </div>
-                    <div class="col-md-4 pt-3">
-                      <label for="bloco-editar">Bloco:</label>
-                      <input type="text" class="form-control" id="bloco-editar" placeholder="Bloco B" />
-                      <div class="invalid-feedback" id="bloco-editar-error"></div>
-                    </div>
-                    <div class="col-md-6 pt-3">
-                      <label for="senha-editar">Senha:</label>
-                      <input type="password" class="form-control" id="senha-editar" placeholder="123Abc" />
-                      <div class="invalid-feedback" id="senha-editar-error"></div>
-                    </div>
-                    <div class="col-md-6 pt-3">
-                      <label for="confirmarSenha-editar">Confirmar Senha:</label>
-                      <input type="password" class="form-control" id="confirmacaoSenha-editar" placeholder="123Abc" />
-                      <div class="invalid-feedback" id="confirmacaoSenha-editar-error"></div>
-                    </div>
-
-                    <div class="modal-footer pt-3 mt-3">
-                      <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">
+                <div class="modal-header">
+                    <input type="hidden" value="" , id="id-status-change" />
+                    <h5 class="modal-title" id="confirme-chamge-status-modalLabel">
+                        Alterar Status
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja alterar o status do morador?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
                         Fechar
-                      </button>
-                      <button type="submit" class="btn btn-primary">
-                        Alterar
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </div>
+                    </button>
+                    <button type="button" id="bnt-change-status" class="btn btn-primary">
+                        Sim
+                    </button>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="confirme-chamge-status-modal" tabindex="-1"
-    aria-labelledby="confirme-chamge-status-modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <input type="hidden" value="" , id="id-status-change" />
-          <h5 class="modal-title" id="confirme-chamge-status-modalLabel">
-            Alterar Status
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Tem certeza que deseja alterar o status do morador?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-            Fechar
-          </button>
-          <button type="button" id="bnt-change-status" class="btn btn-primary">
-            Sim
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 
 </html>
