@@ -1,5 +1,6 @@
 package com.CondoSync.models.DTOs;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -20,7 +21,7 @@ public class ReservaDTO {
   String morador;
 
   @JsonFormat(pattern = "dd/MM/yyyy")
-  Date data;
+  LocalDate data;
 
   String horario;
 
