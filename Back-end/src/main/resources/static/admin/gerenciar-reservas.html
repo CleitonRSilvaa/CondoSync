@@ -104,20 +104,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div class="mb-3">
-              <label for="" class="form-label">Titulo Ocorrencia</label>
-              <input type="text" class="form-control" id="" placeholder="Problema de Energia" />
+            <div class="mb-2">
+              <label for="statusReserva" class="form-label">Status da Reserva:</label>
+              <select class="form-select" id="statusReserva">
+              </select>
             </div>
-            <div class="mb-3">
-              <label for="" class="form-label">Descrição da Ocorrência:</label>
-              <textarea class="form-control" id="" rows="3" placeholder="Estou sem energia!!!"></textarea>
+            <div id="respostaReserva-div" class="mb-2" hidden>
+              <label for="respostaReserva" class="form-label">Resposta do Administrador:</label>
+              <textarea class="form-control" id="respostaReserva" placeholder="Digite aqui a resposta..." required></textarea>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-              Fechar
-            </button>
-            <button type="button" class="btn btn-primary">Finalizar</button>
+
           </div>
         </div>
       </div>
