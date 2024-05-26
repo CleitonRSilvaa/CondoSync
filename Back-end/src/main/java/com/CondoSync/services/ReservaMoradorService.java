@@ -167,7 +167,7 @@ public class ReservaMoradorService {
     }
 
     @Async
-    @Scheduled(fixedRate = 30000)
+    // @Scheduled(fixedRate = 30000)
     public void atualizarStatusReservas() {
         LocalDateTime agora = LocalDateTime.now();
         List<Reserva> reservas = reservaAreaRepository.findAllByStatusReserva(StatusReserva.PENDENTE);
