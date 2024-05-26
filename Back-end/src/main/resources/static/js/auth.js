@@ -74,7 +74,12 @@ export function validateSecurity() {
     window.location.href = "../Login/login.html";
   }
   if (isExpiredToken()) {
-    alert("Sua sessão expirou!");
+    showToast(
+      "Atenção",
+      "Sua sessão expirou, faça login novamente!",
+      "bg-warning",
+      7000
+    );
     logout();
   }
 }
