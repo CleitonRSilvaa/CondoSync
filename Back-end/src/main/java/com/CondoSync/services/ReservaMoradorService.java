@@ -17,6 +17,7 @@ import com.CondoSync.models.StatusReserva;
 import com.CondoSync.models.User;
 import com.CondoSync.models.DTOs.NewReservaDTO;
 import com.CondoSync.models.DTOs.ReservaDTO;
+import com.CondoSync.models.DTOs.UpdateStatusReservaDTO;
 import com.CondoSync.repositores.ReservaRepository;
 import com.CondoSync.repositores.ReservaMoradorRepository;
 
@@ -187,6 +188,30 @@ public class ReservaMoradorService {
 
         });
 
+    }
+
+    public ResponseEntity<?> updateReserva(Integer id, UpdateStatusReservaDTO reservaMoradorDto) {
+        var reservaMorador = reservaMoradorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada!"));
+
+        if (reservaMoradorDto.getStatus() == null) {
+            throw new IllegalArgumentException("Status da reserva é obrigatório!");
+        }
+
+        if (reservaMorador.getReserva().getData().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Não é possível alterar uma reserva passada!");
+        }
+
+        if (reservaMorador.getReserva().getStatusReserva().equals(StatusReserva.CANCELADA)) {
+            throw new IllegalArgumentException("Reserva já cancelada!");
+        }
+
+        reservaMorador.getReserva().setStatusReserva(StatusReserva.fromString(reservaMoradorDto.getStatus()));
+
+        log.info("Reserva atualizada: " + reservaMorador);
+        // reservaMoradorRepository.save(reservaMorador);
+
+        return ResponseEntity.ok().build();
     }
 
 }
