@@ -5,6 +5,7 @@ import * as token from "/js/auth.js";
 const baseUrl = "http://localhost:8010";
 
 document.addEventListener("DOMContentLoaded", () => {
+  token.validateSecurity();
   getOcorrencias();
 });
 
