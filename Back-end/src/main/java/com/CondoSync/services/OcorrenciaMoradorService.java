@@ -128,7 +128,7 @@ public class OcorrenciaMoradorService {
                 .sorted(Comparator
                         .comparing((OcorenciaDTO o) -> o.getStatus().equals(StatusOcorrencia.ABERTO.getStatus()) ? 0
                                 : o.getStatus().equals(StatusOcorrencia.EM_ANDAMENTO.getStatus()) ? 1 : 2)
-                        .thenComparing(OcorenciaDTO::getCreation))
+                        .thenComparing(OcorenciaDTO::getCreation, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
 
         return resultList;
