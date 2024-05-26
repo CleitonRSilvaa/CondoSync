@@ -501,7 +501,7 @@ async function submitCriarMorador(form) {
         5000
       );
       clearModal();
-      getMoradores();
+      await getMoradores();
       return;
     }
 
@@ -627,8 +627,8 @@ async function changeStatus(moradorID) {
         bootstrap.Modal.getInstance(modalElement) ||
         new bootstrap.Modal(modalElement);
       modalInstance.hide();
+      await getMoradores();
       showToast("Sucesso", "Status alterado com sucesso!", "bg-success", 5000);
-      getMoradores();
       return;
     }
     if (response.status === 404 || response.status === 400) {
