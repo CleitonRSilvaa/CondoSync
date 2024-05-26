@@ -46,4 +46,9 @@ public class ReservaMorador {
     @JoinColumn(name = "area_id", nullable = false)
     private Area area;
 
+    @Override
+    public String toString() {
+        return "ReservaMorador [id=" + id + ", morador=" + morador + ", reserva=" + reserva + ", area=" + area + "]";
+    }
+
 }
