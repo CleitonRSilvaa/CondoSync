@@ -3,6 +3,7 @@ package com.CondoSync.services;
 import java.util.stream.Collectors;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 import com.CondoSync.repositores.OcorrenciaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +30,15 @@ public class OcorrenciaMoradorService {
 
     @Autowired
     private MoradorService moradorService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserSubscriptionService userSubscriptionService;
+
+    @Autowired
+    ApiPushManagerService apiPushManagerService;
 
     public List<OcorenciaDTO> getOcorrenciaMorador(String moradorUserName) {
 
@@ -119,7 +129,9 @@ public class OcorrenciaMoradorService {
                 () -> new EntityNotFoundException("Ocorrencia não encontrada!"));
         ocorrenciaMorador2.setMorador(ocorrenciaMorador.getMorador());
         ocorrenciaMorador2.setOcorrencia(ocorrenciaMorador.getOcorrencia());
-        return ResponseEntity.ok().body(ocorrenciaMoradorRepository.save(ocorrenciaMorador2));
+        var result = ocorrenciaMoradorRepository.save(ocorrenciaMorador2);
+
+        return ResponseEntity.ok().body(result);
     }
 
     public List<?> getAllOcorrenciaMorador() {
@@ -153,6 +165,14 @@ public class OcorrenciaMoradorService {
         }
 
         ocorrencia.setResolution(ocorenciaDTO.getResolution());
+
+        var ocorrenciaMorador2 = ocorrenciaMoradorRepository.findByOcorrencia_Id(ocorrencia.getId());
+
+        UUID uuid = userService.findByUserName(ocorrenciaMorador2.getMorador().getEmail()).get().getId();
+
+        var subs = userSubscriptionService.getSubscriptions(uuid);
+
+        apiPushManagerService.sendNotification(subs, "Sua ocorrência foi atualizada");
         return ResponseEntity.ok().body(ocorrenciaRepository.save(ocorrencia));
     }
 
