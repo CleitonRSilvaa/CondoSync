@@ -56,7 +56,7 @@ public class ReservaMoradorService {
         return reservaMoradorRepository.findAll().stream()
                 .map(reservaMorador -> {
                     ReservaDTO r = new ReservaDTO();
-                    r.setId(reservaMorador.getId());
+                    r.setId(reservaMorador.getReserva().getId());
                     r.setArea(reservaMorador.getArea().getName());
                     r.setMorador(reservaMorador.getMorador().getNome());
                     r.setData(reservaMorador.getReserva().getData());
@@ -89,7 +89,7 @@ public class ReservaMoradorService {
         return reservaMoradorRepository.findByMorador_Id(morador.getId()).stream()
                 .map(reservaMorador -> {
                     ReservaDTO r = new ReservaDTO();
-                    r.setId(reservaMorador.getId());
+                    r.setId(reservaMorador.getReserva().getId());
                     r.setArea(reservaMorador.getArea().getName());
                     r.setMorador(reservaMorador.getMorador().getNome());
                     r.setData(reservaMorador.getReserva().getData());
@@ -117,20 +117,22 @@ public class ReservaMoradorService {
 
     public ResponseEntity<?> cancelarReserva(Integer id) {
 
-        var reservaMorador = reservaMoradorRepository.findById(id)
+        var reservaMorador = reservaAreaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada!"));
 
-        if (reservaMorador.getReserva().getStatusReserva().equals(StatusReserva.CANCELADA)) {
+        if (reservaMorador.getStatusReserva().equals(StatusReserva.CANCELADA)) {
             throw new IllegalArgumentException("Reserva já cancelada!");
         }
 
-        if (reservaMorador.getReserva().getData().isBefore(LocalDate.now())) {
+        if (reservaMorador.getData().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Não é possível cancelar uma reserva passada!");
         }
 
-        reservaMorador.getReserva().setStatusReserva(StatusReserva.CANCELADA);
+        reservaMorador.setStatusReserva(StatusReserva.CANCELADA);
 
-        reservaMoradorRepository.save(reservaMorador);
+        reservaAreaRepository.save(reservaMorador);
+
+        log.info("Reserva cancelada com sucesso!");
 
         return ResponseEntity.ok().build();
     }
@@ -168,7 +170,7 @@ public class ReservaMoradorService {
     }
 
     @Async
-    // @Scheduled(fixedRate = 30000)
+    // @Scheduled(fixedRate = 300000) // 5 minutos
     public void atualizarStatusReservas() {
         LocalDateTime agora = LocalDateTime.now();
         List<Reserva> reservas = reservaAreaRepository.findAllByStatusReserva(StatusReserva.PENDENTE);
@@ -191,25 +193,27 @@ public class ReservaMoradorService {
     }
 
     public ResponseEntity<?> updateReserva(Integer id, UpdateStatusReservaDTO reservaMoradorDto) {
-        var reservaMorador = reservaMoradorRepository.findById(id)
+
+        var reservaMorador = reservaAreaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada!"));
 
         if (reservaMoradorDto.getStatus() == null) {
             throw new IllegalArgumentException("Status da reserva é obrigatório!");
         }
 
-        if (reservaMorador.getReserva().getData().isBefore(LocalDate.now())) {
+        if (reservaMorador.getData().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Não é possível alterar uma reserva passada!");
         }
 
-        if (reservaMorador.getReserva().getStatusReserva().equals(StatusReserva.CANCELADA)) {
+        if (reservaMorador.getStatusReserva().equals(StatusReserva.CANCELADA)) {
             throw new IllegalArgumentException("Reserva já cancelada!");
         }
 
-        reservaMorador.getReserva().setStatusReserva(StatusReserva.fromString(reservaMoradorDto.getStatus()));
+        reservaMorador.setStatusReserva(reservaMoradorDto.getStatus());
 
-        log.info("Reserva atualizada: " + reservaMorador);
-        // reservaMoradorRepository.save(reservaMorador);
+        reservaAreaRepository.save(reservaMorador);
+
+        log.info("Reserva atualizada com sucesso!");
 
         return ResponseEntity.ok().build();
     }
