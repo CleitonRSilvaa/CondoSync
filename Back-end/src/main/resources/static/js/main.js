@@ -1,28 +1,35 @@
 import * as token from "/js/auth.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (token.isLogged()) {
+    if (token.getScope().includes("ADMIN")) {
+      window.location.href = "/admin/index.html";
+    }
+    if (token.getScope().includes("MORADOR")) {
+      window.location.href = "/morador/index.html";
+    }
+  }
+
   let paramUrl = new URLSearchParams(window.location.search);
+
   if (paramUrl.has("error") && paramUrl.get("error") === "401") {
-    showToast(
-      "Sessão expirada",
-      "Faça login novamente para continuar!",
-      "bg-warning",
-      10000
+    $("#divPaiForms").empty();
+    const divPaiForms = document.getElementById("divPaiForms");
+    divPaiForms.insertAdjacentHTML(
+      "afterbegin",
+      criarMensagemDeErro(
+        "Sessão expirada",
+        "Faça login novamente para continuar!",
+        "alert-warning"
+      )
     );
+
     paramUrl.delete("error");
-    const newUrl = `${window.location.pathname}?${paramUrl.toString()}`;
+    paramUrl.delete("mgs");
+    const newUrl = `${window.location.pathname}?${paramUrl.toString()} `;
     window.history.replaceState({}, document.title, newUrl);
   }
 });
-
-if (token.isLogged()) {
-  if (token.getScope().includes("ADMIN")) {
-    window.location.href = "/admin/index.html";
-  }
-  if (token.getScope().includes("MORADOR")) {
-    window.location.href = "/morador/index.html";
-  }
-}
 
 const baseUrl = "http://192.168.0.115:8010";
 
@@ -51,10 +58,7 @@ document
   .addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const btn = document.getElementById("btn-login");
-    const loading = document.getElementById("loading");
-    btn.disabled = true;
-    loading.style.display = "block";
+    showLoading();
 
     clearError();
 
@@ -72,6 +76,14 @@ document
       await postLogin(email.value, senha.value);
     }
   });
+
+function showLoading() {
+  document.getElementById("loading").style.display = "block";
+}
+
+function hideLoading() {
+  document.getElementById("loading").style.display = "none";
+}
 
 async function postLogin(email, senha) {
   const body = {
@@ -132,16 +144,13 @@ async function postLogin(email, senha) {
     console.error(error);
     return;
   } finally {
-    const bnt = document.getElementById("btn-login");
-    const loading = document.getElementById("loading");
-    loading.style.display = "none";
-    bnt.disabled = false;
+    hideLoading();
   }
 }
 
-function criarMensagemDeErro(titulo = "", texto) {
+function criarMensagemDeErro(titulo = "", texto, clss = "alert-danger") {
   return `
-	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+	<div class="alert ${clss} alert-dismissible fade show" role="alert">
   <strong>${titulo}</strong> <p>${texto}</p>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
