@@ -9,6 +9,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.CondoSync.models.DTOs.SubscripitionDTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
@@ -37,27 +41,54 @@ public class ApiPushManagerService {
     }
 
     @Async
-    public void sendNotification(List<SubscripitionDTO> subscriptions, String payload) {
-        webClientBuilder.build()
-                .post()
-                .uri("http://localhost:8020/api/v1/notifications/send-notification")
-                .body(Mono.just(subscriptions), List.class)
-                .retrieve()
-                .bodyToMono(String.class)
-                .doOnNext(response -> {
-                    log.info("Notificação enviada com sucesso: " + response);
-                })
-                .doOnError(error -> {
+    public void sendNotification(List<SubscripitionDTO> subscriptions, Payload payload) {
+        try {
 
-                    log.error("Erro ao enviar notificação: " + error.getMessage());
-                })
-                .subscribe();
+            InnerApiPushManagerService innerApiPushManagerService = new InnerApiPushManagerService(subscriptions,
+                    payload);
+
+            webClientBuilder.build()
+                    .post()
+                    .uri("http://localhost:8020/api/v1/notifications/send-notification")
+                    .body(Mono.just(innerApiPushManagerService), List.class)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .doOnNext(response -> {
+                        log.info("Notificação enviada com sucesso: " + response);
+                    })
+                    .doOnError(error -> {
+
+                        log.error("Erro ao enviar notificação: " + error.getMessage());
+                    })
+                    .subscribe();
+        } catch (Exception e) {
+            log.error("Erro ao enviar notificação: " + e.getMessage());
+        }
+
     }
-    // publc static record Payload(String title, String body, String icon, String
-    // image, String tag, String url, String requireInteraction, String renotify,
-    // String silent, String vibrate, String dir, String lang, String timestamp,
-    // String data) {
 
-    // }
+    public static class Payload {
+
+        String title;
+        String body;
+        String icon;
+        String image;
+        String badge;
+        String tag;
+        String url;
+        List<Action> actions;
+
+    }
+
+    public static class Action {
+
+        String action;
+        String title;
+        String icon;
+
+    }
+
+    public record InnerApiPushManagerService(List<SubscripitionDTO> subscripitionDTOs, Payload payload) {
+    }
 
 }
