@@ -141,8 +141,8 @@ public class ReservaMoradorService {
 
         var horario = horarioService.findById(reservaMoradorDTO.getHorarioId());
 
-        if (reservaAreaRepository.findByDataAndHoraInicioAndHoraFim(reservaMoradorDTO.getData(),
-                horario.getHoraInicio(), horario.getHoraFim()).isPresent()) {
+        if (reservaAreaRepository.findByDataAndHoraInicioAndHoraFimAndNotStatus(reservaMoradorDTO.getData(),
+                horario.getHoraInicio(), horario.getHoraFim(), StatusReserva.CANCELADA).isPresent()) {
             throw new IllegalArgumentException(
                     "Já existe uma reserva cadastrada para a área com o mesmo horário!");
         }
@@ -170,7 +170,7 @@ public class ReservaMoradorService {
     }
 
     @Async
-    // @Scheduled(fixedRate = 300000) // 5 minutos
+    @Scheduled(fixedRate = 300000) // 5 minutos
     public void atualizarStatusReservas() {
         LocalDateTime agora = LocalDateTime.now();
         List<Reserva> reservas = reservaAreaRepository.findAllByStatusReserva(StatusReserva.PENDENTE);
