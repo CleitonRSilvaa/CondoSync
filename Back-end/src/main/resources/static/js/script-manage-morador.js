@@ -788,3 +788,5 @@ document
     const moradorID = document.getElementById("id-status-change").value;
     changeStatus(moradorID);
   });
+
+document.getElementById("btn-logout").addEventListener("click", token.logout);

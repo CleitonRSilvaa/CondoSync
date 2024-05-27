@@ -342,3 +342,5 @@ document.getElementById("statusReserva").addEventListener("change", (event) => {
     //respostareservadiv.style.display = "none";
   }
 });
+
+document.getElementById("btn-logout").addEventListener("click", token.logout);

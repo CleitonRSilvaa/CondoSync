@@ -327,3 +327,5 @@ function closeModal() {
     bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
   modalInstance.hide();
 }
+
+document.getElementById("btn-logout").addEventListener("click", token.logout);

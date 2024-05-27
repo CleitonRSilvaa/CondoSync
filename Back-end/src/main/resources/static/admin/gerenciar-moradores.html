@@ -58,14 +58,18 @@
               id="menu"
             >
               <li class="nav-item">
+                <a href="/admin/index.html" class="nav-link align-middle p-2">
+                  <i class="fs-4 bi-house"></i>
+                  <span class="ms-1 d-none d-sm-inline">Home</span>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a
                   href="/admin/gerenciar-moradores.html"
-                  class="nav-link align-middle px-0"
+                  class="nav-link align-middle p-2 active"
                 >
-                  <i class="fs-4 bi-house"></i>
-                  <span class="ms-1 d-none d-sm-inline"
-                    >Cadastro Moradores</span
-                  >
+                  <i class="fs-4 bi-people-fill"></i>
+                  <span class="ms-1 d-none d-sm-inline">Moradores</span>
                 </a>
               </li>
               <li>
@@ -86,9 +90,15 @@
                   <span class="ms-1 d-none d-sm-inline">Agendamentos</span>
                 </a>
               </li>
+              <li>
+                <a id="btn-logout" class="nav-link px-0 align-middle">
+                  <i class="fs-4 bi-box-arrow-in-right"></i>
+                  <span class="ms-1 d-none d-sm-inline">Sair</span>
+                </a>
+              </li>
             </ul>
             <hr />
-            <div class="dropdown pb-4">
+            <!-- <div class="dropdown pb-4">
               <a
                 href="#"
                 class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
@@ -118,7 +128,7 @@
                   <a class="dropdown-item" href="#" onclick="logout()">Sair</a>
                 </li>
               </ul>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="col py-3">
