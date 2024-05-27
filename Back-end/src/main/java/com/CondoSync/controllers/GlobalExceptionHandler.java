@@ -17,6 +17,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -273,6 +276,20 @@ public class GlobalExceptionHandler {
         ex.getMessage(),
         "Token inválido");
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
+  }
+
+  @ExceptionHandler(NoHandlerFoundException.class)
+  public ModelAndView handleNoHandlerFoundException(NoHandlerFoundException ex) {
+    ModelAndView mav = new ModelAndView();
+    mav.setViewName("redirect:/404/index.html"); // substitua pelo caminho da sua página estática
+    return mav;
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ModelAndView handleNoResourceFoundException(NoResourceFoundException ex) {
+    ModelAndView mav = new ModelAndView();
+    mav.setViewName("redirect:/404/index.html"); // substitua pelo caminho da sua página estática
+    return mav;
   }
 
   // ResourceAccessException
