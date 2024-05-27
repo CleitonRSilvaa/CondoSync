@@ -72,7 +72,5 @@ self.addEventListener("push", function (event) {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   console.log("notificationclick", event.notification.data);
-  event.waitUntil(
-    clients.openWindow(window.location.origin + "/morador/perfil")
-  );
+  event.waitUntil(clients.openWindow(window.location.origin + ""));
 });
