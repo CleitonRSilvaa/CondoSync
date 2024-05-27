@@ -6,6 +6,10 @@ const baseUrl = "http://localhost:8010";
 
 document.addEventListener("DOMContentLoaded", () => {
   token.validateSecurity();
+
+  if (!token.isLoggedAdmin()) {
+    window.location.href = "../home/index.html";
+  }
   geReservas();
 });
 
@@ -61,7 +65,6 @@ async function geReservas() {
         Authorization: "Bearer " + token.getToken(),
       },
     });
-
     const data = await response.json();
 
     if (response.ok) {
@@ -78,6 +81,7 @@ async function geReservas() {
       buildTable(data);
       return;
     }
+
     if (response.status === 403 || response.status === 401) {
       showToast(
         "Atenção",
@@ -98,12 +102,6 @@ async function geReservas() {
     hideLoading();
   }
 }
-const StatusOcorrencia = Object.freeze({
-  ABERTO: "Em aberto",
-  EM_ANDAMENTO: "Em andamento",
-  RESOLVIDA: "Resolvida",
-  CANCELADA: "Cancelada",
-});
 
 const StatusReserva = Object.freeze({
   PENDENTE: "Pendente",
@@ -120,6 +118,13 @@ function inverterObjeto(obj) {
   }
   return Object.freeze(objetoInvertido);
 }
+const collor = {
+  PENDENTE: "text-warning",
+  APROVADA: "text-success",
+  FINALIZADA: "text-primary",
+  REJEITADA: "text-danger",
+  CANCELADA: "text-secondary",
+};
 
 function buildTable(data) {
   const container = document.getElementById("reservas-container");
@@ -154,19 +159,14 @@ function buildTable(data) {
     const cell = row.insertCell();
     cell.textContent = reserva.status;
 
-    const collor = {
-      PENDENTE: "text-warning",
-      APROVADA: "text-success",
-      FINALIZADA: "text-primary",
-      REJEITADA: "text-danger",
-      CANCELADA: "text-secondary",
-    };
-
     cell.classList.add(collor[inverterObjeto(StatusReserva)[reserva.status]]);
 
     const actionCell = row.insertCell();
     actionCell.className = "text-center";
-    if (reserva.status === StatusReserva.PENDENTE.toString()) {
+    if (
+      reserva.status === StatusReserva.PENDENTE.toString() ||
+      reserva.status === StatusReserva.APROVADA.toString()
+    ) {
       const button = document.createElement("button");
       button.classList.add("btn", "btn-warning", "btn-sm", "me-2");
       button.textContent = "Validar";
@@ -200,7 +200,9 @@ function changeModalEdit(reserva) {
   statusReserva.innerHTML = "";
   for (const [chave, valor] of Object.entries(StatusReservaInvertido)) {
     if (
-      (reserva.status !== "Pendente" && valor === "PENDENTE") ||
+      (reserva.status !== "Pendente" &&
+        valor === "PENDENTE" &&
+        reserva.status !== "Aprovada") ||
       valor === "FINALIZADA"
     ) {
       continue;
@@ -252,72 +254,6 @@ function changeModalEdit(reserva) {
   // }
 }
 
-async function resolverReserva2(ocorrencia) {
-  const statusOcorrencia = document.getElementById("statusOcorrencia").value;
-  const respostaOcorrencia =
-    document.getElementById("respostaOcorrencia").value;
-
-  const resolverOcorrenciaSchema = zod.object({
-    id: zod.number(),
-    status: zod.string(),
-    resolution: zod.string(),
-  });
-
-  const resolverOcorrenciaData = resolverOcorrenciaSchema.parse({
-    id: ocorrencia.id,
-    resolution: respostaOcorrencia,
-    status: statusOcorrencia,
-  });
-
-  showLoading();
-
-  try {
-    const response = await fetch(
-      `${baseUrl}/api/v1/ocorrencia/update/` + ocorrencia.id,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token.getToken(),
-        },
-        body: JSON.stringify(resolverOcorrenciaData),
-      }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      closeModal();
-      showToast(
-        "Sucesso",
-        "Ocorrência atualizado com sucesso!",
-        "bg-success",
-        5000
-      );
-      await getOcorrencias();
-      return;
-    }
-    if (response.status === 403 || response.status === 401) {
-      showToast(
-        "Atenção",
-        "Você não tem permissão para acessar essa página!",
-        "bg-warning",
-        7000
-      );
-      return;
-    }
-    if (response.status === 400 || response.status === 404) {
-      showToast("Atenção", data.message, "bg-warning", 7000);
-      return;
-    }
-    showToast("Atenção", "Erro ao resolver a ocorrência!", "bg-warning", 7000);
-  } catch (error) {
-    showToast("Erro", "Erro ao resolver a ocorrência!", "bg-danger", 5000);
-  } finally {
-    hideLoading();
-  }
-}
-
 function closeModal() {
   const modal = document.getElementById("exampleModal");
   const modalInstance =
@@ -353,8 +289,6 @@ async function resolverReserva(reserva) {
       }
     );
 
-    const data = await response.json();
-
     if (response.ok) {
       closeModal();
       showToast(
@@ -363,9 +297,11 @@ async function resolverReserva(reserva) {
         "bg-success",
         5000
       );
-      // await geReservas();
+      await geReservas();
       return;
     }
+    const data = await response.json();
+
     if (response.status === 403 || response.status === 401) {
       showToast(
         "Atenção",
