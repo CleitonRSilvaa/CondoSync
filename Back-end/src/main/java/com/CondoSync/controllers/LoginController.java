@@ -36,7 +36,7 @@ public class LoginController {
                 new UsernamePasswordAuthenticationToken(
                         usuarioCred.email(), usuarioCred.password()));
         User usuario = (User) auth.getPrincipal();
-        String jwt = tokenService.generateToken(usuario, Duration.ofMinutes(60));
+        String jwt = tokenService.generateToken(usuario, Duration.ofMinutes(120));
         return ResponseEntity.ok(new JwtKey(jwt));
 
     }
