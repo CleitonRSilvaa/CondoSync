@@ -26,7 +26,7 @@ import lombok.Setter;
 public class Role implements GrantedAuthority {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "role_id")
     private Long id;
 
@@ -47,5 +47,10 @@ public class Role implements GrantedAuthority {
 
     @UpdateTimestamp
     private Instant upudate;
+
+    @Override
+    public String toString() {
+        return "Role [id=" + id + ", nome=" + nome + "]";
+    }
 
 }

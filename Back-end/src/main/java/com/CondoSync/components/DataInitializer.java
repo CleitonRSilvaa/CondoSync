@@ -1,7 +1,7 @@
 package com.CondoSync.components;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,27 +28,16 @@ public class DataInitializer implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... args) throws Exception {
-
+    public void run(String... args) throws ValidateUserException {
         try {
-
-            List<Role> roles = new ArrayList<Role>();
-
-            if (!roleService.existsByNome("ROLE_ADMIN")) {
-                var role = new Role("ROLE_ADMIN");
-                roleService.createRole(role);
-                roles.add(role);
-
-                log.info("Role ROLE_ADMIN created");
-
-            } else {
-                roles.add(roleService.getRoleByNome("ROLE_ADMIN"));
+            String[] roles = { "ADMIN", "USER", "GUEST", "MORADOR" };
+            for (String roleName : roles) {
+                if (!roleService.existsByNome(roleName)) {
+                    Role newRole = new Role(roleName);
+                    roleService.createRole(newRole);
+                    log.info("Role {} created", roleName);
+                }
             }
-
-            if (!roleService.existsByNome("ROLE_USER"))
-                roleService.createRole(new Role("ROLE_USER"));
-            if (!roleService.existsByNome("ROLE_GUEST"))
-                roleService.createRole(new Role("ROLE_GUEST"));
 
             if (!userService.existsByUserName("admin")) {
                 User user = new User();
@@ -57,16 +46,14 @@ public class DataInitializer implements CommandLineRunner {
                 user.setHashPassword(passwordEncoder.encode("admin123"));
                 user.setStatus(true);
                 user.setInativa(false);
-                user.setRoles(roles);
+                Role adminRole = roleService.getRoleByNome("ADMIN");
+                user.setRoles(Set.of(adminRole));
                 userService.createUser(user);
-
                 log.info("Admin user created");
             }
-
         } catch (Exception e) {
-            log.info("Error: " + e.getMessage());
+            log.error("Error initializing data: {}", e.getMessage(), e);
         }
-
     }
 
 }

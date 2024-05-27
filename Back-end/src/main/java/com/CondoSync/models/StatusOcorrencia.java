@@ -2,7 +2,7 @@ package com.CondoSync.models;
 
 public enum StatusOcorrencia {
 
-    ABERTA("Aberta"),
+    ABERTO("Em aberto"),
     EM_ANDAMENTO("Em andamento"),
     RESOLVIDA("Resolvida"),
     CANCELADA("Cancelada");
@@ -16,5 +16,4 @@ public enum StatusOcorrencia {
     public String getStatus() {
         return status;
     }
-
 }
