@@ -109,10 +109,13 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return "User [creation=" + creation + ", datahashSenhaUpdate=" + datahashSenhaUpdate + ", fullName=" + fullName
-                + ", hashPassword=" + hashPassword + ", id=" + id + ", inativa=" + inativa + ", roles=" + roles.size()
+        return "User [creation=" + creation + ", datahashSenhaUpdate=" +
+                datahashSenhaUpdate + ", fullName=" + fullName
+                + ", hashPassword=" + hashPassword + ", id=" + id + ", inativa=" + inativa +
+                ", roles=" + roles.size()
                 + ", status="
-                + status + ", subscriptions=" + subscriptions.size() + ", upudate=" + upudate + ", userName=" + userName
+                + status + ", subscriptions=" + subscriptions.size() + ", upudate=" + upudate
+                + ", userName=" + userName
                 + "]";
     }
 
