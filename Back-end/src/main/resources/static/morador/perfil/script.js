@@ -1,14 +1,14 @@
 const baseUrl = "http://localhost:8010";
 
-import * as tokem from "/js/auth.js";
+import * as token from "/js/auth.js";
 
 function validateSecurity() {
-  if (!tokem.isLogged()) {
+  if (!token.isLogged()) {
     window.location.href = "../Login/login.html";
   }
-  if (tokem.isExpiredToken()) {
+  if (token.isExpiredToken()) {
     alert("Sua sessão expirou!");
-    tokem.logout();
+    token.logout();
   }
 }
 
@@ -28,12 +28,11 @@ function hideLoading() {
 async function getProfile() {
   showLoading();
   try {
-    const token = tokem.getToken();
     const response = await fetch(`${baseUrl}/api/v1/morador/perfil`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token.getToken()}`,
       },
     });
 
@@ -103,3 +102,5 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
   const toast = new bootstrap.Toast(toastEl);
   toast.show();
 }
+
+document.getElementById("btn-logout").addEventListener("click", token.logout);

@@ -1,9 +1,9 @@
 const baseUrl = "http://localhost:8010";
 
-import * as tokem from "/js/auth.js";
+import * as token from "/js/auth.js";
 
 window.onload = () => {
-  tokem.validateSecurity();
+  token.validateSecurity();
   getOcorrencias();
 };
 
@@ -48,7 +48,7 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
 }
 
 async function saveOcorrencia() {
-  tokem.validateSecurity();
+  token.validateSecurity();
 
   try {
     const titulo = document.getElementById("title");
@@ -62,7 +62,7 @@ async function saveOcorrencia() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + tokem.getToken(),
+        Authorization: "Bearer " + token.getToken(),
       },
       body: JSON.stringify(occoreencia),
     });
@@ -113,7 +113,7 @@ async function saveOcorrencia() {
 }
 
 async function getOcorrencias() {
-  tokem.validateSecurity();
+  token.validateSecurity();
   showLoading();
 
   try {
@@ -121,7 +121,7 @@ async function getOcorrencias() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + tokem.getToken(),
+        Authorization: "Bearer " + token.getToken(),
       },
     });
 
@@ -203,7 +203,7 @@ function buildTable(data) {
 }
 
 async function cancelarOcorencia(reservaId) {
-  tokem.validateSecurity();
+  token.validateSecurity();
   showLoading();
   try {
     const response = await fetch(
@@ -212,7 +212,7 @@ async function cancelarOcorencia(reservaId) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + tokem.getToken(),
+          Authorization: "Bearer " + token.getToken(),
         },
       }
     );
@@ -283,3 +283,5 @@ document
     showLoading();
     saveOcorrencia();
   });
+
+document.getElementById("btn-logout").addEventListener("click", token.logout);

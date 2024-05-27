@@ -37,3 +37,5 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
   const toast = new bootstrap.Toast(toastEl);
   toast.show();
 }
+
+document.getElementById("btn-logout").addEventListener("click", token.logout);

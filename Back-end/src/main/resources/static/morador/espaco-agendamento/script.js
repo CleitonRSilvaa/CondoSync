@@ -1,21 +1,11 @@
 const baseUrl = "http://localhost:8010";
 
-import * as tokem from "/js/auth.js";
-
-function validateSecurity() {
-  if (!tokem.isLogged()) {
-    window.location.href = "../Login/login.html";
-  }
-  if (tokem.isExpiredToken()) {
-    alert("Sua sessão expirou!");
-    tokem.logout();
-  }
-}
+import * as token from "/js/auth.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  validateSecurity();
+  token.validateSecurity();
 
-  // console.log(tokem.getPayload());
+  // console.log(token.getPayload());
 
   loadDate();
   getReservas();
@@ -56,7 +46,7 @@ async function getEspacos() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + tokem.getToken(),
+        Authorization: "Bearer " + token.getToken(),
       },
     });
 
@@ -96,11 +86,11 @@ async function getEspacos() {
 }
 
 async function getReservas() {
-  validateSecurity();
+  token.validateSecurity();
   showLoading();
 
   try {
-    const params = new URLSearchParams({ userName: tokem.getUserName() });
+    const params = new URLSearchParams({ userName: token.getUserName() });
 
     const response = await fetch(
       `${baseUrl}/api/v1/reserva/list?${params.toString()}`,
@@ -108,7 +98,7 @@ async function getReservas() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + tokem.getToken(),
+          Authorization: "Bearer " + token.getToken(),
         },
       }
     );
@@ -270,7 +260,7 @@ async function getHorarios(areaId) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + tokem.getToken(),
+          Authorization: "Bearer " + token.getToken(),
         },
       }
     );
@@ -358,7 +348,7 @@ async function saveReserva() {
   const espaco = document.getElementById("espacos").value;
 
   const reserva = {
-    userName: tokem.getUserName(),
+    userName: token.getUserName(),
     data: date,
     horarioId: parseInt(horario),
     areaId: espaco,
@@ -369,7 +359,7 @@ async function saveReserva() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + tokem.getToken(),
+        Authorization: "Bearer " + token.getToken(),
       },
       body: JSON.stringify(reserva),
     });
@@ -429,7 +419,7 @@ async function cancelarReserva(reservaId) {
         method: "POST", // Ou "DELETE", dependendo de como sua API está configurada
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + tokem.getToken(),
+          Authorization: "Bearer " + token.getToken(),
         },
       }
     );
@@ -457,3 +447,5 @@ async function cancelarReserva(reservaId) {
     hideLoading();
   }
 }
+
+document.getElementById("btn-logout").addEventListener("click", token.logout);
