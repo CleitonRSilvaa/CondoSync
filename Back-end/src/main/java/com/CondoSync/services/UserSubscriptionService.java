@@ -47,7 +47,7 @@ public class UserSubscriptionService {
         return null;
     }
 
-    public List<?> getSubscriptions(UUID userId) {
+    public List<SubscripitionDTO> getSubscriptions(UUID userId) {
 
         List<SubscripitionDTO> subs = new ArrayList<>();
 
