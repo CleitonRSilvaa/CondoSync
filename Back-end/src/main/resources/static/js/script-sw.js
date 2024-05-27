@@ -1,4 +1,11 @@
-const baseUrl = "http://localhost:8020/api/v1/notifications";
+import * as token from "/js/auth.js";
+
+const baseUrl = "http://localhost:8010/api/v1/notifications";
+document.addEventListener("DOMContentLoaded", () => {
+  token.validateSecurity();
+
+  registerServiceWorker();
+});
 
 const registerServiceWorker = async () => {
   if ("serviceWorker" in navigator) {
@@ -8,8 +15,8 @@ const registerServiceWorker = async () => {
         return;
       }
 
-      const registration = await navigator.serviceWorker.register("/sw.js", {
-        scope: "/",
+      const registration = await navigator.serviceWorker.register("/js/sw.js", {
+        scope: "/js/",
       });
       const publicVapidKey = await getPublicKey();
       let subscription = await registration.pushManager.getSubscription();
@@ -33,6 +40,7 @@ async function getPublicKey() {
       headers: {
         Accept: "application/text",
         "Content-Type": "application/text",
+        Authorization: "Bearer " + token.getToken(),
       },
     });
     if (response.ok) {
@@ -47,19 +55,19 @@ async function getPublicKey() {
 
 async function saveSubscribe(subscription) {
   try {
+    // subscription.user_id = token.getUserId();
     let url = baseUrl + "/subscribe";
     const response = await fetch(url, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + token.getToken(),
       },
       body: JSON.stringify(subscription),
     });
     if (response.ok) {
-      const data = await response.json();
-      console.log("Subscription saved:", data);
-      return data;
+      return;
     }
     return null;
   } catch (error) {
@@ -80,5 +88,3 @@ function urlBase64ToUint8Array(base64String) {
   }
   return outputArray;
 }
-
-registerServiceWorker();
