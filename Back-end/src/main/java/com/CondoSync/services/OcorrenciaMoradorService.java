@@ -172,7 +172,19 @@ public class OcorrenciaMoradorService {
 
         var subs = userSubscriptionService.getSubscriptions(uuid);
 
-        apiPushManagerService.sendNotification(subs, "Sua ocorrência foi atualizada");
+        var payload = new ApiPushManagerService.Payload();
+        payload.title = "Ocorrência Atualizada";
+        payload.body = "Sua ocorrência foi atualizada";
+        // payload.setClick_action("http://localhost:8080/ocorrencias/" +
+        // ocorrencia.getId());
+        payload.icon = "https://cdn.icon-icons.com/icons2/2699/PNG/512/sync_icon_168770.png";
+        payload.image = "https://cdn.icon-icons.com/icons2/2699/PNG/512/sync_icon_168770.png";
+        payload.badge = "https://cdn.icon-icons.com/icons2/2699/PNG/512/sync_icon_168770.png";
+        payload.tag = "Ocorrencia";
+        payload.url = "http://localhost:8080/ocorrencias/" + ocorrencia.getId();
+        payload.actions = List.of();
+
+        apiPushManagerService.sendNotification(subs, payload);
         return ResponseEntity.ok().body(ocorrenciaRepository.save(ocorrencia));
     }
 
