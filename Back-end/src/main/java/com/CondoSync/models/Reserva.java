@@ -25,7 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "reservas_areas", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "data_reserva", "hora_inicio", "hora_fim" })
+        @UniqueConstraint(columnNames = { "data_reserva", "hora_inicio", "hora_fim", "status_reserva" })
 })
 @Getter
 @Setter
