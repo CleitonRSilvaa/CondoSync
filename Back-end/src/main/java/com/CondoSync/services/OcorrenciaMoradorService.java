@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import com.CondoSync.repositores.OcorrenciaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import com.CondoSync.models.DTOs.OcorrenciaResolucaoDTO;
 import com.CondoSync.repositores.OcorrenciaMoradorRepository;
 
 @Service
+@Slf4j
 public class OcorrenciaMoradorService {
 
     @Autowired
@@ -185,6 +188,7 @@ public class OcorrenciaMoradorService {
         payload.actions = List.of();
 
         apiPushManagerService.sendNotification(subs, payload);
+        log.info("Enviando notificação para: " + subs.size() + " dispositivos.");
         return ResponseEntity.ok().body(ocorrenciaRepository.save(ocorrencia));
     }
 
