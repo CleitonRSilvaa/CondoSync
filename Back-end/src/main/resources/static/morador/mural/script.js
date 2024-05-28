@@ -1,6 +1,6 @@
 import * as token from "/js/auth.js";
 
-const baseUrl = "http://localhost:8010";
+const baseUrl = "https://200.155.171.178:16580";
 
 document.addEventListener("DOMContentLoaded", () => {
   token.validateSecurity();

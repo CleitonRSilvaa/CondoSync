@@ -1,6 +1,6 @@
 import * as token from "/js/auth.js";
 
-const baseUrl = "http://localhost:8010/api/v1/notifications";
+const baseUrl = "https://200.155.171.178:16580/api/v1/notifications";
 document.addEventListener("DOMContentLoaded", () => {
   token.validateSecurity();
 
