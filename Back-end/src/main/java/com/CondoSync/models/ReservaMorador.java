@@ -48,7 +48,8 @@ public class ReservaMorador {
 
     @Override
     public String toString() {
-        return "ReservaMorador [id=" + id + ", morador=" + morador + ", reserva=" + reserva + ", area=" + area + "]";
+        return "ReservaMorador [id=" + id + ", morador=" + morador.getEmail() + ", reserva=" + reserva.getId()
+                + ", area=" + area + "]";
     }
 
 }

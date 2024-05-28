@@ -21,7 +21,7 @@ public class UpdateStatusReservaDTO {
   @NotNull(message = "O id da reserva é obrigatorio")
   private Integer id;
 
-  @NotBlank(message = "O status da reserva é obrigatorio")
-  private String status;
+  @NotNull(message = "O status da reserva é obrigatorio")
+  private StatusReserva status;
 
 }

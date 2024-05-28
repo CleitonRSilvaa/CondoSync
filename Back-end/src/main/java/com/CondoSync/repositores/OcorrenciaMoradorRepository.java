@@ -11,4 +11,6 @@ public interface OcorrenciaMoradorRepository extends JpaRepository<OcorrenciaMor
 
   List<OcorrenciaMorador> findByMorador_Id(UUID moradorId);
 
+  OcorrenciaMorador findByOcorrencia_Id(Integer id);
+
 }

@@ -13,6 +13,8 @@ import com.CondoSync.repositores.HorarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -97,7 +99,11 @@ public class HorarioService {
     }
 
     public List<HorarioDTO> getAvailableHorarios(UUID areaId, Date data) {
-        return horarioRepository.findAvailableOrCanceledHorariosByAreaIdAndDate(areaId, data, StatusReserva.CANCELADA)
+
+        LocalDate localDate = data.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        return horarioRepository
+                .findAvailableOrCanceledHorariosByAreaIdAndDate(areaId, localDate, StatusReserva.CANCELADA)
                 .stream().map(HorarioDTO::new)
                 .sorted((h1, h2) -> h1.getHoraInicio().compareTo(h2.getHoraInicio())).collect(Collectors.toList());
     }

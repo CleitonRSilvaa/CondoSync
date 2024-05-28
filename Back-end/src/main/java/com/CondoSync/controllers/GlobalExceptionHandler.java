@@ -291,7 +291,6 @@ public class GlobalExceptionHandler {
     mav.setViewName("redirect:/404/index.html"); // substitua pelo caminho da sua página estática
     return mav;
   }
-
   // ResourceAccessException
 
   // @ExceptionHandler(ResourceAccessException.class)
