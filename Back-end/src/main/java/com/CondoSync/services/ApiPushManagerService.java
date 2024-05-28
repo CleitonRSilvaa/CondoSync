@@ -38,6 +38,7 @@ public class ApiPushManagerService {
 
     @Async
     public void sendNotification(List<SubscripitionDTO> subscriptions, Payload payload) {
+        log.info("Enviando notificação para: " + subscriptions.size() + " dispositivos.");
         try {
 
             InnerApiPushManagerService innerApiPushManagerService = new InnerApiPushManagerService(subscriptions,
@@ -46,7 +47,7 @@ public class ApiPushManagerService {
             webClientBuilder.build()
                     .post()
                     .uri("http://localhost:8020/api/v1/notifications/send-notification")
-                    .body(Mono.just(innerApiPushManagerService), List.class)
+                    .body(Mono.just(subscriptions), List.class)
                     .retrieve()
                     .bodyToMono(String.class)
                     .doOnNext(response -> {
