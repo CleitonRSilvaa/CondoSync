@@ -130,12 +130,14 @@ public class MoradorService {
     @Transactional
     public MoradorDTO update(UUID moradorId, MoradorDTO moradorDTO) {
         Morador morador = findById(moradorId);
-
+        User user = morador.getUser();
         if (findByCpf(moradorDTO.getCpf()).isPresent() && !moradorDTO.getCpf().equals(morador.getCpf())) {
             throw new IllegalArgumentException("CPF já cadastrado por outro morador");
         }
 
-        if (findByEmail(moradorDTO.getEmail()).isPresent() && !moradorDTO.getEmail().equals(morador.getEmail())) {
+        if (findByEmail(moradorDTO.getEmail()).isPresent() && !moradorDTO.getEmail().equals(morador.getEmail())
+                || userService.existsByUserName(moradorDTO.getEmail())
+                        && !moradorDTO.getEmail().equals(morador.getEmail())) {
             throw new IllegalArgumentException("Email já cadastrado por outro morador");
         }
 
@@ -149,14 +151,20 @@ public class MoradorService {
             if (moradorDTO.getConfirmacaoSenha().length() < 5 || moradorDTO.getConfirmacaoSenha().length() > 100) {
                 throw new IllegalArgumentException("A senha de confirmação deve ter entre 5 e 100 caracteres");
             }
-            User user = morador.getUser();
+
             user.setHashPassword(userService.encodePassword(moradorDTO.getSenha()));
             var pass = userService.matchesPassword(moradorDTO.getSenha(), user.getHashPassword());
             if (!pass) {
                 throw new IllegalArgumentException("Senha inválida");
             }
+
             userService.updateUser(user);
 
+        }
+
+        if (user.getUsername() != moradorDTO.getEmail()) {
+            user.setUserName(moradorDTO.getEmail());
+            userService.updateUser(user);
         }
 
         morador.setCpf(moradorDTO.getCpf());
