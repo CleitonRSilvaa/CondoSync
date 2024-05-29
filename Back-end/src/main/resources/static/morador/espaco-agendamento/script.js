@@ -1,4 +1,4 @@
-const baseUrl = "https://200.155.171.178:16580";
+const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 
 import * as token from "/js/auth.js";
 
