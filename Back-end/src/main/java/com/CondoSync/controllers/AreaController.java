@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +40,7 @@ public class AreaController {
     private HorarioService horarioService;
 
     @Autowired
+    @Lazy
     private ReservaMoradorService reservaMoradorService;
 
     @Autowired
