@@ -2,18 +2,12 @@ const baseUrl = "https://200.155.171.178:16580";
 
 import * as token from "/js/auth.js";
 
-function validateSecurity() {
-  if (!token.isLogged()) {
-    window.location.href = "../Login/login.html";
-  }
-  if (token.isExpiredToken()) {
-    alert("Sua sessão expirou!");
-    token.logout();
-  }
-}
+window.addEventListener("load", () => {
+  token.validateSecurity();
+});
 
 document.addEventListener("DOMContentLoaded", () => {
-  validateSecurity();
+  token.validateSecurity();
   getProfile();
 });
 
