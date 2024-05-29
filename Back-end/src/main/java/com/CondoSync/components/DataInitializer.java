@@ -3,7 +3,8 @@ package com.CondoSync.components;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class DataInitializer implements CommandLineRunner {
+public class DataInitializer implements ApplicationRunner {
 
     @Autowired
     private RoleService roleService;
@@ -28,7 +29,7 @@ public class DataInitializer implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... args) throws ValidateUserException {
+    public void run(ApplicationArguments args) throws ValidateUserException {
         try {
             String[] roles = { "ADMIN", "USER", "GUEST", "MORADOR" };
             for (String roleName : roles) {
