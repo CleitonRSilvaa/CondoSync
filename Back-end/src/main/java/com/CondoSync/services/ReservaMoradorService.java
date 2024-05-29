@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,22 +32,39 @@ import lombok.extern.slf4j.Slf4j;
 public class ReservaMoradorService {
 
     @Autowired
+    @Lazy
     private ReservaMoradorRepository reservaMoradorRepository;
 
     @Autowired
+    @Lazy
+
     private ReservaRepository reservaAreaRepository;
 
     @Autowired
+    @Lazy
+
     private AreaService areaService;
 
     @Autowired
+    @Lazy
+
     private HorarioService horarioService;
 
     @Autowired
+    @Lazy
+
     private UserService userService;
 
     @Autowired
+    @Lazy
     private MoradorService moradorService;
+
+    @Value("${scheduled.task.fixedRate.minutes}")
+    public long fixedRateMinutes;
+
+    public long fixedRateMillis() {
+        return this.fixedRateMinutes * 60 * 1000;
+    }
 
     public ReservaMorador save(@Valid ReservaMorador reservaMorador) {
 
@@ -170,7 +189,7 @@ public class ReservaMoradorService {
     }
 
     @Async
-    @Scheduled(fixedRate = 300000) // 5 minutos
+    @Scheduled(fixedRateString = "#{@fixedRateMillis}", initialDelay = 1000 * 60 * 1)
     public void atualizarStatusReservas() {
         LocalDateTime agora = LocalDateTime.now();
         List<Reserva> reservas = reservaAreaRepository.findAllByStatusReserva(StatusReserva.PENDENTE);
