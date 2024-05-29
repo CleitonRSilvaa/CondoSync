@@ -31,6 +31,18 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+
+# Ignorar arquivos de configuração do Spring Boot
+*/src/main/resources/springboot.jks
+*/src/main/resources/springboot.p12
+*/src/main/resources/springboot.pem
+
+*.springboot.p12
+*.springboot.pem
+
+
+
+
 ### STS ###
 .apt_generated
 .classpath
