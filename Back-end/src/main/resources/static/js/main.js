@@ -125,6 +125,13 @@ async function postLoginAxios(email, senha) {
       return;
     }
   } catch (error) {
+    $("#divPaiForms").empty();
+    const divPaiForms = document.getElementById("divPaiForms");
+    divPaiForms.insertAdjacentHTML(
+      "afterbegin",
+      criarMensagemDeErro("Erro ao fazer login, tente novamente mais tarde!")
+    );
+
     console.error("Error fetching data:", error);
     return;
   } finally {
