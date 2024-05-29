@@ -4,7 +4,7 @@ const baseUrl = "https://200.155.171.178:16580/api/v1/notifications";
 document.addEventListener("DOMContentLoaded", () => {
   token.validateSecurity();
 
-  registerServiceWorker();
+  // registerServiceWorker();
 });
 
 const registerServiceWorker = async () => {
