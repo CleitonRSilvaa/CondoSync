@@ -13,54 +13,38 @@ self.addEventListener("push", function (event) {
     }
 
     try {
+      let data = {
+        title: "Push Notification",
+        body: "Você tem uma nova notificação.",
+        icon: "images/icon.png",
+        data: {
+          dateOfArrival: Date.now(),
+          primaryKey: "1",
+        },
+      };
+
       if (event.data) {
-        let data = {};
         try {
           data = event.data.json();
         } catch (error) {
-          data = {
-            title: "Push Notification",
-            body: event.data.text(),
-            icon: "images/icon.png",
-            primaryKey: "1",
-          };
+          data.body = event.data.text();
         }
-
-        console.log("data", data);
-
-        const options = {
-          body: data.body || "Você tem uma nova notificação.",
-          icon: data.icon || "images/icon.png",
-          vibrate: [100, 50, 100],
-          data: {
-            dateOfArrival: Date.now(),
-            primaryKey: data.primaryKey || "1",
-          },
-        };
-
-        event.waitUntil(
-          self.registration.showNotification(
-            data.title || "Push Notification",
-            data
-          )
-        );
-      } else {
-        const fallbackOptions = {
-          body: "Você tem uma nova notificação.",
-          icon: "images/icon.png",
-          vibrate: [100, 50, 100],
-          data: {
-            dateOfArrival: Date.now(),
-            primaryKey: "2",
-          },
-        };
-        event.waitUntil(
-          self.registration.showNotification(
-            "Push Notification",
-            fallbackOptions
-          )
-        );
       }
+
+      console.log("data", data);
+
+      const options = {
+        body: data.body,
+        icon: data.icon,
+        vibrate: [100, 50, 100],
+        data: {
+          dateOfArrival: Date.now(),
+          primaryKey: data.primaryKey || "1",
+        },
+        actions: data.actions || [],
+      };
+
+      event.waitUntil(self.registration.showNotification(data.title, options));
     } catch (error) {
       console.error("Error handling push event:", error);
     }
@@ -72,5 +56,11 @@ self.addEventListener("push", function (event) {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   console.log("notificationclick", event.notification.data);
-  event.waitUntil(clients.openWindow(window.location.origin + ""));
+
+  let url = window.location.origin;
+  if (event.notification.data && event.notification.data.url) {
+    url = event.notification.data.url;
+  }
+
+  event.waitUntil(clients.openWindow(url));
 });
