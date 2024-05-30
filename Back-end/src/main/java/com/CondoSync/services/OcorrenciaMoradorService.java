@@ -178,18 +178,17 @@ public class OcorrenciaMoradorService {
         var payload = new ApiPushManagerService.Payload();
         payload.title = "Ocorrência Atualizada";
         payload.body = "Sua ocorrência foi atualizada";
-        // payload.setClick_action("http://localhost:8080/ocorrencias/" +
-        // ocorrencia.getId());
         payload.icon = "https://cdn.icon-icons.com/icons2/2699/PNG/512/sync_icon_168770.png";
         payload.image = "https://cdn.icon-icons.com/icons2/2699/PNG/512/sync_icon_168770.png";
         payload.badge = "https://cdn.icon-icons.com/icons2/2699/PNG/512/sync_icon_168770.png";
         payload.tag = "Ocorrencia";
-        payload.url = "http://localhost:8080/ocorrencias/" + ocorrencia.getId();
+        payload.url = "https://condo-sync.vercel.app/morador/ocorrencia/index.html";
         payload.actions = List.of();
 
         apiPushManagerService.sendNotification(subs, payload);
         log.info("Enviando notificação para: " + subs.size() + " dispositivos.");
         return ResponseEntity.ok().body(ocorrenciaRepository.save(ocorrencia));
+
     }
 
 }
