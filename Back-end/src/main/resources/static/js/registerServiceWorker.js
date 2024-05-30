@@ -4,22 +4,29 @@ const baseUrl =
   "https://condosyn.eastus.cloudapp.azure.com:4433/api/v1/notifications";
 document.addEventListener("DOMContentLoaded", () => {
   token.validateSecurity();
-
   registerServiceWorker();
 });
 
 const registerServiceWorker = async () => {
-  if ("serviceWorker" in navigator) {
+  if ("serviceWorker" in navigator && "PushManager" in window) {
     try {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") {
+        console.warn("Permissão para notificações não foi concedida.");
         return;
       }
 
       const registration = await navigator.serviceWorker.register("/js/sw.js", {
         scope: "/js/",
       });
+      console.log("Service Worker registrado com sucesso:", registration);
+
       const publicVapidKey = await getPublicKey();
+      if (!publicVapidKey) {
+        console.error("Chave pública não pôde ser obtida.");
+        return;
+      }
+
       let subscription = await registration.pushManager.getSubscription();
       if (!subscription) {
         subscription = await registration.pushManager.subscribe({
@@ -29,10 +36,15 @@ const registerServiceWorker = async () => {
         await saveSubscribe(subscription);
       }
     } catch (error) {
-      console.error(`Service Worker registration failed with ${error}`);
+      console.error(`Falha ao registrar o Service Worker: ${error}`);
     }
+  } else {
+    console.error(
+      "Service Worker ou Push Manager não são suportados no navegador."
+    );
   }
 };
+
 async function getPublicKey() {
   try {
     let url = baseUrl + "/public-key";
@@ -47,16 +59,16 @@ async function getPublicKey() {
     if (response.ok) {
       return await response.text();
     }
+    console.error("Falha ao obter a chave pública: Resposta não OK");
     return null;
   } catch (error) {
-    console.log("Error getting key from server:", error);
+    console.error("Erro ao obter a chave pública do servidor:", error);
     return null;
   }
 }
 
 async function saveSubscribe(subscription) {
   try {
-    // subscription.user_id = token.getUserId();
     let url = baseUrl + "/subscribe";
     const response = await fetch(url, {
       method: "POST",
@@ -68,11 +80,13 @@ async function saveSubscribe(subscription) {
       body: JSON.stringify(subscription),
     });
     if (response.ok) {
+      console.log("Assinatura salva com sucesso.");
       return;
     }
+    console.error("Falha ao salvar a assinatura: Resposta não OK");
     return null;
   } catch (error) {
-    console.log("Error saving subscription:", error);
+    console.error("Erro ao salvar a assinatura:", error);
     return null;
   }
 }

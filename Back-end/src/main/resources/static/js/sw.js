@@ -53,7 +53,13 @@ self.addEventListener("push", function (event) {
 });
 
 self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-  let url = event.notification.data.url || "/";
-  event.waitUntil(clients.openWindow(url));
+  if (event.action === "open") {
+    let url = event.notification.data.url || "/";
+    event.waitUntil(clients.openWindow(url));
+  } else if (event.action === "dismiss") {
+    event.notification.close();
+  } else {
+    let url = event.notification.data.url || "/";
+    event.waitUntil(clients.openWindow(url));
+  }
 });
