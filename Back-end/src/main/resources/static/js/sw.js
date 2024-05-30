@@ -57,10 +57,6 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   console.log("notificationclick", event.notification.data);
 
-  let url = window.location.origin;
-  if (event.notification.data && event.notification.data.url) {
-    url = event.notification.data.url;
-  }
-
+  let url = event.notification.data.url || "/";
   event.waitUntil(clients.openWindow(url));
 });
