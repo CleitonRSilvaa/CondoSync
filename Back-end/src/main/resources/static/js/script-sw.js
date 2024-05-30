@@ -5,7 +5,7 @@ const baseUrl =
 document.addEventListener("DOMContentLoaded", () => {
   token.validateSecurity();
 
-  // registerServiceWorker();
+  registerServiceWorker();
 });
 
 const registerServiceWorker = async () => {
