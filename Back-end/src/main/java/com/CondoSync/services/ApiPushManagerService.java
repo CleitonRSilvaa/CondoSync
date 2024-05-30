@@ -2,45 +2,41 @@ package com.CondoSync.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-
+import org.springframework.web.client.RestTemplate;
 import com.CondoSync.models.DTOs.SubscriptionDTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Mono;
 
 @Service
 @Slf4j
 public class ApiPushManagerService {
 
-    @Autowired
-    private WebClient.Builder webClientBuilder;
-
     @Async
     public void sendNotification(List<SubscriptionDTO> subscriptions, Payload payload) {
         log.info("Enviando notificação para: " + subscriptions.size() + " dispositivos.");
         try {
-            webClientBuilder.build()
-                    .post()
-                    .uri("http://localhost:8020/api/v1/notifications/send-notification")
-                    .body(Mono.just(new NotificationRequest(subscriptions, payload)), NotificationRequest.class)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .doOnNext(response -> {
-                        log.info("Notificação enviada com sucesso: " + response);
-                    })
-                    .doOnError(error -> {
-                        log.error("Erro ao enviar notificação: ", error);
-                    })
-                    .subscribe();
+            NotificationRequest request = new NotificationRequest(subscriptions, payload);
+            RestTemplate restTemplate = new RestTemplate();
+            String response = restTemplate.postForObject(
+                    "https://condosyn.eastus.cloudapp.azure.com:8080/api/v1/notifications/send-notification",
+                    request,
+                    String.class);
+            log.info("Notificação enviada com sucesso: " + response);
         } catch (Exception e) {
-            log.error("Erro ao enviar notificação: ", e);
+            log.error("Erro ao enviar notificação: ", e.fillInStackTrace());
         }
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Payload {
         String title;
         String body;
@@ -52,12 +48,19 @@ public class ApiPushManagerService {
         List<Action> actions;
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Action {
         String action;
         String title;
         String icon;
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
     public static class NotificationRequest {
         List<SubscriptionDTO> subscriptions;
         Payload payload;
