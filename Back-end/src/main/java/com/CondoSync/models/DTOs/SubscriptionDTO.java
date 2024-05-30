@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class SubscripitionDTO {
+public class SubscriptionDTO {
 
   @NotBlank(message = "O endpoint é obrigatorio")
   @Column(unique = true)
