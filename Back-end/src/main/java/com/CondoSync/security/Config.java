@@ -88,7 +88,8 @@ public class Config {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(
-                Arrays.asList("http://localhost:8011", "http://localhost:8010", "http://192.168.0.115:8011",
+                Arrays.asList("http://localhost:8011", "http://localhost:8010", "http://localhost:8020",
+                        "http://192.168.0.115:8011",
                         "http://192.168.0.115:16580",
                         "http://127.0.0.1:5500", "http://localhost:16580",
                         "https://200.155.171.178:16580", "https://condo-sync.vercel.app",
