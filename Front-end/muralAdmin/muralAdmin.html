@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+
+    <title>CondoSync:: Ocorrencia dos Moradores</title>
+
+
+    <style>
+        @media (max-width: 800px) {
+            .imgLogo {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body style="background-color: rgb(230, 219, 219);">
+
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <img src="../imagens/Logo_ADM.png" alt="" class="img-fluid imgLogo">
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+                        id="menu">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">
+                                    Cadastro Morador</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                                <i class="fs-4 bi-tools"></i> <span
+                                    class="ms-1 d-none d-sm-inline">Ocorrência</span></a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <div class="dropdown pb-4">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                            id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30"
+                                class="rounded-circle">
+                            <span class="d-none d-sm-inline mx-1">bellicoth</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                            <li><a class="dropdown-item" href="#">Configurações</a></li>
+                            <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Sair</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col py-3">
+
+                <div class="container-fluid">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-lg-12 mt-3">
+                            <div class="card border">
+                                <div class="card-body">
+                                    <!-- Conteúdo do card aqui -->
+                                    <h1 class="text-center">Cadastro para o Mural de Avisos</h1>
+                                    <hr class="mb-5">
+
+                                    <form enctype="multipart/form-data">
+                                        <div class="row">
+                                          <div class="col-md-12 mb-3">
+                                            <label for="nome" class="form-label">Titulo do Aviso:</label>
+                                            <input type="text" class="form-control" id="" name="" maxlength="200" required>
+                                          </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                          <label for="descricao" class="form-label text-white">Descrição</label>
+                                          <textarea class="form-control" id="descricao" name="descricaoProduto" rows="4" maxlength="2000"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="imagem" class="form-label">Imagens</label>
+                                          <input type="file" class="form-control" id="imagem" name="imagem" multiple required>
+                                        </div>
+                                        <div id="preview" class="row p-2 justify-content-center">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                            <button type="submit" class="btn btn-primary buttonSalvar" id="botaoSalvar">Cadastrar</button>
+                                          </div>
+                                      </form>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        
+function updateRadioInputs() {
+      var preview = document.getElementById('preview');
+      var radios = preview.querySelectorAll('.form-check-input');
+      var labels = preview.querySelectorAll('.form-check-label');
+      for (var i = 0; i < radios.length; i++) {
+        radios[i].id = 'exampleRadios' + i;
+        radios[i].value = i;
+        labels[i].htmlFor = 'exampleRadios' + i;
+      }
+    }
+
+    function removeImage(card, file) {
+      var input = document.getElementById('imagem');
+      var preview = document.getElementById('preview');
+
+      preview.removeChild(card);
+
+      // Cria um novo objeto de FormData
+      var dataTransfer = new DataTransfer();
+      for (var i = 0; i < input.files.length; i++) {
+        if (input.files[i] !== file) {
+          dataTransfer.items.add(input.files[i]);
+        }
+      }
+
+      // Atualiza o input com os arquivos restantes
+      input.files = dataTransfer.files;
+    }
+
+    function handleFile(file, i) {
+      console.log(file.name);
+      if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
+        alert('Só são permitidos arquivos de imagem (jpg, jpeg, png).');
+        this.value = '';
+        return;
+      }
+
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        var img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = 'Imagem-produto';
+        img.className = 'card-img-top';
+
+        var cardBody = document.createElement('div');
+        cardBody.className = 'card-body d-flex flex-column';
+
+        var formCheck = document.createElement('div');
+        formCheck.className = 'form-check mt-auto';
+
+        var radioInput = document.createElement('input');
+        radioInput.className = 'form-check-input';
+        radioInput.type = 'radio';
+        radioInput.name = 'imgPrincipal';
+        radioInput.id = 'exampleRadios' + i;
+        radioInput.value = i;
+        var radioLabel = document.createElement('label');
+        radioLabel.className = 'form-check-label';
+        radioLabel.htmlFor = 'exampleRadios' + i;
+        radioLabel.textContent = 'Imagem principal';
+
+        formCheck.appendChild(radioInput);
+        formCheck.appendChild(radioLabel);
+        cardBody.appendChild(formCheck);
+
+        var closeButton = document.createElement('button');
+        closeButton.type = 'button';
+        closeButton.className = 'btn-close';
+        closeButton.setAttribute('aria-label', 'Close');
+
+        var card = document.createElement('div');
+        card.className = 'card p-2 m-1';
+        card.style.width = '18rem';
+        card.appendChild(closeButton);
+        card.appendChild(img);
+        card.appendChild(cardBody);
+
+        closeButton.addEventListener('click', function () {
+          removeImage(card, file);
+          updateRadioInputs()
+        });
+
+        preview.appendChild(card);
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    document.body.addEventListener('change', function (event) {
+      if (event.target.id === 'imagem') {
+        var preview = document.getElementById('preview');
+        preview.innerHTML = '';
+
+
+        for (var i = 0; i < event.target.files.length; i++) {
+          handleFile(event.target.files[i], i);
+        }
+      }
+    });
+
+
+    </script>
+
+
+</body>
+
+</html>
