@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-const baseUrl = "https://200.155.171.178:16580";
+const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 
 (function ($) {
   "use strict";
@@ -73,7 +73,7 @@ document
         getOrCreateErrorMsg(senha, "A senha é obrigatória.");
       }
     } else {
-      await postLoginAxios(email.value, senha.value);
+      await postLogin(email.value, senha.value);
     }
   });
 
@@ -85,16 +85,26 @@ function hideLoading() {
   document.getElementById("loading").style.display = "none";
 }
 
-async function postLoginAxios(email, senha) {
+async function postLogin(email, senha) {
   const body = {
     email: email,
     password: senha,
   };
   try {
-    const response = await axios.post(`${baseUrl}/api/v1/login`, body);
-    if (response.status === 200) {
-      token.saveLogin(response.data.token);
+    const response = await fetch(`${baseUrl}/api/v1/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(body),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      token.saveLogin(data.token);
     }
+
     if (response.status === 401) {
       const data = await response.json();
       $("#divPaiForms").empty();
@@ -129,78 +139,14 @@ async function postLoginAxios(email, senha) {
     const divPaiForms = document.getElementById("divPaiForms");
     divPaiForms.insertAdjacentHTML(
       "afterbegin",
-      criarMensagemDeErro("Erro ao fazer login, tente novamente mais tarde!")
+      criarMensagemDeErro("Erro ao fazer login.", "Tente novamente mais tarde!")
     );
-
-    console.error("Error fetching data:", error);
+    console.error(error);
     return;
   } finally {
     hideLoading();
   }
 }
-
-// async function postLogin(email, senha) {
-//   const body = {
-//     email: email,
-//     password: senha,
-//   };
-//   try {
-//     const response = await fetch(`${baseUrl}/api/v1/login`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       credentials: "include",
-//       body: JSON.stringify(body),
-//     });
-
-//     if (response.ok) {
-//       const data = await response.json();
-//       token.saveLogin(data.token);
-//     }
-
-//     if (response.status === 401) {
-//       const data = await response.json();
-//       $("#divPaiForms").empty();
-//       const divPaiForms = document.getElementById("divPaiForms");
-//       divPaiForms.insertAdjacentHTML(
-//         "afterbegin",
-//         criarMensagemDeErro(data.message, data.error)
-//       );
-//       return;
-//     }
-//     if (response.status >= 400 && response.status < 500) {
-//       const data = await response.json();
-//       $("#divPaiForms").empty();
-//       const divPaiForms = document.getElementById("divPaiForms");
-//       divPaiForms.insertAdjacentHTML(
-//         "afterbegin",
-//         criarMensagemDeErro(data.message, data.error)
-//       );
-//       return;
-//     }
-//     if (response.status === 500) {
-//       $("#divPaiForms").empty();
-//       const divPaiForms = document.getElementById("divPaiForms");
-//       divPaiForms.insertAdjacentHTML(
-//         "afterbegin",
-//         criarMensagemDeErro("Erro ao fazer login, tente novamente mais tarde!")
-//       );
-//       return;
-//     }
-//   } catch (error) {
-//     $("#divPaiForms").empty();
-//     const divPaiForms = document.getElementById("divPaiForms");
-//     divPaiForms.insertAdjacentHTML(
-//       "afterbegin",
-//       criarMensagemDeErro("Erro ao fazer login.", "Tente novamente mais tarde!")
-//     );
-//     console.error(error);
-//     return;
-//   } finally {
-//     hideLoading();
-//   }
-// }
 
 function criarMensagemDeErro(titulo = "", texto, clss = "alert-danger") {
   return `

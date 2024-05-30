@@ -2,7 +2,7 @@ import zod from "https://cdn.jsdelivr.net/npm/zod@3.23.8/+esm";
 
 import * as token from "/js/auth.js";
 
-const baseUrl = "https://200.155.171.178:16580";
+const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 
 document.addEventListener("DOMContentLoaded", function () {
   token.validateSecurity();
