@@ -39,7 +39,7 @@ function loadDate() {
 }
 
 async function getEspacos() {
-  validateSecurity();
+  token.validateSecurity();
   showLoading();
   try {
     const response = await fetch(baseUrl + "/api/v1/area/list", {
@@ -247,7 +247,7 @@ function hideLoading() {
 }
 
 async function getHorarios(areaId) {
-  validateSecurity();
+  token.validateSecurity();
   showLoading();
   try {
     const date = document.getElementById("data-reserva").value;
@@ -342,7 +342,7 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
 }
 
 async function saveReserva() {
-  validateSecurity();
+  token.validateSecurity();
   const date = document.getElementById("data-reserva").value;
   const horario = document.getElementById("horarios").value;
   const espaco = document.getElementById("espacos").value;
@@ -410,7 +410,7 @@ document.getElementById("btn-reservar").addEventListener("click", function () {
 });
 
 async function cancelarReserva(reservaId) {
-  validateSecurity();
+  token.validateSecurity();
   showLoading();
   try {
     const response = await fetch(
