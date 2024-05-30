@@ -3,6 +3,7 @@ package com.CondoSync.services;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,12 @@ public class ReservaMoradorService {
     @Autowired
     @Lazy
     private MoradorService moradorService;
+
+    @Autowired
+    ApiPushManagerService apiPushManagerService;
+
+    @Autowired
+    private UserSubscriptionService userSubscriptionService;
 
     @Value("${scheduled.task.fixedRate.minutes}")
     public long fixedRateMinutes;
@@ -231,6 +238,20 @@ public class ReservaMoradorService {
         reservaMorador.setStatusReserva(reservaMoradorDto.getStatus());
 
         reservaAreaRepository.save(reservaMorador);
+
+        var reservaAreaMorador = reservaMoradorRepository.findByReserva_Id(reservaMorador.getId());
+
+        UUID uuid = userService.findByUserName(reservaAreaMorador.getMorador().getEmail()).get().getId();
+
+        var subs = userSubscriptionService.getSubscriptions(uuid);
+
+        var payload = new ApiPushManagerService.Payload();
+        payload.setTitle("Reserva Atualizada");
+        payload.setBody("Sua reserva foi atualizada para: " + reservaMoradorDto.getStatus().getStatus());
+        payload.setUrl("https://condo-sync.vercel.app/morador/espaco-agendamento/index.html");
+        payload.setIcon("https://condo-sync.vercel.app/imagens/logo2.png");
+
+        apiPushManagerService.sendNotification(subs, payload);
 
         log.info("Reserva atualizada com sucesso!");
 
