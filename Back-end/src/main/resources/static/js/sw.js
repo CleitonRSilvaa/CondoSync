@@ -16,7 +16,7 @@ self.addEventListener("push", function (event) {
       let data = {
         title: "Push Notification",
         body: "Você tem uma nova notificação.",
-        icon: "images/icon.png",
+        icon: "https://condo-sync.vercel.app/imagens/logo2.png",
         data: {
           dateOfArrival: Date.now(),
           primaryKey: "1",
@@ -30,9 +30,6 @@ self.addEventListener("push", function (event) {
           data.body = event.data.text();
         }
       }
-
-      console.log("data", data);
-
       const options = {
         body: data.body,
         icon: data.icon,
@@ -40,14 +37,16 @@ self.addEventListener("push", function (event) {
         data: {
           dateOfArrival: Date.now(),
           primaryKey: data.primaryKey || "1",
+          url: data.url || "/",
         },
-        actions: data.actions || [],
+        actions: data.actions || [
+          { action: "open", title: "Abrir" },
+          { action: "dismiss", title: "Fechar" },
+        ],
       };
 
       event.waitUntil(self.registration.showNotification(data.title, options));
-    } catch (error) {
-      console.error("Error handling push event:", error);
-    }
+    } catch (error) {}
   };
 
   getData(event);
@@ -55,8 +54,6 @@ self.addEventListener("push", function (event) {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  console.log("notificationclick", event.notification.data);
-
   let url = event.notification.data.url || "/";
   event.waitUntil(clients.openWindow(url));
 });
