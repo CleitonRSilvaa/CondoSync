@@ -21,6 +21,13 @@ public class ApiPushManagerService {
     public void sendNotification(List<SubscriptionDTO> subscriptions, Payload payload) {
         log.info("Enviando notificação para: " + subscriptions.size() + " dispositivos.");
         try {
+
+            var abrir = new Action("open", "Abrir", payload.getUrl());
+            var fechar = new Action("close", "Fechar", payload.getUrl());
+
+            payload.setActions(
+                    List.of(abrir, fechar));
+
             NotificationRequest request = new NotificationRequest(subscriptions, payload);
             RestTemplate restTemplate = new RestTemplate();
             String response = restTemplate.postForObject(
