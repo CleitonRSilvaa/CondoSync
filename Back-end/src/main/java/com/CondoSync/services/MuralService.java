@@ -9,7 +9,6 @@ import com.CondoSync.models.DTOs.MuralDTO;
 import com.CondoSync.repositores.MuralRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.var;
 
 @Service
 public class MuralService {
