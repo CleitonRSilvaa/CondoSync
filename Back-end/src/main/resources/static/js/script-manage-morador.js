@@ -657,7 +657,7 @@ function buildTable(data) {
   table.innerHTML = `
     <thead class="table-dark">
       <tr>
-        <th scope="col">#</th>
+        <th scope="col">ID</th>
         <th scope="col">Nome</th>
         <th scope="col">Email</th>
         <th scope="col">Apartamento</th>
@@ -675,7 +675,7 @@ function buildTable(data) {
   let count = 1;
   data.forEach((morad) => {
     const row = tbody.insertRow();
-    row.insertCell().textContent = count++;
+    row.insertCell().textContent = morad.id;
     row.insertCell().textContent = morad.nomeCompleto;
     row.insertCell().textContent = morad.email;
     row.insertCell().textContent = morad.apartamento;

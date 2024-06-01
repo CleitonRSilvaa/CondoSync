@@ -279,8 +279,9 @@ function buildTable(data) {
   const table = document.createElement("table");
   table.className = "table table-striped table-hover";
   table.innerHTML = `
-    <thead>
+    <thead class="table-dark">
       <tr>
+        <th scope="col">ID</th>
         <th scope="col">Título</th>
         <th scope="col">Descrição</th>
         <th scope="col">Imagem nome</th>
@@ -296,6 +297,7 @@ function buildTable(data) {
   data.forEach((item) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
+      <td>${item.id}</td>
       <td>${item.title}</td>
       <td>${item.description}</td>
       <td>${item.image.name}</td>
