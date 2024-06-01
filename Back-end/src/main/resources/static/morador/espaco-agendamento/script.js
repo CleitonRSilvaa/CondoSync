@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
   changeDesabilitarHorarios();
   changeDesabilitarEspacos();
   changeDesabilitaBntReservar();
+  setdaDadosModalConfirmacao(
+    "Confirmação",
+    "Deseja realmente cancelar a reserva?"
+  );
   const inputData = document.getElementById("data-reserva");
 
   inputData.addEventListener("input", function () {
@@ -165,7 +169,22 @@ function buildTable(data) {
       const button = document.createElement("button");
       button.className = "btn btn-danger";
       button.textContent = "Cancelar";
-      button.onclick = () => cancelarReserva(reserva.id);
+      button.dataset.bsToggle = "modal";
+      button.dataset.bsTarget = "#confirme-modal";
+
+      button.addEventListener("click", function () {
+        document.getElementById("id-value").value = reserva.id;
+        document
+          .getElementById("bnt-confirme-sim")
+          .addEventListener("click", function (event) {
+            const modalElement = document.getElementById("confirme-modal");
+            const modalInstance =
+              bootstrap.Modal.getInstance(modalElement) ||
+              new bootstrap.Modal(modalElement);
+            modalInstance.hide();
+            cancelarReserva(reserva.id);
+          });
+      });
       actionCell.appendChild(button);
     }
   });
@@ -446,6 +465,17 @@ async function cancelarReserva(reservaId) {
   } finally {
     hideLoading();
   }
+}
+
+function setdaDadosModalConfirmacao(titulo, mensagem) {
+  const modal = document.getElementById("confirme-modal");
+  const modalTitulo = modal.querySelector(".modal-title");
+  modalTitulo.innerHTML = titulo;
+  const modalBody = modal.querySelector(".modal-body");
+
+  modalBody.innerHTML = `
+    <h5 class="text-center" >${mensagem}</h5>
+  `;
 }
 
 document.getElementById("btn-logout").addEventListener("click", token.logout);

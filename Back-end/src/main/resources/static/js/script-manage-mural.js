@@ -7,7 +7,10 @@ const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 document.addEventListener("DOMContentLoaded", function () {
   token.validateSecurity();
   getDadosMural();
-  setdaDadosModalConfirmacao();
+  setdaDadosModalConfirmacao(
+    "Confirmação",
+    "Deseja realmente excluir o aviso?"
+  );
 });
 
 document
@@ -406,13 +409,13 @@ function validateForm() {
   }
 }
 
-function setdaDadosModalConfirmacao() {
+function setdaDadosModalConfirmacao(titulo, mensagem) {
   const modal = document.getElementById("confirme-modal");
   const modalTitulo = modal.querySelector(".modal-title");
-  modalTitulo.innerHTML = "Confirmação";
+  modalTitulo.innerHTML = titulo;
   const modalBody = modal.querySelector(".modal-body");
 
   modalBody.innerHTML = `
-    <h5 class="text-center" >Tem certeza que deseja excluir este aviso?</h5>
+    <h5 class="text-center" >${mensagem}</h5>
   `;
 }
