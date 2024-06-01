@@ -65,4 +65,34 @@ public class UserSubscriptionService {
 
     }
 
+    public List<SubscriptionDTO> findAllIsActive() {
+
+        var subscriptions = userSubscriptionRepository.findAllByUserStatus(true);
+        List<SubscriptionDTO> subs = new ArrayList<>();
+
+        for (PushSubscription pushSubscription : subscriptions) {
+            SubscriptionDTO sub = new SubscriptionDTO();
+            sub.setEndpoint(pushSubscription.getEndpoint());
+            sub.setExpirationTime(pushSubscription.getExpirationTime());
+            sub.setKeys(new Keys(pushSubscription.getP256dh(), pushSubscription.getAuth()));
+            subs.add(sub);
+        }
+
+        return subs;
+
+    }
+
+    public List<SubscriptionDTO> findSubscriptionsByUserStatusAndRole(String role) {
+        var subscriptions = userSubscriptionRepository.findSubscriptionsByUserStatusAndRole(role);
+        List<SubscriptionDTO> subs = new ArrayList<>();
+        for (PushSubscription pushSubscription : subscriptions) {
+            SubscriptionDTO sub = new SubscriptionDTO();
+            sub.setEndpoint(pushSubscription.getEndpoint());
+            sub.setExpirationTime(pushSubscription.getExpirationTime());
+            sub.setKeys(new Keys(pushSubscription.getP256dh(), pushSubscription.getAuth()));
+            subs.add(sub);
+        }
+        return subs;
+    }
+
 }

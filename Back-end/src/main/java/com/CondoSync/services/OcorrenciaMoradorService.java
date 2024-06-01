@@ -84,7 +84,19 @@ public class OcorrenciaMoradorService {
         ocorrenciaMorador.setOcorrencia(ocorrencia);
         ocorrenciaMorador.setMorador(morador);
 
-        return ResponseEntity.ok().body(ocorrenciaMoradorRepository.save(ocorrenciaMorador));
+        var ocorr = ocorrenciaMoradorRepository.save(ocorrenciaMorador);
+
+        var subs = userSubscriptionService.findSubscriptionsByUserStatusAndRole("ADMIN");
+
+        var payload = new ApiPushManagerService.Payload();
+        payload.setTitle("Nova Ocorrencia");
+        payload.setBody("Nova Ocorrencia: " + ocorrencia.getTitle());
+        payload.setIcon("https://condo-sync.vercel.app/imagens/logo2.png");
+        payload.setUrl("https://condo-sync.vercel.app/admin/gerenciar-ocorrencias.html");
+
+        apiPushManagerService.sendNotification(subs, payload);
+
+        return ResponseEntity.ok().body(ocorr);
     }
 
     public ResponseEntity<?> createOcorrenciaMorador(OcorenciaDTO ocorenciaDTO, String moradorUserName) {
@@ -105,6 +117,16 @@ public class OcorrenciaMoradorService {
         System.out.println(morador);
 
         ocorrenciaMoradorRepository.save(ocorrenciaMorador);
+
+        var subs = userSubscriptionService.findSubscriptionsByUserStatusAndRole("ADMIN");
+
+        var payload = new ApiPushManagerService.Payload();
+        payload.setTitle("Nova Ocorrencia");
+        payload.setBody("Nova Ocorrencia: " + ocorrencia.getTitle());
+        payload.setIcon("https://condo-sync.vercel.app/imagens/logo2.png");
+        payload.setUrl("https://condo-sync.vercel.app/admin/gerenciar-ocorrencias.html");
+
+        apiPushManagerService.sendNotification(subs, payload);
 
         return ResponseEntity.ok().body("");
     }

@@ -16,6 +16,12 @@ public class MuralService {
   @Autowired
   private MuralRepository muralRepository;
 
+  @Autowired
+  ApiPushManagerService apiPushManagerService;
+
+  @Autowired
+  private UserSubscriptionService userSubscriptionService;
+
   public Mural save(Mural mural) {
     return muralRepository.save(mural);
   }
@@ -38,7 +44,20 @@ public class MuralService {
     mural.setImage(imageMural);
     imageMural.setMural(mural);
 
-    return muralRepository.save(mural);
+    mural = muralRepository.save(mural);
+
+    var subs = userSubscriptionService.findSubscriptionsByUserStatusAndRole("MORADOR");
+
+    var payload = new ApiPushManagerService.Payload();
+
+    payload.setTitle("Novo aviso foi adicionado ao Mura");
+    payload.setBody("Novo aviso : " + mural.getTitle());
+    payload.setIcon("https://condo-sync.vercel.app/imagens/logo2.png");
+    payload.setUrl("https://condo-sync.vercel.app/");
+
+    apiPushManagerService.sendNotification(subs, payload);
+
+    return mural;
   }
 
   public Mural findById(Integer id) {
