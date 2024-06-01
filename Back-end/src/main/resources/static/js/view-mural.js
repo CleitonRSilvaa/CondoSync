@@ -77,7 +77,6 @@ async function getDadosMural() {
     }
   } catch (error) {
     buildMural(dataUnicoAviso, true);
-    console.error("Error:", error);
   } finally {
     hideLoading();
   }
@@ -154,12 +153,8 @@ document.getElementById("btn-logout").addEventListener("click", token.logout);
 
 function buildProfile() {
   const user = token.getUser();
-  console.log(user);
   const namePerson = document.getElementById("name-person");
   namePerson.innerHTML = `${user.nome}`;
-
-  console.log(namePerson);
-
   const ul = document.getElementById("user-name");
 
   const li = document.createElement("li");

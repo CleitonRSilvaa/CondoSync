@@ -5,8 +5,6 @@ import * as token from "/js/auth.js";
 document.addEventListener("DOMContentLoaded", () => {
   token.validateSecurity();
 
-  // console.log(token.getPayload());
-
   loadDate();
   getReservas();
   changeDesabilitarHorarios();
@@ -84,7 +82,6 @@ async function getEspacos() {
     }
   } catch (error) {
     showToast("Erro", "Erro ao buscar os espaços!", "bg-danger", 5000);
-    console.error("Error:", error);
   } finally {
     hideLoading();
   }
@@ -127,7 +124,6 @@ async function getReservas() {
     }
   } catch (error) {
     showToast("Erro", "Erro ao buscar as reservas!", "bg-danger", 5000);
-    console.error("Error:", error);
   } finally {
     hideLoading();
   }
@@ -324,7 +320,6 @@ async function getHorarios(areaId) {
     }
   } catch (error) {
     showToast("Erro", "Erro ao buscar os horários!", "bg-danger", 7000);
-    console.error("Error:", error);
   } finally {
     hideLoading();
   }
@@ -407,7 +402,6 @@ async function saveReserva() {
       return;
     }
   } catch (error) {
-    console.error("Error:", error);
     showToast("Erro", "Erro ao realizar a reserva!", "bg-danger", 5000);
   } finally {
     hideLoading();
@@ -461,7 +455,6 @@ async function cancelarReserva(reservaId) {
       showToast("Erro", "Erro ao cancelar a reserva!", "bg-danger", 5000);
     }
   } catch (error) {
-    console.error("Error:", error);
     showToast("Erro", "Erro ao cancelar a reserva!", "bg-danger", 5000);
   } finally {
     hideLoading();
@@ -483,12 +476,8 @@ document.getElementById("btn-logout").addEventListener("click", token.logout);
 
 function buildProfile() {
   const user = token.getUser();
-  console.log(user);
   const namePerson = document.getElementById("name-person");
   namePerson.innerHTML = `${user.nome}`;
-
-  console.log(namePerson);
-
   const ul = document.getElementById("user-name");
 
   const li = document.createElement("li");

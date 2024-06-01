@@ -59,7 +59,6 @@ async function getProfile() {
 
     showToast("Erro", "Erro ao buscar perfil", "bg-danger");
   } catch (error) {
-    console.error("Erro ao buscar perfil", error);
     showToast("Erro", "Erro ao buscar perfil", "bg-danger");
   } finally {
     hideLoading();
@@ -101,12 +100,8 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
 document.getElementById("btn-logout").addEventListener("click", token.logout);
 function buildProfile() {
   const user = token.getUser();
-  console.log(user);
   const namePerson = document.getElementById("name-person");
   namePerson.innerHTML = `${user.nome}`;
-
-  console.log(namePerson);
-
   const ul = document.getElementById("user-name");
 
   const li = document.createElement("li");

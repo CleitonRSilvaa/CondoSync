@@ -162,7 +162,6 @@ document.addEventListener("submit", async function (event) {
       try {
         return await getImageBase64(image);
       } catch (error) {
-        console.error("Error reading the image file:", error);
         return null;
       }
     }
@@ -178,7 +177,6 @@ document.addEventListener("submit", async function (event) {
     },
   };
 
-  console.log(formData);
   try {
     const response = await fetch(baseUrl + "/api/v1/mural/save", {
       method: "POST",
@@ -230,7 +228,6 @@ document.addEventListener("submit", async function (event) {
     }
   } catch (error) {
     showToast("Erro", "Erro ao cadastrar o aviso.", "bg-danger");
-    console.error("Error:", error);
   }
 });
 
@@ -259,7 +256,7 @@ async function getDadosMural() {
       showToast("Erro", "Erro ao buscar os dados do mural.", "bg-danger");
     }
   } catch (error) {
-    console.error("Error:", error);
+    showToast("Erro", "Erro ao buscar os dados do mural.", "bg-danger");
   } finally {
     hideLoading();
   }
@@ -357,7 +354,6 @@ async function deleteAviso(id) {
     }
   } catch (error) {
     showToast("Erro", "Erro ao excluir o aviso.", "bg-danger");
-    console.error("Error:", error);
   } finally {
     hideLoading();
   }
@@ -427,11 +423,8 @@ document.getElementById("btn-logout").addEventListener("click", token.logout);
 
 function buildProfile() {
   const user = token.getUser();
-  console.log(user);
   const namePerson = document.getElementById("name-person");
   namePerson.innerHTML = `${user.nome}`;
-
-  console.log(namePerson);
 
   const ul = document.getElementById("user-name");
 
