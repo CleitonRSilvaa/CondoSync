@@ -84,88 +84,98 @@
                 <span class="ms-1 d-none d-sm-inline">Sair</span>
               </a>
             </li>
-
+            <hr />
+            <div class="dropdown pb-4">
+              <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <i id="imagem-default" class="bi bi-person-circle fs-2" style="display:block"></i>
+                <img id="imagem-profile" width="30" height="30" class="rounded-circle" style="display:none" />
+                <span class="d-none d-sm-inline mx-1" id="name-person"></span>
+              </a>
+              <ul id="user-name" class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+              </ul>
+            </div>
+          </ul>
         </div>
-      </div>
-      <div class="col py-3">
-        <div class="container-fluid">
-          <div class="row justify-content-center align-items-center">
-            <div class="col-lg-12 mt-3">
-              <div class="card border" style="background-color: #f9f9f9 !important">
-                <div class="card-body mt-3">
+        <div class="col py-3">
+          <div class="container-fluid">
+            <div class="row justify-content-center align-items-center">
+              <div class="col-lg-12 mt-3">
+                <div class="card border" style="background-color: #f9f9f9 !important">
                   <div class="card-body mt-3">
-                    <!-- Conteúdo do card aqui -->
-                    <div class="card text-white bg-warning py-1 text-center">
-                      <div class="card-body">
-                        <h3 class="text-white ">Quadro de avisos !!!</h3>
+                    <div class="card-body mt-3">
+                      <!-- Conteúdo do card aqui -->
+                      <div class="card text-white bg-warning py-1 text-center">
+                        <div class="card-body">
+                          <h3 class="text-white ">Quadro de avisos !!!</h3>
+                        </div>
                       </div>
-                    </div>
-                    <!-- Page Content-->
-                    <div class="container px-4 px-lg-5">
-                      <!-- Heading Row-->
-                      <div class="row gx-2 gx-lg-5 align-items-center my-5">
-                        <div id="carouselMural" class="carousel slide col-lg-12" data-bs-ride="carousel">
-                          <div id="carouselMural-indicators" class="carousel-indicators">
+                      <!-- Page Content-->
+                      <div class="container px-4 px-lg-5">
+                        <!-- Heading Row-->
+                        <div class="row gx-2 gx-lg-5 align-items-center my-5">
+                          <div id="carouselMural" class="carousel slide col-lg-12" data-bs-ride="carousel">
+                            <div id="carouselMural-indicators" class="carousel-indicators">
 
-                          </div>
-                          <div id="carouselMural-items" class="carousel-inner">
+                            </div>
+                            <div id="carouselMural-items" class="carousel-inner">
 
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselMural" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon bg-dark " style="opacity: 0.9;" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselMural" data-bs-slide="next">
+                              <span class="carousel-control-next-icon bg-dark " style="opacity: 0.9;" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
                           </div>
-                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselMural" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon bg-dark " style="opacity: 0.9;" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                          </button>
-                          <button class="carousel-control-next" type="button" data-bs-target="#carouselMural" data-bs-slide="next">
-                            <span class="carousel-control-next-icon bg-dark " style="opacity: 0.9;" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                          </button>
+                        </div>
+                      </div>
+                      <!-- Call to Action-->
+                      <div class="card text-white bg-secondary my-5 py-1 text-center">
+                        <div class="card-body">
+                          <h3 class="text-white m-0">Outos de avisos</h3>
+                        </div>
+                      </div>
+                      <!-- Content Row-->
+                      <div class="row gx-4 gx-lg-5">
+                        <div class="col-md-4 mb-5">
+                          <div class="card h-100">
+                            <img src="/imagens/imagensMural/incendio.webp" class="card-img-top" alt="...">
+                            <div class="card-body">
+                              <h5 class="card-title">Auto de Vistoria do Corpo de Bombeiros - AVCB</h5>
+                              <p class="card-text">O Auto de Vistoria do Corpo de Bombeiros (AVCB) serve
+                                como prova de que diversas obrigações de segurança estão em dia no condomínio.</p>
+                              <a href="https://www.sindiconet.com.br/informese/auto-de-vistoria-do-corpo-de-bombeiros-avcb-administracao-condominios-novos" class="btn btn-primary">Mais informações</a>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-5">
+                          <div class="card h-100">
+                            <img src="/imagens/imagensMural/agua_limpa_destaque.webp" class="card-img-top" alt="...">
+                            <div class="card-body">
+                              <h5 class="card-title">Limpeza de caixas de água - Manutenção deve ser periódica</h5>
+                              <p class="card-text mt-3">Especialistas consultados nesta matéria também crêem, independente
+                                de lei, ser duas vezes por ano o necessário para manter o local em condições higiênicas adequadas..</p>
+                              <a href="https://www.sindiconet.com.br/informese/limpeza-de-caixas-dagua-manutencao-limpeza-de-caixas-dagua" class="btn btn-primary">Mais informações</a>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-5">
+                          <div class="card h-100">
+                            <img src="/imagens/imagensMural/elevador_manutencao.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                              <h5 class="card-title">Conferindo a segurança do elevador - O que checar no equipamento.</h5>
+                              <p class="card-text">Mesmo sendo o meio de transporte mais seguro do mundo,
+                                acidentes com elevadores são mais frequentes do que se supõe. Os mais comuns são ocasionados pelo uso da chave.</p>
+                              <a href="https://www.sindiconet.com.br/informese/conferindo-a-seguranca-do-elevador-manutencao-elevadores" class="btn btn-primary">Mais informações</a>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <!-- Call to Action-->
-                    <div class="card text-white bg-secondary my-5 py-1 text-center">
-                      <div class="card-body">
-                        <h3 class="text-white m-0">Outos de avisos</h3>
-                      </div>
-                    </div>
-                    <!-- Content Row-->
-                    <div class="row gx-4 gx-lg-5">
-                      <div class="col-md-4 mb-5">
-                        <div class="card h-100">
-                          <img src="/imagens/imagensMural/incendio.webp" class="card-img-top" alt="...">
-                          <div class="card-body">
-                            <h5 class="card-title">Auto de Vistoria do Corpo de Bombeiros - AVCB</h5>
-                            <p class="card-text">O Auto de Vistoria do Corpo de Bombeiros (AVCB) serve
-                              como prova de que diversas obrigações de segurança estão em dia no condomínio.</p>
-                            <a href="https://www.sindiconet.com.br/informese/auto-de-vistoria-do-corpo-de-bombeiros-avcb-administracao-condominios-novos" class="btn btn-primary">Mais informações</a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-4 mb-5">
-                        <div class="card h-100">
-                          <img src="/imagens/imagensMural/agua_limpa_destaque.webp" class="card-img-top" alt="...">
-                          <div class="card-body">
-                            <h5 class="card-title">Limpeza de caixas de água - Manutenção deve ser periódica</h5>
-                            <p class="card-text mt-3">Especialistas consultados nesta matéria também crêem, independente
-                              de lei, ser duas vezes por ano o necessário para manter o local em condições higiênicas adequadas..</p>
-                            <a href="https://www.sindiconet.com.br/informese/limpeza-de-caixas-dagua-manutencao-limpeza-de-caixas-dagua" class="btn btn-primary">Mais informações</a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-4 mb-5">
-                        <div class="card h-100">
-                          <img src="/imagens/imagensMural/elevador_manutencao.jpg" class="card-img-top" alt="...">
-                          <div class="card-body">
-                            <h5 class="card-title">Conferindo a segurança do elevador - O que checar no equipamento.</h5>
-                            <p class="card-text">Mesmo sendo o meio de transporte mais seguro do mundo,
-                              acidentes com elevadores são mais frequentes do que se supõe. Os mais comuns são ocasionados pelo uso da chave.</p>
-                            <a href="https://www.sindiconet.com.br/informese/conferindo-a-seguranca-do-elevador-manutencao-elevadores" class="btn btn-primary">Mais informações</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+
                   </div>
-
                 </div>
               </div>
             </div>
@@ -173,12 +183,13 @@
         </div>
       </div>
     </div>
-  </div>
-  <button onclick="topFunction()" id="backToTopBtn" title="Voltar ao topo"><i class="bi bi-arrow-up-square"></i></button>
-  <script src="/js/scroll.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  <script type="module" src="/js/auth.js"></script>
-  <script type="module" src="/js/view-mural.js"></script>
+    <button onclick="topFunction()" id="backToTopBtn" title="Voltar ao topo"><i class="bi bi-arrow-up-square"></i></button>
+    <script src="/js/scroll.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script type="module" src="/js/auth.js"></script>
+    <script type="module" src="/js/view-mural.js"></script>
+    <script type="module" src="/js/registerServiceWorker.js"></script>
+
 </body>
 
 </html>

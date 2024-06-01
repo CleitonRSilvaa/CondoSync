@@ -7,6 +7,7 @@ const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 document.addEventListener("DOMContentLoaded", () => {
   token.validateSecurity();
   getOcorrencias();
+  buildProfile();
 });
 
 function showLoading() {
@@ -329,3 +330,29 @@ function closeModal() {
 }
 
 document.getElementById("btn-logout").addEventListener("click", token.logout);
+
+function buildProfile() {
+  const user = token.getUser();
+  console.log(user);
+  const namePerson = document.getElementById("name-person");
+  namePerson.innerHTML = `${user.nome}`;
+
+  console.log(namePerson);
+
+  const ul = document.getElementById("user-name");
+
+  const li = document.createElement("li");
+  li.className = "dropdown-item";
+  li.innerHTML = `${user.email}`;
+  ul.appendChild(li);
+
+  const imageProfile = document.getElementById("imagem-profile");
+  if (user.image) {
+    imageProfile.src = user.image;
+    imageProfile.alt = "Imagem de perfil";
+    imageProfile.className = "img-fluid rounded-circle";
+    const imageDefault = document.getElementById("imagem-default");
+    imageDefault.style.display = "none";
+    imageProfile.style.display = "block";
+  }
+}

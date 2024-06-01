@@ -73,6 +73,8 @@ const pagesAdmin = [
   "/admin/gerenciar-ocorrencias.html",
   "/admin/gerenciar-reservas.html",
   "/admin/gerenciar-moradores.html",
+  "/admin/gerenciar-mural.html",
+  "/admin/mural.html",
 ];
 
 const pagesMorador = [
@@ -144,4 +146,17 @@ export function getUserId() {
   const payload = getPayload();
   if (!payload) return null;
   return payload.id;
+}
+
+export function getUser() {
+  const payload = getPayload();
+  if (!payload) return null;
+  const [firstName, ...rest] = payload.name.split(" ");
+  const lastName = rest.length > 0 ? rest[rest.length - 1] : "";
+  return {
+    id: payload.id,
+    nome: firstName + " " + lastName,
+    email: payload.sub,
+    image: payload.image ?? null,
+  };
 }
