@@ -13,4 +13,6 @@ public interface ReservaMoradorRepository extends JpaRepository<ReservaMorador, 
     List<ReservaMorador> findByMorador(Morador morador);
 
     List<ReservaMorador> findByMorador_Id(UUID moradorId);
+
+    ReservaMorador findByReserva_Id(Integer reservaId);
 }

@@ -2,70 +2,49 @@ package com.CondoSync.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
+import com.CondoSync.models.DTOs.SubscriptionDTO;
 
-import com.CondoSync.models.DTOs.SubscripitionDTO;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Mono;
 
 @Service
 @Slf4j
 public class ApiPushManagerService {
 
-    @Autowired
-    private WebClient.Builder webClientBuilder;
-
-    public Mono<String> getDataFromExternalApi() {
-        return webClientBuilder.build()
-                .get()
-                .uri("http://external-api.com/data")
-                .retrieve()
-                .bodyToMono(String.class);
-    }
-
-    public Mono<String> postDataToExternalApi(Object requestBody) {
-        return webClientBuilder.build()
-                .post()
-                .uri("http://external-api.com/data")
-                .body(Mono.just(requestBody), Object.class)
-                .retrieve()
-                .bodyToMono(String.class);
-    }
-
     @Async
-    public void sendNotification(List<SubscripitionDTO> subscriptions, Payload payload) {
+    public void sendNotification(List<SubscriptionDTO> subscriptions, Payload payload) {
         log.info("Enviando notificação para: " + subscriptions.size() + " dispositivos.");
         try {
 
-            InnerApiPushManagerService innerApiPushManagerService = new InnerApiPushManagerService(subscriptions,
-                    payload);
+            var abrir = new Action("open", "Abrir", payload.getUrl());
+            var fechar = new Action("close", "Fechar", payload.getUrl());
 
-            webClientBuilder.build()
-                    .post()
-                    .uri("http://localhost:8020/api/v1/notifications/send-notification")
-                    .body(Mono.just(subscriptions), List.class)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .doOnNext(response -> {
-                        log.info("Notificação enviada com sucesso: " + response);
-                    })
-                    .doOnError(error -> {
+            payload.setActions(
+                    List.of(abrir, fechar));
 
-                        log.error("Erro ao enviar notificação: " + error.getMessage());
-                    })
-                    .subscribe();
+            NotificationRequest request = new NotificationRequest(subscriptions, payload);
+            RestTemplate restTemplate = new RestTemplate();
+            String response = restTemplate.postForObject(
+                    "https://condosyn.eastus.cloudapp.azure.com:8080/api/v1/notifications/send-notification",
+                    request,
+                    String.class);
+            log.info("Notificação enviada com sucesso: " + response);
         } catch (Exception e) {
-            log.error("Erro ao enviar notificação: " + e.getMessage());
+            log.error("Erro ao enviar notificação: ", e.fillInStackTrace());
         }
-
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Payload {
-
         String title;
         String body;
         String icon;
@@ -74,18 +53,28 @@ public class ApiPushManagerService {
         String tag;
         String url;
         List<Action> actions;
-
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Action {
-
         String action;
         String title;
         String icon;
-
     }
 
-    public record InnerApiPushManagerService(List<SubscripitionDTO> subscripitionDTOs, Payload payload) {
-    }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class NotificationRequest {
+        List<SubscriptionDTO> subscriptions;
+        Payload payload;
 
+        public NotificationRequest(List<SubscriptionDTO> subscriptions, Payload payload) {
+            this.subscriptions = subscriptions;
+            this.payload = payload;
+        }
+    }
 }

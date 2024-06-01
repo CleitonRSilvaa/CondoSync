@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.CondoSync.models.PushSubscription;
 import com.CondoSync.models.User;
-import com.CondoSync.models.DTOs.SubscripitionDTO;
+import com.CondoSync.models.DTOs.SubscriptionDTO;
 import com.CondoSync.models.DTOs.UserSubscriptionDTO;
-import com.CondoSync.models.DTOs.SubscripitionDTO.Keys;
+import com.CondoSync.models.DTOs.SubscriptionDTO.Keys;
 import com.CondoSync.repositores.UserSubscriptionRepository;
 
 @Service
@@ -47,14 +47,14 @@ public class UserSubscriptionService {
         return null;
     }
 
-    public List<SubscripitionDTO> getSubscriptions(UUID userId) {
+    public List<SubscriptionDTO> getSubscriptions(UUID userId) {
 
-        List<SubscripitionDTO> subs = new ArrayList<>();
+        List<SubscriptionDTO> subs = new ArrayList<>();
 
         var subscriptions = (List<PushSubscription>) userSubscriptionRepository.findAllByUserId(userId);
 
         for (PushSubscription pushSubscription : subscriptions) {
-            SubscripitionDTO sub = new SubscripitionDTO();
+            SubscriptionDTO sub = new SubscriptionDTO();
             sub.setEndpoint(pushSubscription.getEndpoint());
             sub.setExpirationTime(pushSubscription.getExpirationTime());
             sub.setKeys(new Keys(pushSubscription.getP256dh(), pushSubscription.getAuth()));
