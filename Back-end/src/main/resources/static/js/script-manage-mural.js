@@ -196,6 +196,7 @@ document.addEventListener("submit", async function (event) {
         new bootstrap.Modal(modalElement);
       modalInstance.hide();
       getDadosMural();
+      return;
     }
     if (
       response.status === 404 ||
