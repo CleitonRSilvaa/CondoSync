@@ -193,16 +193,6 @@ function buildTable(data) {
 
       button.addEventListener("click", function () {
         document.getElementById("id-value").value = ocorrencia.id;
-        document
-          .getElementById("bnt-confirme-sim")
-          .addEventListener("click", function (event) {
-            const modalElement = document.getElementById("confirme-modal");
-            const modalInstance =
-              bootstrap.Modal.getInstance(modalElement) ||
-              new bootstrap.Modal(modalElement);
-            modalInstance.hide();
-            cancelarOcorencia(ocorrencia.id);
-          });
       });
       actionCell.appendChild(button);
     }
@@ -222,9 +212,12 @@ function buildTable(data) {
   container.appendChild(div);
 }
 
-async function cancelarOcorencia(reservaId) {
+async function cancelarOcorencia() {
   token.validateSecurity();
   showLoading();
+
+  const reservaId = document.getElementById("id-value").value;
+
   try {
     const response = await fetch(
       `${baseUrl}/api/v1/ocorrencia/cancel/${reservaId}`,
@@ -338,3 +331,14 @@ function buildProfile() {
     imageProfile.style.display = "block";
   }
 }
+
+document
+  .getElementById("bnt-confirme-sim")
+  .addEventListener("click", function (event) {
+    const modalElement = document.getElementById("confirme-modal");
+    const modalInstance =
+      bootstrap.Modal.getInstance(modalElement) ||
+      new bootstrap.Modal(modalElement);
+    modalInstance.hide();
+    cancelarOcorencia();
+  });

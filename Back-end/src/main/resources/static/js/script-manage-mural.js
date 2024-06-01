@@ -311,16 +311,6 @@ function buildTable(data) {
 
     button.addEventListener("click", function () {
       document.getElementById("id-value").value = item.id;
-      document
-        .getElementById("bnt-confirme-sim")
-        .addEventListener("click", function (event) {
-          const modalElement = document.getElementById("confirme-modal");
-          const modalInstance =
-            bootstrap.Modal.getInstance(modalElement) ||
-            new bootstrap.Modal(modalElement);
-          modalInstance.hide();
-          deleteAviso(item.id);
-        });
     });
     tdActions.appendChild(button);
     tr.appendChild(tdActions);
@@ -330,9 +320,11 @@ function buildTable(data) {
   container.appendChild(table);
 }
 
-async function deleteAviso(id) {
+async function deleteAviso() {
   token.validateSecurity();
   showLoading();
+
+  const id = document.getElementById("id-value").value;
 
   try {
     const response = await fetch(`${baseUrl}/api/v1/mural/deleteById/${id}`, {
@@ -445,3 +437,14 @@ function buildProfile() {
     imageProfile.style.display = "block";
   }
 }
+
+document
+  .getElementById("bnt-confirme-sim")
+  .addEventListener("click", async function (event) {
+    const modalElement = document.getElementById("confirme-modal");
+    const modalInstance =
+      bootstrap.Modal.getInstance(modalElement) ||
+      new bootstrap.Modal(modalElement);
+    modalInstance.hide();
+    await deleteAviso();
+  });
