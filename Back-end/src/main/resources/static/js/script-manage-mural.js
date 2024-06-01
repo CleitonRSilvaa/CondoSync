@@ -133,6 +133,9 @@ document.body.addEventListener("click", function (event) {
 
 document.addEventListener("submit", async function (event) {
   event.preventDefault();
+  showLoading();
+
+  document.getElementById("botaoSalvar").disabled = true;
 
   const title = document.getElementById("title").value;
   const description = document.getElementById("descricao").value;
@@ -229,6 +232,9 @@ document.addEventListener("submit", async function (event) {
     }
   } catch (error) {
     showToast("Erro", "Erro ao cadastrar o aviso.", "bg-danger");
+  } finally {
+    document.getElementById("botaoSalvar").disabled = false;
+    hideLoading();
   }
 });
 
