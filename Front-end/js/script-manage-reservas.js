@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "../home/index.html";
   }
   geReservas();
+  buildProfile();
 });
 
 function showLoading() {
@@ -185,7 +186,6 @@ function buildTable(data) {
 }
 
 function changeModalEdit(reserva) {
-  console.log(reserva);
   const modal = document.getElementById("exampleModal");
   const modalTitle = modal.querySelector(".modal-title");
   const modalFooter = modal.querySelector(".modal-footer");
@@ -270,11 +270,7 @@ async function resolverReserva(reserva) {
     status: statusReserva.toString(),
   };
 
-  console.log(resolverReservaData);
-
   showLoading();
-
-  console.log("json", JSON.stringify(resolverReservaData));
 
   try {
     const response = await fetch(
@@ -324,7 +320,6 @@ async function resolverReserva(reserva) {
 }
 
 document.getElementById("statusReserva").addEventListener("change", (event) => {
-  console;
   const respostareserva = document.getElementById("respostaReserva");
   const respostareservadiv = document.getElementById("respostaReserva-div");
 
@@ -344,3 +339,24 @@ document.getElementById("statusReserva").addEventListener("change", (event) => {
 });
 
 document.getElementById("btn-logout").addEventListener("click", token.logout);
+function buildProfile() {
+  const user = token.getUser();
+  const namePerson = document.getElementById("name-person");
+  namePerson.innerHTML = `${user.nome}`;
+  const ul = document.getElementById("user-name");
+
+  const li = document.createElement("li");
+  li.className = "dropdown-item";
+  li.innerHTML = `${user.email}`;
+  ul.appendChild(li);
+
+  const imageProfile = document.getElementById("imagem-profile");
+  if (user.image) {
+    imageProfile.src = user.image;
+    imageProfile.alt = "Imagem de perfil";
+    imageProfile.className = "img-fluid rounded-circle";
+    const imageDefault = document.getElementById("imagem-default");
+    imageDefault.style.display = "none";
+    imageProfile.style.display = "block";
+  }
+}

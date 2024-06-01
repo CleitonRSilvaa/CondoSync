@@ -5,13 +5,15 @@ import * as token from "/js/auth.js";
 document.addEventListener("DOMContentLoaded", () => {
   token.validateSecurity();
 
-  // console.log(token.getPayload());
-
   loadDate();
   getReservas();
   changeDesabilitarHorarios();
   changeDesabilitarEspacos();
   changeDesabilitaBntReservar();
+  setdaDadosModalConfirmacao(
+    "Confirmação",
+    "Deseja realmente cancelar a reserva?"
+  );
   const inputData = document.getElementById("data-reserva");
 
   inputData.addEventListener("input", function () {
@@ -21,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
       changeDesabilitarEspacos();
     }
   });
+  buildProfile();
 });
 function loadDate() {
   const startDate = document.getElementById("data-reserva");
@@ -79,7 +82,6 @@ async function getEspacos() {
     }
   } catch (error) {
     showToast("Erro", "Erro ao buscar os espaços!", "bg-danger", 5000);
-    console.error("Error:", error);
   } finally {
     hideLoading();
   }
@@ -122,7 +124,6 @@ async function getReservas() {
     }
   } catch (error) {
     showToast("Erro", "Erro ao buscar as reservas!", "bg-danger", 5000);
-    console.error("Error:", error);
   } finally {
     hideLoading();
   }
@@ -165,7 +166,22 @@ function buildTable(data) {
       const button = document.createElement("button");
       button.className = "btn btn-danger";
       button.textContent = "Cancelar";
-      button.onclick = () => cancelarReserva(reserva.id);
+      button.dataset.bsToggle = "modal";
+      button.dataset.bsTarget = "#confirme-modal";
+
+      button.addEventListener("click", function () {
+        document.getElementById("id-value").value = reserva.id;
+        document
+          .getElementById("bnt-confirme-sim")
+          .addEventListener("click", function (event) {
+            const modalElement = document.getElementById("confirme-modal");
+            const modalInstance =
+              bootstrap.Modal.getInstance(modalElement) ||
+              new bootstrap.Modal(modalElement);
+            modalInstance.hide();
+            cancelarReserva(reserva.id);
+          });
+      });
       actionCell.appendChild(button);
     }
   });
@@ -304,7 +320,6 @@ async function getHorarios(areaId) {
     }
   } catch (error) {
     showToast("Erro", "Erro ao buscar os horários!", "bg-danger", 7000);
-    console.error("Error:", error);
   } finally {
     hideLoading();
   }
@@ -387,7 +402,6 @@ async function saveReserva() {
       return;
     }
   } catch (error) {
-    console.error("Error:", error);
     showToast("Erro", "Erro ao realizar a reserva!", "bg-danger", 5000);
   } finally {
     hideLoading();
@@ -441,11 +455,43 @@ async function cancelarReserva(reservaId) {
       showToast("Erro", "Erro ao cancelar a reserva!", "bg-danger", 5000);
     }
   } catch (error) {
-    console.error("Error:", error);
     showToast("Erro", "Erro ao cancelar a reserva!", "bg-danger", 5000);
   } finally {
     hideLoading();
   }
 }
 
+function setdaDadosModalConfirmacao(titulo, mensagem) {
+  const modal = document.getElementById("confirme-modal");
+  const modalTitulo = modal.querySelector(".modal-title");
+  modalTitulo.innerHTML = titulo;
+  const modalBody = modal.querySelector(".modal-body");
+
+  modalBody.innerHTML = `
+    <h5 class="text-center" >${mensagem}</h5>
+  `;
+}
+
 document.getElementById("btn-logout").addEventListener("click", token.logout);
+
+function buildProfile() {
+  const user = token.getUser();
+  const namePerson = document.getElementById("name-person");
+  namePerson.innerHTML = `${user.nome}`;
+  const ul = document.getElementById("user-name");
+
+  const li = document.createElement("li");
+  li.className = "dropdown-item";
+  li.innerHTML = `${user.email}`;
+  ul.appendChild(li);
+
+  const imageProfile = document.getElementById("imagem-profile");
+  if (user.image) {
+    imageProfile.src = user.image;
+    imageProfile.alt = "Imagem de perfil";
+    imageProfile.className = "img-fluid rounded-circle";
+    const imageDefault = document.getElementById("imagem-default");
+    imageDefault.style.display = "none";
+    imageProfile.style.display = "block";
+  }
+}

@@ -4,6 +4,7 @@ import * as token from "/js/auth.js";
 
 window.addEventListener("load", () => {
   token.validateSecurity();
+  buildProfile();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -58,7 +59,6 @@ async function getProfile() {
 
     showToast("Erro", "Erro ao buscar perfil", "bg-danger");
   } catch (error) {
-    console.error("Erro ao buscar perfil", error);
     showToast("Erro", "Erro ao buscar perfil", "bg-danger");
   } finally {
     hideLoading();
@@ -98,3 +98,24 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
 }
 
 document.getElementById("btn-logout").addEventListener("click", token.logout);
+function buildProfile() {
+  const user = token.getUser();
+  const namePerson = document.getElementById("name-person");
+  namePerson.innerHTML = `${user.nome}`;
+  const ul = document.getElementById("user-name");
+
+  const li = document.createElement("li");
+  li.className = "dropdown-item";
+  li.innerHTML = `${user.email}`;
+  ul.appendChild(li);
+
+  const imageProfile = document.getElementById("imagem-profile");
+  if (user.image) {
+    imageProfile.src = user.image;
+    imageProfile.alt = "Imagem de perfil";
+    imageProfile.className = "img-fluid rounded-circle";
+    const imageDefault = document.getElementById("imagem-default");
+    imageDefault.style.display = "none";
+    imageProfile.style.display = "block";
+  }
+}

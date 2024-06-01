@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const newUrl = `${window.location.pathname}?${paramUrl.toString()}`;
     window.history.replaceState({}, document.title, newUrl);
   }
+  buildProfile();
 });
 
 function showToast(titulo, message, clss = "bg-primary", time = 5000) {
@@ -51,3 +52,24 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
   toast.show();
 }
 document.getElementById("btn-logout").addEventListener("click", token.logout);
+function buildProfile() {
+  const user = token.getUser();
+  const namePerson = document.getElementById("name-person");
+  namePerson.innerHTML = `${user.nome}`;
+  const ul = document.getElementById("user-name");
+
+  const li = document.createElement("li");
+  li.className = "dropdown-item";
+  li.innerHTML = `${user.email}`;
+  ul.appendChild(li);
+
+  const imageProfile = document.getElementById("imagem-profile");
+  if (user.image) {
+    imageProfile.src = user.image;
+    imageProfile.alt = "Imagem de perfil";
+    imageProfile.className = "img-fluid rounded-circle";
+    const imageDefault = document.getElementById("imagem-default");
+    imageDefault.style.display = "none";
+    imageProfile.style.display = "block";
+  }
+}

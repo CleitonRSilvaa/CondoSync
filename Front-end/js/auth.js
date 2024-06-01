@@ -3,10 +3,7 @@ import * as jose from "https://cdnjs.cloudflare.com/ajax/libs/jose/5.3.0/index.b
 export function saveLogin(jwt) {
   const token = jose.decodeJwt(jwt);
   sessionStorage.setItem("token", jwt);
-
-  console.log("Token salvo com sucesso!");
   if (token) {
-    console.log("Token decodificado: ", token);
     if (token.scope.includes("ADMIN")) {
       window.location.href = "/admin/index.html";
     }
@@ -51,7 +48,6 @@ export function isExpiredToken() {
   const payload = getPayload();
   if (!payload) return true;
   const dataExpiracao = new Date(payload.exp * 1000);
-  //console.log("seu tempo de expiração é: " + dataExpiracao);
   return Date.now() >= payload.exp * 1000;
 }
 
@@ -73,6 +69,8 @@ const pagesAdmin = [
   "/admin/gerenciar-ocorrencias.html",
   "/admin/gerenciar-reservas.html",
   "/admin/gerenciar-moradores.html",
+  "/admin/gerenciar-mural.html",
+  "/admin/mural.html",
 ];
 
 const pagesMorador = [
@@ -101,7 +99,6 @@ export function validateSecurity() {
 
   if (!isLoggedAdmin()) {
     const page = window.location.pathname;
-    //console.log("Página atual: ", page);
     if (pagesAdmin.includes(page)) {
       window.location.href = "/morador/index.html?error=403";
       return;
@@ -109,7 +106,6 @@ export function validateSecurity() {
   }
   if (isLoggedAdmin()) {
     const page = window.location.pathname;
-    //console.log("Página atual: ", page);
     if (pagesMorador.includes(page)) {
       window.location.href = "/admin/index.html?error=403";
       return;
@@ -117,22 +113,9 @@ export function validateSecurity() {
   }
 }
 
-// export function reloadToken() {
-//   const token = getToken();
-//   if (!token) {
-//     window.location.href = "http://localhost:8011/Login/Login.html";
-//   }
-//   if (isExpiredToken()) {
-//     revogeToken();
-//     return;
-//   }
-//   saveLogin(token);
-// }
-
 // Função para obter a página de referência
 export function getReferrer() {
   const referrer = document.referrer;
-  //console.log("Página de referência: ", referrer);
   return referrer;
 }
 
@@ -144,4 +127,17 @@ export function getUserId() {
   const payload = getPayload();
   if (!payload) return null;
   return payload.id;
+}
+
+export function getUser() {
+  const payload = getPayload();
+  if (!payload) return null;
+  const [firstName, ...rest] = payload.name.split(" ");
+  const lastName = rest.length > 0 ? rest[rest.length - 1] : "";
+  return {
+    id: payload.id,
+    nome: firstName + " " + lastName,
+    email: payload.sub,
+    image: payload.image ?? null,
+  };
 }

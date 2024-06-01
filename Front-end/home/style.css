@@ -70,3 +70,23 @@ body main {
   color: #fff;
   border-bottom-color: #fff;
 }
+
+#backToTopBtn {
+  display: none; /* Esconda o botão por padrão */
+  position: fixed; /* Fixa o botão na tela */
+  bottom: 20px; /* Distância da parte inferior da tela */
+  right: 30px; /* Distância do lado direito da tela */
+  z-index: 99; /* Certifique-se que o botão ficará na frente de outros elementos */
+  font-size: 18px; /* Tamanho do texto */
+  border: none; /* Sem borda */
+  outline: none; /* Sem contorno */
+  background-color: #555; /* Cor de fundo */
+  color: white; /* Cor do texto */
+  cursor: pointer; /* Aparecer como um botão clicável */
+  padding: 15px; /* Espaçamento interno */
+  border-radius: 10px; /* Bordas arredondadas */
+}
+
+#backToTopBtn:hover {
+  background-color: #000; /* Cor de fundo ao passar o mouse */
+}

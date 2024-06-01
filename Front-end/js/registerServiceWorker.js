@@ -12,18 +12,18 @@ const registerServiceWorker = async () => {
     try {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") {
-        console.warn("Permissão para notificações não foi concedida.");
+        // console.warn("Permissão para notificações não foi concedida.");
         return;
       }
 
       const registration = await navigator.serviceWorker.register("/js/sw.js", {
         scope: "/js/",
       });
-      console.log("Service Worker registrado com sucesso:", registration);
+      // console.log("Service Worker registrado com sucesso:", registration);
 
       const publicVapidKey = await getPublicKey();
       if (!publicVapidKey) {
-        console.error("Chave pública não pôde ser obtida.");
+        // console.error("Chave pública não pôde ser obtida.");
         return;
       }
 
@@ -36,12 +36,12 @@ const registerServiceWorker = async () => {
         await saveSubscribe(subscription);
       }
     } catch (error) {
-      console.error(`Falha ao registrar o Service Worker: ${error}`);
+      // console.error(`Falha ao registrar o Service Worker: ${error}`);
     }
   } else {
-    console.error(
-      "Service Worker ou Push Manager não são suportados no navegador."
-    );
+    // console.error(
+    //   "Service Worker ou Push Manager não são suportados no navegador."
+    // );
   }
 };
 
@@ -59,10 +59,10 @@ async function getPublicKey() {
     if (response.ok) {
       return await response.text();
     }
-    console.error("Falha ao obter a chave pública: Resposta não OK");
+    // console.error("Falha ao obter a chave pública: Resposta não OK");
     return null;
   } catch (error) {
-    console.error("Erro ao obter a chave pública do servidor:", error);
+    // console.error("Erro ao obter a chave pública do servidor:", error);
     return null;
   }
 }
@@ -80,13 +80,12 @@ async function saveSubscribe(subscription) {
       body: JSON.stringify(subscription),
     });
     if (response.ok) {
-      console.log("Assinatura salva com sucesso.");
       return;
     }
-    console.error("Falha ao salvar a assinatura: Resposta não OK");
+    // console.error("Falha ao salvar a assinatura: Resposta não OK");
     return null;
   } catch (error) {
-    console.error("Erro ao salvar a assinatura:", error);
+    // console.error("Erro ao salvar a assinatura:", error);
     return null;
   }
 }

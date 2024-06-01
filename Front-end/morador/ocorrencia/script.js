@@ -5,6 +5,11 @@ import * as token from "/js/auth.js";
 window.onload = () => {
   token.validateSecurity();
   getOcorrencias();
+  setdaDadosModalConfirmacao(
+    "Confirmação de exclusão",
+    "Deseja realmente cancelar a ocorrência?"
+  );
+  buildProfile();
 };
 
 function showLoading() {
@@ -183,7 +188,12 @@ function buildTable(data) {
       const button = document.createElement("button");
       button.classList.add("btn", "btn-danger", "btn-sm", "me-2");
       button.textContent = "Excluir";
-      button.onclick = () => cancelarOcorencia(ocorrencia.id);
+      button.dataset.bsToggle = "modal";
+      button.dataset.bsTarget = "#confirme-modal";
+
+      button.addEventListener("click", function () {
+        document.getElementById("id-value").value = ocorrencia.id;
+      });
       actionCell.appendChild(button);
     }
     const button = document.createElement("button");
@@ -202,9 +212,12 @@ function buildTable(data) {
   container.appendChild(div);
 }
 
-async function cancelarOcorencia(reservaId) {
+async function cancelarOcorencia() {
   token.validateSecurity();
   showLoading();
+
+  const reservaId = document.getElementById("id-value").value;
+
   try {
     const response = await fetch(
       `${baseUrl}/api/v1/ocorrencia/cancel/${reservaId}`,
@@ -284,4 +297,48 @@ document
     saveOcorrencia();
   });
 
+function setdaDadosModalConfirmacao(titulo, mensagem) {
+  const modal = document.getElementById("confirme-modal");
+  const modalTitulo = modal.querySelector(".modal-title");
+  modalTitulo.innerHTML = titulo;
+  const modalBody = modal.querySelector(".modal-body");
+
+  modalBody.innerHTML = `
+      <h5 class="text-center" >${mensagem}</h5>
+    `;
+}
+
 document.getElementById("btn-logout").addEventListener("click", token.logout);
+
+function buildProfile() {
+  const user = token.getUser();
+  const namePerson = document.getElementById("name-person");
+  namePerson.innerHTML = `${user.nome}`;
+  const ul = document.getElementById("user-name");
+
+  const li = document.createElement("li");
+  li.className = "dropdown-item";
+  li.innerHTML = `${user.email}`;
+  ul.appendChild(li);
+
+  const imageProfile = document.getElementById("imagem-profile");
+  if (user.image) {
+    imageProfile.src = user.image;
+    imageProfile.alt = "Imagem de perfil";
+    imageProfile.className = "img-fluid rounded-circle";
+    const imageDefault = document.getElementById("imagem-default");
+    imageDefault.style.display = "none";
+    imageProfile.style.display = "block";
+  }
+}
+
+document
+  .getElementById("bnt-confirme-sim")
+  .addEventListener("click", function (event) {
+    const modalElement = document.getElementById("confirme-modal");
+    const modalInstance =
+      bootstrap.Modal.getInstance(modalElement) ||
+      new bootstrap.Modal(modalElement);
+    modalInstance.hide();
+    cancelarOcorencia();
+  });

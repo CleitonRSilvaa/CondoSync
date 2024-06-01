@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   getMoradores();
+  buildProfile();
 
   document
     .getElementById("exampleModal")
@@ -657,7 +658,7 @@ function buildTable(data) {
   table.innerHTML = `
     <thead class="table-dark">
       <tr>
-        <th scope="col">#</th>
+        <th scope="col">ID</th>
         <th scope="col">Nome</th>
         <th scope="col">Email</th>
         <th scope="col">Apartamento</th>
@@ -675,7 +676,7 @@ function buildTable(data) {
   let count = 1;
   data.forEach((morad) => {
     const row = tbody.insertRow();
-    row.insertCell().textContent = count++;
+    row.insertCell().textContent = morad.id;
     row.insertCell().textContent = morad.nomeCompleto;
     row.insertCell().textContent = morad.email;
     row.insertCell().textContent = morad.apartamento;
@@ -790,3 +791,25 @@ document
   });
 
 document.getElementById("btn-logout").addEventListener("click", token.logout);
+
+function buildProfile() {
+  const user = token.getUser();
+  const namePerson = document.getElementById("name-person");
+  namePerson.innerHTML = `${user.nome}`;
+  const ul = document.getElementById("user-name");
+
+  const li = document.createElement("li");
+  li.className = "dropdown-item";
+  li.innerHTML = `${user.email}`;
+  ul.appendChild(li);
+
+  const imageProfile = document.getElementById("imagem-profile");
+  if (user.image) {
+    imageProfile.src = user.image;
+    imageProfile.alt = "Imagem de perfil";
+    imageProfile.className = "img-fluid rounded-circle";
+    const imageDefault = document.getElementById("imagem-default");
+    imageDefault.style.display = "none";
+    imageProfile.style.display = "block";
+  }
+}
