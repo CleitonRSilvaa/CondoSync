@@ -4,10 +4,10 @@ import * as token from "/js/auth.js";
 
 const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   token.validateSecurity();
 
-  getDadosMural();
+  await getDadosMural();
   buildProfile();
   setdaDadosModalConfirmacao(
     "Confirmação",
@@ -195,7 +195,7 @@ document.addEventListener("submit", async function (event) {
         bootstrap.Modal.getInstance(modalElement) ||
         new bootstrap.Modal(modalElement);
       modalInstance.hide();
-      getDadosMural();
+      await getDadosMural();
       return;
     }
     if (
@@ -349,7 +349,8 @@ async function deleteAviso(id) {
         "O aviso foi excluído com sucesso.",
         "bg-success"
       );
-      getDadosMural();
+      await getDadosMural();
+      return;
     } else {
       showToast("Erro", "Erro ao excluir o aviso.", "bg-danger");
     }
