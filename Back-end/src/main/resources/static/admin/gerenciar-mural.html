@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="/css/loading.css" />
+  <title>CondoSync:: Ocorrencia dos Moradores</title>
+</head>
+
+<body style="background-color: rgb(230, 219, 219)">
+  <div id="loading" class="loading-overlay" style="display: none">
+    <div class="d-flex justify-content-center align-items-center h-100">
+      <div class="spinner-border text-light" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
+  </div>
+  <div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3"></div>
+  </div>
+  <div class="container-fluid">
+    <div class="row flex-nowrap">
+      <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+          <a href="/admin/index.html" class="nav-link align-middle px-0">
+            <img src="../imagens/Logo_ADM.png" alt="" class="img-fluid imgLogo" />
+          </a>
+          <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+            <li class="nav-item">
+              <a href="/admin/index.html" class="nav-link align-middle p-2">
+                <i class="fs-4 bi-house"></i>
+                <span class="ms-1 d-none d-sm-inline">Home</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/mural.html" class="nav-link align-middle p-2">
+                <i class="fs-4 bi-info-square"></i>
+                <span class="ms-1 d-none d-sm-inline">Mural</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/gerenciar-mural.html" class="nav-link align-middle p-2 active">
+                <i class="fs-4 bi-info-circle"></i>
+                <span class="ms-1 d-none d-sm-inline">Gerencia mural</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/admin/gerenciar-moradores.html" class="nav-link align-middle p-2">
+                <i class="fs-4 bi-people-fill"></i>
+                <span class="ms-1 d-none d-sm-inline">Moradores</span>
+              </a>
+            </li>
+            <li>
+              <a href="/admin/gerenciar-ocorrencias.html" class="nav-link align-middle p-2 ">
+                <i class="fs-4 bi-tools"></i>
+                <span class="ms-1 d-none d-sm-inline">Ocorrências</span></a>
+            </li>
+            <li>
+              <a href="/admin/gerenciar-reservas.html" class="nav-link px-0 align-middle">
+                <i class="fs-4 bi-calendar-event"></i>
+                <span class="ms-1 d-none d-sm-inline">Agendamentos</span>
+              </a>
+            </li>
+            <li>
+              <a id="btn-logout" class="nav-link px-0 align-middle">
+                <i class="fs-4 bi-box-arrow-in-right"></i>
+                <span class="ms-1 d-none d-sm-inline">Sair</span>
+              </a>
+            </li>
+          </ul>
+
+        </div>
+
+      </div>
+      <div class="col py-3">
+        <div class="container-fluid">
+          <div class="row justify-content-center align-items-center">
+            <div class="col-lg-12 mt-3">
+              <div class="card border">
+                <h3 class="text-center">Cadastra novo aviso</h1>
+                  <hr class="mb-5">
+                  <button class="btn btn-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#modal-form-aviso">Clique aqui</button>
+                  <div class="card-body">
+                  </div>
+              </div>
+            </div>
+            <!-- llista de avisos -->
+            <div class="col-lg-12 mt-3">
+              <div class="card border">
+                <div class="card-body">
+                  <!-- Conteúdo do card aqui -->
+                  <h3 class="text-center">Lista de Avisos</h1>
+                    <hr class="mb-5">
+                    <div id="avisos-container"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal fade" id="confirme-modal" tabindex="-1" aria-labelledby="confirme-modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <input type="hidden" value="" , id="id-value" />
+          <h5 class="modal-title" id="confirme-modalLabel">
+
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Fechar
+          </button>
+          <button type="button" id="bnt-confirme-sim" class="btn btn-primary">
+            Sim
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal-form-aviso" tabindex="-1" aria-labelledby="modal-form-avisoLabel" aria-hidden="true" style="display: none;" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <h5 class="modal-title" id="modal-form-avisoLabel">
+            Cadastro de Aviso
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="formMural" enctype="multipart/form-data">
+          <div class="modal-body">
+
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label for="nome" class="form-label">Titulo do Aviso:</label>
+                <input type="text" class="form-control" id="title" name="title" maxlength="200" required>
+              </div>
+              <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição:</label>
+                <textarea class="form-control" id="descricao" name="descricaoProduto" rows="4" maxlength="255"></textarea>
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+              <label for="imagem" class="form-label">Imagens</label>
+              <input type="file" class="form-control" id="imagem" name="imagem" required>
+            </div>
+            <div id="preview" class="row p-2 justify-content-center">
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+              Fechar
+            </button>
+            <button type="submit" class="btn btn-primary buttonSalvar" id="botaoSalvar">Cadastrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script type="module" src="/js/auth.js"></script>
+  <script type="module" src="/js/script-manage-mural.js"></script>
+  <script type="module" src="/js/registerServiceWorker.js"></script>
+
+</body>
+
+</html>

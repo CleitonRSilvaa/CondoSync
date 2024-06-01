@@ -54,7 +54,7 @@ async function getDadosMural() {
   showLoading();
 
   try {
-    const response = await fetch(`${baseUrl}/api/v1/mural/lists`, {
+    const response = await fetch(`${baseUrl}/api/v1/mural/list`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -142,6 +142,7 @@ function buildMural(data, unicoAviso = false) {
         p.textContent = item.description;
         carouselCaption.appendChild(p);
       }
+      itemDiv.appendChild(carouselCaption);
     }
 
     muralItems.appendChild(itemDiv);
