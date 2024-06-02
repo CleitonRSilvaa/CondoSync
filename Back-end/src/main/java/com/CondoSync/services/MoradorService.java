@@ -203,4 +203,9 @@ public class MoradorService {
         return ResponseEntity.ok().build();
     }
 
+    public User findUserById(UUID id) {
+        return moradorRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Morador não encontrado com o email: " + id)).getUser();
+    }
+
 }

@@ -13,8 +13,10 @@ import com.CondoSync.models.Role;
 import com.CondoSync.models.User;
 import com.CondoSync.models.DTOs.UserUpdatePasswordDTO;
 import com.CondoSync.models.DTOs.UsuarioDTO;
+import com.CondoSync.repositores.MoradorRepository;
 import com.CondoSync.repositores.UsersRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
@@ -39,6 +41,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MoradorRepository moradorRepository;
 
     @Autowired
     private RoleService roleService;
@@ -299,8 +304,8 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void updatePassword(UUID userId, UserUpdatePasswordDTO userUpdatePasswordDTO) {
-        User user = usersRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+
+        User user = findUserOrMoradorUserById(userId);
 
         if (!userId.equals(user.getId())) {
             throw new IllegalArgumentException("Usuário não pode alterar a senha de outro usuário");
@@ -325,6 +330,13 @@ public class UserService implements UserDetailsService {
                 LocalDateTime.now().plusMonths(2));
         updateUser(user);
 
+    }
+
+    public User findUserOrMoradorUserById(UUID id) {
+        return moradorRepository.findById(id)
+                .map(morador -> morador.getUser())
+                .orElseGet(() -> usersRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
     }
 
 }
