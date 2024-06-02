@@ -13,6 +13,8 @@ public interface MoradorRepository extends JpaRepository<Morador, UUID> {
 
     Optional<Morador> findByEmail(String email);
 
+    Optional<Morador> findByUserId(UUID userId);
+
     // Optional<Morador> findByBlocoAndApartamento(String bloco, String
     // apartamento);
 
