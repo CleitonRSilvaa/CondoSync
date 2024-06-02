@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.CondoSync.components.ValidateUserException;
+import com.CondoSync.models.Morador;
 import com.CondoSync.models.Role;
 import com.CondoSync.models.User;
 import com.CondoSync.models.DTOs.UserUpdatePasswordDTO;
@@ -308,7 +309,14 @@ public class UserService implements UserDetailsService {
         User user = findUserOrMoradorUserById(userId);
 
         if (!userId.equals(user.getId())) {
-            throw new IllegalArgumentException("Usuário não pode alterar a senha de outro usuário");
+            findMoradorByUserId(userId).ifPresentOrElse(morador -> {
+                if (!morador.getUser().getId().equals(user.getId())) {
+                    throw new IllegalArgumentException("Usuário não pode alterar a senha de outro usuário");
+                }
+            }, () -> {
+                throw new IllegalArgumentException("Usuário não pode alterar a senha de outro usuário");
+            });
+
         }
 
         if (!matchesPassword(userUpdatePasswordDTO.getSenhaAtual(), user.getHashPassword())) {
@@ -337,6 +345,11 @@ public class UserService implements UserDetailsService {
                 .map(morador -> morador.getUser())
                 .orElseGet(() -> usersRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado")));
+    }
+
+    public Optional<Morador> findMoradorByUserId(UUID userId) {
+        return moradorRepository.findByUserId(userId);
+
     }
 
 }
