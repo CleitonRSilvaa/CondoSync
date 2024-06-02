@@ -164,6 +164,9 @@ public class UserService implements UserDetailsService {
                 if (!pass) {
                     throw new IllegalArgumentException("Senha inválida");
                 }
+
+                user.setDatahashSenhaUpdate(
+                        LocalDateTime.now());
             }
 
             Set<Role> roles = new HashSet<Role>();
@@ -175,7 +178,6 @@ public class UserService implements UserDetailsService {
             user.setId(userDto.getId());
             user.setFullName(userDto.getNomeCompleto());
             user.setUserName(userDto.getEmail());
-            user.setHashPassword(passwordEncoder.encode(userDto.getSenha()));
 
             user.setRoles(roles);
             var userSave = updateUser(user);
@@ -320,7 +322,7 @@ public class UserService implements UserDetailsService {
         user.setHashPassword(passwordEncoder.encode(userUpdatePasswordDTO.getNovaSenha()));
 
         user.setDatahashSenhaUpdate(
-                LocalDateTime.now().plusDays(30));
+                LocalDateTime.now().plusMonths(2));
         updateUser(user);
 
     }

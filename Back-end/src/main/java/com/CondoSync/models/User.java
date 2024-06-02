@@ -107,7 +107,7 @@ public class User implements UserDetails {
     @JsonIgnore
     public boolean isCredentialsExpired() {
         return this.datahashSenhaUpdate == null
-                || this.datahashSenhaUpdate.isBefore(LocalDateTime.now().minusMonths(3));
+                || this.datahashSenhaUpdate.isBefore(LocalDateTime.now());
 
     }
 

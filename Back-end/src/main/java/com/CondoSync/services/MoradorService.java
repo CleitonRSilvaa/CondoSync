@@ -1,5 +1,6 @@
 package com.CondoSync.services;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -157,6 +158,8 @@ public class MoradorService {
             if (!pass) {
                 throw new IllegalArgumentException("Senha inválida");
             }
+
+            user.setDatahashSenhaUpdate(LocalDateTime.now());
 
             userService.updateUser(user);
 
