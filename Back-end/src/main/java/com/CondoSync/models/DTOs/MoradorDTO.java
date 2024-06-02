@@ -41,7 +41,7 @@ public class MoradorDTO {
     @Size(min = 9, max = 9, message = "O RG deve ter 9 caracteres")
     private String rg;
 
-    @Size(min = 1, max = 1, message = "O bloco deve ter 1 caracter")
+    @Size(max = 1, message = "O bloco deve ter 1 caracter")
     private String bloco;
 
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
