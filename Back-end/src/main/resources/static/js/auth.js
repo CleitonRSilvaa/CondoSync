@@ -5,9 +5,15 @@ export function saveLogin(jwt) {
   sessionStorage.setItem("token", jwt);
   if (token) {
     if (token.scope.includes("ADMIN")) {
+      if (token.passwordExpiration == true) {
+        window.location.href = "/admin/alterar-senha.html";
+      }
       window.location.href = "/admin/index.html";
     }
     if (token.scope.includes("MORADOR")) {
+      if (token.passwordExpiration == true) {
+        window.location.href = "/morador/alterar-senha.html";
+      }
       window.location.href = "/morador/index.html";
     }
   }
@@ -70,6 +76,8 @@ const pagesAdmin = [
   "/admin/gerenciar-reservas.html",
   "/admin/gerenciar-moradores.html",
   "/admin/gerenciar-mural.html",
+  "/admin/gerenciar-usuarios.html",
+  "/admin/alterar-senha.html",
   "/admin/mural.html",
 ];
 
@@ -80,6 +88,7 @@ const pagesMorador = [
   "/morador/espaco-agendamento/index.html",
   "/morador/financeiro/index.html",
   "/morador/ocorrencia/index.html",
+  "/morador/alterar-senha.html",
 ];
 
 export function validateSecurity() {
@@ -140,4 +149,10 @@ export function getUser() {
     email: payload.sub,
     image: payload.image ?? null,
   };
+}
+
+export function getNome() {
+  const payload = getPayload();
+  if (!payload) return null;
+  return payload.name;
 }
