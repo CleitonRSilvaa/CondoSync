@@ -308,12 +308,14 @@ public class UserService implements UserDetailsService {
 
         User user = findUserOrMoradorUserById(userId);
 
-        findMoradorByUserId(userId).ifPresentOrElse(morador -> {
+        findMoradorByUserId(user.getId()).ifPresentOrElse(morador -> {
             if (!morador.getUser().getId().equals(user.getId())) {
+                log.error("Usuário não pode alterar a senha de outro usuário - morador");
                 throw new IllegalArgumentException("Usuário não pode alterar a senha de outro usuário");
             }
         }, () -> {
             if (!userId.equals(user.getId())) {
+                log.error("Usuário não pode alterar a senha de outro usuário - user");
                 throw new IllegalArgumentException("Usuário não pode alterar a senha de outro usuário");
             }
         });
