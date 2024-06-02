@@ -22,7 +22,7 @@ public class TokenService {
 	@Autowired
 	private JwtEncoder jwtEncoder;
 
-	@Value("${jwt.expiration}")
+	@Value("${jwt.expiration.ofMinutes}")
 	private int durationToExpire;
 
 	@Autowired
