@@ -5,16 +5,38 @@ export function saveLogin(jwt) {
   sessionStorage.setItem("token", jwt);
   if (token) {
     if (token.scope.includes("ADMIN")) {
-      if (token.passwordExpiration == true) {
+      if (token.passwordExpiration === true) {
+        console.log("entrou");
         window.location.href = "/admin/alterar-senha.html";
+        return;
       }
       window.location.href = "/admin/index.html";
     }
     if (token.scope.includes("MORADOR")) {
-      if (token.passwordExpiration == true) {
+      if (token.passwordExpiration === true) {
+        console.log("entrou");
         window.location.href = "/morador/alterar-senha.html";
+        return;
       }
       window.location.href = "/morador/index.html";
+    }
+  }
+}
+
+function passwordExpiration() {
+  const payload = getPayload();
+  if (!payload) {
+    logout();
+    return;
+  }
+  if (payload.passwordExpiration) {
+    if (payload.scope.includes("ADMIN")) {
+      window.location.href = "/admin/alterar-senha.html";
+      return;
+    }
+    if (payload.scope.includes("MORADOR")) {
+      window.location.href = "/morador/alterar-senha.html";
+      return;
     }
   }
 }
@@ -93,6 +115,10 @@ const pagesMorador = [
 
 export function validateSecurity() {
   getReferrer();
+
+  if (!window.location.pathname.includes("alterar-senha.html")) {
+    passwordExpiration();
+  }
 
   if (isExpiredToken()) {
     window.location.href =
