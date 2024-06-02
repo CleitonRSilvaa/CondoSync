@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.CondoSync.models.User;
 import com.CondoSync.models.DTOs.ResponseDTO;
+import com.CondoSync.models.DTOs.UserUpdatePasswordDTO;
 import com.CondoSync.models.DTOs.UsuarioDTO;
 import com.CondoSync.services.UserService;
 
@@ -108,6 +109,16 @@ public class UserController {
             responseDTO.setStatus(400);
             return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN') or hasAuthority('SCOPE_MORADOR')")
+    @PutMapping("/update-password/{userId}")
+    public ResponseEntity<?> updatePassword(
+            @PathVariable UUID userId,
+            @RequestBody @Valid UserUpdatePasswordDTO usuarioDTO) {
+
+        userService.updatePassword(userId, usuarioDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
