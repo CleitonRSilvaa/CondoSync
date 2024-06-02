@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.CondoSync.components.ValidateUserException;
 import com.CondoSync.models.Role;
 import com.CondoSync.models.User;
+import com.CondoSync.models.DTOs.UserUpdatePasswordDTO;
 import com.CondoSync.models.DTOs.UsuarioDTO;
 import com.CondoSync.repositores.UsersRepository;
 
@@ -20,7 +21,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -283,6 +284,45 @@ public class UserService implements UserDetailsService {
         }
         userDto.setRoles(roles);
         return userDto;
+    }
+
+    public char[] generatePassword() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        char[] password = new char[8];
+        for (int i = 0; i < 8; i++) {
+            int index = (int) (chars.length() * Math.random());
+            password[i] = chars.charAt(index);
+        }
+        return password;
+    }
+
+    public void updatePassword(UUID userId, UserUpdatePasswordDTO userUpdatePasswordDTO) {
+        User user = usersRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+
+        if (!userId.equals(user.getId())) {
+            throw new IllegalArgumentException("Usuário não pode alterar a senha de outro usuário");
+        }
+
+        if (!matchesPassword(userUpdatePasswordDTO.getSenhaAtual(), user.getHashPassword())) {
+            throw new IllegalArgumentException("Senha atual inválida");
+        }
+
+        if (matchesPassword(userUpdatePasswordDTO.getNovaSenha(), user.getHashPassword())) {
+            throw new IllegalArgumentException("A nova senha não pode ser igual a senha atual");
+        }
+
+        if (!userUpdatePasswordDTO.getNovaSenha().equals(userUpdatePasswordDTO
+                .getConfirmacaoNovaSenha())) {
+            throw new IllegalArgumentException("As senhas não conferem");
+        }
+
+        user.setHashPassword(passwordEncoder.encode(userUpdatePasswordDTO.getNovaSenha()));
+
+        user.setDatahashSenhaUpdate(
+                LocalDateTime.now().plusDays(30));
+        updateUser(user);
+
     }
 
 }
