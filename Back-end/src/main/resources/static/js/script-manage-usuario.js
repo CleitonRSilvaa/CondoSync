@@ -219,7 +219,7 @@ document
 
     const validation = usuarioSchema.safeParse(formData);
 
-    if (false) {
+    if (!validation.success) {
       validation.error.errors.forEach((err) => {
         const fieldName = err.path[0];
         const errorElementId = `${fieldName}-editar-error`;
