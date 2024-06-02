@@ -2,8 +2,7 @@ import zod from "https://cdn.jsdelivr.net/npm/zod@3.23.8/+esm";
 
 import * as token from "/js/auth.js";
 
-const baseUrl = "http://localhost:8010";
-// const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
+const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 
 document.addEventListener("DOMContentLoaded", function () {
   token.validateSecurity();
@@ -92,8 +91,6 @@ document
       confirmacaoSenha: document.getElementById("confirmacaoSenha").value,
       rolesIds: [parseInt(document.getElementById("tipo").value)],
     };
-
-    console.log(formData);
 
     const usuarioSchema = zod
       .object({
