@@ -3,6 +3,7 @@ import zod from "https://cdn.jsdelivr.net/npm/zod@3.23.8/+esm";
 import * as token from "/js/auth.js";
 
 const baseUrl = "http://localhost:8010";
+// const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 
 document.addEventListener("DOMContentLoaded", function () {
   token.validateSecurity();
@@ -221,7 +222,7 @@ document
 
     const validation = usuarioSchema.safeParse(formData);
 
-    if (!validation.success) {
+    if (false) {
       validation.error.errors.forEach((err) => {
         const fieldName = err.path[0];
         const errorElementId = `${fieldName}-editar-error`;
@@ -588,6 +589,16 @@ function buildProfile() {
   li.className = "dropdown-item";
   li.innerHTML = `${user.email}`;
   ul.appendChild(li);
+
+  const li2 = document.createElement("li");
+  li2.className = "dropdown-item";
+  if (token.isLoggedAdmin()) {
+    li2.innerHTML = `<a href="/admin/alterar-senha.html">Alterar senha</a>`;
+  } else {
+    li2.innerHTML = `<a href="/morador/alterar-senha.html">Alterar senha</a>`;
+  }
+
+  ul.appendChild(li2);
 
   const imageProfile = document.getElementById("imagem-profile");
   if (user.image) {
