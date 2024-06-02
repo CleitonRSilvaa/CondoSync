@@ -4,8 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (token.isLogged()) {
     if (token.getScope().includes("ADMIN")) {
       window.location.href = "/admin/index.html";
-    }
-    if (token.getScope().includes("MORADOR")) {
+    } else if (token.getScope().includes("MORADOR")) {
       window.location.href = "/morador/index.html";
     }
   }
@@ -13,15 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let paramUrl = new URLSearchParams(window.location.search);
 
   if (paramUrl.has("error") && paramUrl.get("error") === "401") {
-    $("#divPaiForms").empty();
     const divPaiForms = document.getElementById("divPaiForms");
-    divPaiForms.insertAdjacentHTML(
-      "afterbegin",
-      criarMensagemDeErro(
-        "Sessão expirada",
-        "Faça login novamente para continuar!",
-        "alert-warning"
-      )
+    divPaiForms.innerHTML = criarMensagemDeErro(
+      "Sessão expirada",
+      "Faça login novamente para continuar!",
+      "alert-warning"
     );
 
     paramUrl.delete("error");
@@ -33,25 +28,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 
-(function ($) {
-  "use strict";
-  var fullHeight = function () {
-    $(".js-fullheight").css("height", $(window).height());
-    $(window).resize(function () {
-      $(".js-fullheight").css("height", $(window).height());
+document.addEventListener("DOMContentLoaded", () => {
+  setFullHeight();
+
+  document.querySelectorAll(".toggle-password").forEach((button) => {
+    button.addEventListener("click", function () {
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
+      const input = document.querySelector(this.getAttribute("toggle"));
+      if (input.getAttribute("type") === "password") {
+        input.setAttribute("type", "text");
+      } else {
+        input.setAttribute("type", "password");
+      }
     });
-  };
-  fullHeight();
-  $(".toggle-password").click(function () {
-    $(this).toggleClass("fa-eye fa-eye-slash");
-    var input = $($(this).attr("toggle"));
-    if (input.attr("type") == "password") {
-      input.attr("type", "text");
-    } else {
-      input.attr("type", "password");
-    }
   });
-})(jQuery);
+});
+
+function setFullHeight() {
+  document.querySelectorAll(".js-fullheight").forEach((element) => {
+    element.style.height = `${window.innerHeight}px`;
+  });
+
+  window.addEventListener("resize", () => {
+    document.querySelectorAll(".js-fullheight").forEach((element) => {
+      element.style.height = `${window.innerHeight}px`;
+    });
+  });
+}
 
 document
   .getElementById("forms-login")
@@ -59,7 +63,6 @@ document
     event.preventDefault();
 
     showLoading();
-
     clearError();
 
     const email = document.getElementById("email");
@@ -103,46 +106,19 @@ async function postLogin(email, senha) {
     if (response.ok) {
       const data = await response.json();
       token.saveLogin(data.token);
+      return;
     }
 
-    if (response.status === 401) {
-      const data = await response.json();
-      $("#divPaiForms").empty();
-      const divPaiForms = document.getElementById("divPaiForms");
-      divPaiForms.insertAdjacentHTML(
-        "afterbegin",
-        criarMensagemDeErro(data.message, data.error)
-      );
-      return;
-    }
-    if (response.status >= 400 && response.status < 500) {
-      const data = await response.json();
-      $("#divPaiForms").empty();
-      const divPaiForms = document.getElementById("divPaiForms");
-      divPaiForms.insertAdjacentHTML(
-        "afterbegin",
-        criarMensagemDeErro(data.message, data.error)
-      );
-      return;
-    }
-    if (response.status === 500) {
-      $("#divPaiForms").empty();
-      const divPaiForms = document.getElementById("divPaiForms");
-      divPaiForms.insertAdjacentHTML(
-        "afterbegin",
-        criarMensagemDeErro("Erro ao fazer login, tente novamente mais tarde!")
-      );
-      return;
-    }
-  } catch (error) {
-    $("#divPaiForms").empty();
+    const data = await response.json();
     const divPaiForms = document.getElementById("divPaiForms");
-    divPaiForms.insertAdjacentHTML(
-      "afterbegin",
-      criarMensagemDeErro("Erro ao fazer login.", "Tente novamente mais tarde!")
+    divPaiForms.innerHTML = criarMensagemDeErro(data.message, data.error);
+  } catch (error) {
+    const divPaiForms = document.getElementById("divPaiForms");
+    divPaiForms.innerHTML = criarMensagemDeErro(
+      "Erro ao fazer login.",
+      "Tente novamente mais tarde!"
     );
     console.error(error);
-    return;
   } finally {
     hideLoading();
   }
@@ -150,40 +126,34 @@ async function postLogin(email, senha) {
 
 function criarMensagemDeErro(titulo = "", texto, clss = "alert-danger") {
   return `
-	<div class="alert ${clss} alert-dismissible fade show" role="alert">
-  <strong>${titulo}</strong> <p>${texto}</p>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-	`;
+    <div class="alert ${clss} alert-dismissible fade show" role="alert">
+      <strong>${titulo}</strong> <p>${texto}</p>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  `;
 }
 
 function clearError() {
-  let formulario = document.getElementById("forms-login");
+  const formulario = document.getElementById("forms-login");
   if (formulario) {
-    for (let i = 0; i < formulario.elements.length; i++) {
-      let campo = formulario.elements[i];
+    Array.from(formulario.elements).forEach((campo) => {
       if (campo.tagName === "INPUT") {
-        if (campo.classList.contains("border-danger")) {
-          campo.classList.remove("border-danger");
-        }
-        if (!campo.classList.contains("border-dark")) {
-          campo.classList.add("border-dark");
-        }
+        campo.classList.remove("border-danger");
+        campo.classList.add("border-dark");
 
-        let msgErro = campo.nextElementSibling;
+        const msgErro = campo.nextElementSibling;
         if (msgErro && msgErro.classList.contains("mensagem-erro")) {
-          campo.parentNode.removeChild(msgErro);
+          msgErro.remove();
         }
       }
-    }
+    });
   }
 }
 
 function getOrCreateErrorMsg(input, message) {
   input.classList.add("border-danger");
-  input.classList.remove(" border-dark");
+  input.classList.remove("border-dark");
+
   let msgErro = input.nextElementSibling;
   if (!msgErro || !msgErro.classList.contains("mensagem-erro")) {
     msgErro = document.createElement("p");
@@ -210,18 +180,18 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
   toastEl.dataset.bsDelay = time;
 
   toastEl.innerHTML = `
-          <div class="toast-header">
-            <span class="text-primary"><i class="fa-solid fa-circle-info fa-lg"></i></span>
-            <strong class="me-auto">${titulo}</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-          <div class="toast-body">
-            <span><i class="fa-solid fa-circle-check fa-lg"></i></span>
-            <div class="d-flex flex-grow-1 align-items-center">
-                    ${message}
-                  </div>
-          </div>
-        `;
+    <div class="toast-header">
+      <span class="text-primary"><i class="fa-solid fa-circle-info fa-lg"></i></span>
+      <strong class="me-auto">${titulo}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <span><i class="fa-solid fa-circle-check fa-lg"></i></span>
+      <div class="d-flex flex-grow-1 align-items-center">
+        ${message}
+      </div>
+    </div>
+  `;
 
   toastContainer.appendChild(toastEl);
 

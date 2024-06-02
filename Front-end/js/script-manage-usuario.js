@@ -6,82 +6,15 @@ const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 
 document.addEventListener("DOMContentLoaded", function () {
   token.validateSecurity();
-
-  // if (!token.isLoggedAdmin()) {
-  //   window.location.href = "../home/index.html";
-  // }
-
-  IMask(document.getElementById("cpf"), {
-    mask: "000.000.000-00",
-  });
-
-  IMask(document.getElementById("cpf-editar"), {
-    mask: "000.000.000-00",
-  });
-
-  IMask(document.getElementById("bloco"), {
-    mask: "aa",
-    definitions: {
-      a: /[A-Za-z0-9]/,
-    },
-  });
-
-  IMask(document.getElementById("apartamento"), {
-    mask: "aaaa",
-    definitions: {
-      a: /[A-Za-z0-9]/,
-    },
-  });
-
-  IMask(document.getElementById("rg"), {
-    mask: "00.000.000-0",
-    prepare: function (str) {
-      return str.toUpperCase();
-    },
-    blocks: {
-      0: {
-        mask: IMask.MaskedRange,
-        from: 0,
-        to: 9,
-        maxLength: 1,
-      },
-      X: {
-        mask: IMask.MaskedEnum,
-        enum: ["X"],
-      },
-    },
-    pattern: "00.000.000-[0-9X]",
-  });
-
-  IMask(document.getElementById("rg-editar"), {
-    mask: "00.000.000-0",
-    prepare: function (str) {
-      return str.toUpperCase();
-    },
-    blocks: {
-      0: {
-        mask: IMask.MaskedRange,
-        from: 0,
-        to: 9,
-        maxLength: 1,
-      },
-      X: {
-        mask: IMask.MaskedEnum,
-        enum: ["X"],
-      },
-    },
-    pattern: "00.000.000-[0-9X]",
-  });
-
-  getMoradores();
+  getUsuario();
   buildProfile();
-
-  document
-    .getElementById("exampleModal")
-    .addEventListener("hidden.bs.modal", () => {
-      clearModalEdotar();
-    });
 });
+
+document
+  .getElementById("exampleModal")
+  .addEventListener("hidden.bs.modal", () => {
+    clearModalEditar();
+  });
 
 function showLoading() {
   document.getElementById("loading").style.display = "block";
@@ -143,7 +76,7 @@ function showError(id, message) {
 }
 
 document
-  .getElementById("create-morador")
+  .getElementById("create-usuario")
   .addEventListener("submit", function (event) {
     token.validateSecurity();
     event.preventDefault();
@@ -153,74 +86,20 @@ document
     const formData = {
       nome: document.getElementById("nome").value.toUpperCase(),
       sobrenome: document.getElementById("sobrenome").value.toUpperCase(),
-      dataNascimento: document.getElementById("dataNascimento").value,
-      cpf: document.getElementById("cpf").value,
-      rg: document.getElementById("rg").value,
       email: document.getElementById("email").value.toLowerCase(),
-      apartamento: document.getElementById("apartamento").value,
-      bloco: document.getElementById("bloco").value.toUpperCase(),
-      torre: document.getElementById("torre").value,
       senha: document.getElementById("senha").value,
       confirmacaoSenha: document.getElementById("confirmacaoSenha").value,
-      rolesIds: [4],
+      rolesIds: [parseInt(document.getElementById("tipo").value)],
     };
 
-    function calculateAge(dob) {
-      const today = new Date();
-      const birthDate = new Date(dob);
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-      }
-      return age;
-    }
-
-    const moradorSchema = zod
+    const usuarioSchema = zod
       .object({
         nome: zod.string().min(1, "Nome é obrigatório"),
         sobrenome: zod.string().min(1, "Sobrenome é obrigatório"),
-        dataNascimento: zod
-          .string()
-          .refine(
-            (value) => {
-              // Verifica se o formato da data é válido e se a data é uma data completa
-              const date = new Date(value);
-              if (
-                date.toString() === "Invalid Date" ||
-                isNaN(date.getTime()) ||
-                value.length !== 10
-              ) {
-                return false; // Retorna falso se a data é inválida ou incompleta
-              }
-              // Verifica se a data é futura ou muito antiga
-              if (date > new Date() || date.getFullYear() < 1900) {
-                return false;
-              }
-              return true;
-            },
-            {
-              message:
-                "Data de Nascimento inválida. Deve ser no formato AAAA-MM-DD e real.",
-            }
-          )
-          .refine(
-            (value) => {
-              // Verifica se a idade é de pelo menos 18 anos
-              const date = new Date(value);
-              return calculateAge(date) >= 18;
-            },
-            {
-              message: "Você deve ter pelo menos 18 anos.",
-              path: ["dataNascimento"],
-            }
-          ),
-        cpf: zod.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido"),
-        rg: zod.string().regex(/^\d{2}\.\d{3}\.\d{3}-[\dXx]$/, "RG inválido"),
         email: zod.string().email("E-mail inválido"),
-        apartamento: zod.string().min(1, "Apartamento é obrigatório"),
-        bloco: zod.string().min(1, "Bloco é obrigatório"),
-        torre: zod.string().min(1, "Torre é obrigatória"),
+        rolesIds: zod
+          .array(zod.number())
+          .nonempty("Tipo de conta é obrigatório"),
         senha: zod
           .string()
           .regex(
@@ -252,9 +131,10 @@ document
         }
       );
 
-    const validation = moradorSchema.safeParse(formData);
+    const validation = usuarioSchema.safeParse(formData);
 
     if (!validation.success) {
+      console.log(validation.error.errors);
       validation.error.errors.forEach((err) => {
         const fieldName = err.path[0];
         const errorElementId = `${fieldName}-error`;
@@ -265,100 +145,43 @@ document
       const forms = {
         ...formData,
         nomeCompleto: `${formData.nome} ${formData.sobrenome}`,
-        cpf: formData.cpf.replace(/\D/g, ""),
-        rg: formData.rg.replace(/\D/g, ""),
+        email: formData.email.toLowerCase(),
       };
       delete forms.sobrenome;
       delete forms.nome;
-      submitCriarMorador(forms);
+      submitCriarUsuario(forms);
     }
   });
 
 document
-  .getElementById("editar-morador")
+  .getElementById("editar-usuario")
   .addEventListener("submit", function (event) {
     token.validateSecurity();
     event.preventDefault();
     clearErrors();
 
     const formData = {
-      id: document.getElementById("id-morador-editar").value,
+      id: document.getElementById("id-usuario-editar").value,
       nome: document.getElementById("nome-editar").value.toUpperCase(),
       sobrenome: document
         .getElementById("sobrenome-editar")
         .value.toUpperCase(),
-      dataNascimento: document.getElementById("dataNascimento-editar").value,
-      cpf: document.getElementById("cpf-editar").value,
-      rg: document.getElementById("rg-editar").value,
+
       email: document.getElementById("email-editar").value.toLowerCase(),
-      apartamento: document.getElementById("apartamento-editar").value,
-      bloco: document.getElementById("bloco-editar").value.toUpperCase(),
-      torre: document.getElementById("torre-editar").value,
       senha: document.getElementById("senha-editar").value,
       confirmacaoSenha: document.getElementById("confirmacaoSenha-editar")
         .value,
-      rolesIds: [4],
+      rolesIds: [parseInt(document.getElementById("tipo-editar").value)],
     };
 
-    function calculateAge(dob) {
-      const today = new Date();
-      const birthDate = new Date(dob);
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-      }
-      return age;
-    }
-
-    const moradorSchema = zod
+    const usuarioSchema = zod
       .object({
         nome: zod.string().min(1, "Nome é obrigatório"),
         sobrenome: zod.string().min(1, "Sobrenome é obrigatório"),
-        dataNascimento: zod
-          .string()
-          .refine(
-            (value) => {
-              // Verifica se o formato da data é válido e se a data é uma data completa
-              const date = new Date(value);
-              if (
-                date.toString() === "Invalid Date" ||
-                isNaN(date.getTime()) ||
-                value.length !== 10
-              ) {
-                return false; // Retorna falso se a data é inválida ou incompleta
-              }
-              // Verifica se a data é futura ou muito antiga
-              if (date > new Date() || date.getFullYear() < 1900) {
-                return false;
-              }
-              return true;
-            },
-            {
-              message:
-                "Data de Nascimento inválida. Deve ser no formato AAAA-MM-DD e real.",
-            }
-          )
-          .refine(
-            (value) => {
-              // Verifica se a idade é de pelo menos 18 anos
-              const date = new Date(value);
-              return calculateAge(date) >= 18;
-            },
-            {
-              message: "Você deve ter pelo menos 18 anos.",
-              path: ["dataNascimento"],
-            }
-          ),
-        cpf: zod.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido"),
-        rg: zod.string().regex(/^\d{2}\.\d{3}\.\d{3}-[\dXx]$/, "RG inválido"),
         email: zod.string().email("E-mail inválido"),
-        apartamento: zod.string().min(1, "Apartamento é obrigatório"),
-        bloco: zod.string().min(1, "Bloco é obrigatório"),
-        torre: zod.union([
-          zod.literal(""),
-          zod.string().min(1, "Torre é obrigatória"),
-        ]),
+        rolesIds: zod
+          .array(zod.number())
+          .nonempty("Tipo de conta é obrigatório"),
         senha: zod.union([
           zod.literal(""),
           zod
@@ -394,9 +217,9 @@ document
         }
       );
 
-    const validation = moradorSchema.safeParse(formData);
+    const validation = usuarioSchema.safeParse(formData);
 
-    if (!validation.success) {
+    if (false) {
       validation.error.errors.forEach((err) => {
         const fieldName = err.path[0];
         const errorElementId = `${fieldName}-editar-error`;
@@ -407,21 +230,19 @@ document
         ...formData,
         nomeCompleto: `${formData.nome.toUpperCase()} ${formData.sobrenome.toUpperCase()}`,
         email: formData.email.toLowerCase(),
-        cpf: formData.cpf.replace(/\D/g, ""),
-        rg: formData.rg.replace(/\D/g, ""),
       };
       delete form.nome;
       delete form.sobrenome;
-      submitEditarMorador(form);
+      submitEditarusuario(form);
     }
   });
 
-async function submitEditarMorador(form) {
+async function submitEditarusuario(form) {
   try {
     showLoading();
     const params = new URLSearchParams(form.id);
     const response = await fetch(
-      `${baseUrl}/api/v1/morador/update/${params.toString().replace("=", "")}`,
+      `${baseUrl}/api/v1/users/update/${params.toString().replace("=", "")}`,
       {
         method: "PUT",
         headers: {
@@ -438,8 +259,8 @@ async function submitEditarMorador(form) {
         bootstrap.Modal.getInstance(modalElement) ||
         new bootstrap.Modal(modalElement);
       modalInstance.hide();
-      showToast("Sucesso", "Morador editado com sucesso!", "bg-success", 5000);
-      getMoradores();
+      showToast("Sucesso", "usuário editado com sucesso!", "bg-success", 5000);
+      getUsuario();
       return;
     }
 
@@ -473,14 +294,14 @@ async function submitEditarMorador(form) {
 
     showToast(
       "Atenção",
-      "Erro ao atualizar registro do morador!",
+      "Erro ao atualizar registro do usuário!",
       "bg-warning",
       7000
     );
   } catch (error) {
     showToast(
       "Erro",
-      "Erro ao atualizar registr do morador!",
+      "Erro ao atualizar registr do usuário!",
       "bg-danger",
       5000
     );
@@ -489,9 +310,9 @@ async function submitEditarMorador(form) {
   }
 }
 
-async function submitCriarMorador(form) {
+async function submitCriarUsuario(form) {
   try {
-    const response = await fetch(`${baseUrl}/api/v1/morador/register`, {
+    const response = await fetch(`${baseUrl}/api/v1/users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -503,12 +324,12 @@ async function submitCriarMorador(form) {
     if (response.ok) {
       showToast(
         "Sucesso",
-        "Morador registrado com sucesso!",
+        "usuário registrado com sucesso!",
         "bg-success",
         5000
       );
       clearModal();
-      await getMoradores();
+      await getUsuario();
       return;
     }
 
@@ -540,7 +361,7 @@ async function submitCriarMorador(form) {
       return;
     }
 
-    showToast("Atenção", "Erro ao registrar o morador!", "bg-warning", 7000);
+    showToast("Atenção", "Erro ao registrar o usuário!", "bg-warning", 7000);
   } catch (error) {
     showToast("Erro", "Erro ao registrar o morador!", "bg-danger", 5000);
   } finally {
@@ -548,12 +369,12 @@ async function submitCriarMorador(form) {
   }
 }
 
-async function getMoradores() {
+async function getUsuario() {
   token.validateSecurity();
   showLoading();
 
   try {
-    const response = await fetch(`${baseUrl}/api/v1/morador/list`, {
+    const response = await fetch(`${baseUrl}/api/v1/users/list`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -565,9 +386,9 @@ async function getMoradores() {
 
     if (response.ok) {
       if (data.length === 0) {
-        const container = document.getElementById("moradores-container");
+        const container = document.getElementById("usuarios-container");
         const p = document.createElement("p");
-        p.textContent = "Nenhum morador encontrado.";
+        p.textContent = "Nenhum usuário encontrado.";
         p.classList.add("text-center", "text-uppercase", "fw-bold");
         container.innerHTML = "";
         container.appendChild(p);
@@ -576,21 +397,21 @@ async function getMoradores() {
 
       buildTable(data);
     } else {
-      showToast("Atenção", "Erro ao buscar os moradores!", "bg-warning", 7000);
+      showToast("Atenção", "Erro ao buscar os usuários!", "bg-warning", 7000);
     }
   } catch (error) {
-    showToast("Erro", "Erro ao buscar os moradores!", "bg-danger", 5000);
+    showToast("Erro", "Erro ao buscar os usuários!", "bg-danger", 5000);
   } finally {
     hideLoading();
   }
 }
 
-async function getMorador(id) {
+async function getusuario(id) {
   token.validateSecurity();
   showLoading();
 
   try {
-    const response = await fetch(`${baseUrl}/api/v1/morador/find/${id}`, {
+    const response = await fetch(`${baseUrl}/api/v1/users/find/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -603,21 +424,21 @@ async function getMorador(id) {
     if (response.ok) {
       return data;
     } else {
-      showToast("Atenção", "Erro ao buscar morador!", "bg-warning", 7000);
+      showToast("Atenção", "Erro ao buscar usuário!", "bg-warning", 7000);
     }
   } catch (error) {
-    showToast("Erro", "Erro ao buscar morador!", "bg-danger", 5000);
+    showToast("Erro", "Erro ao buscar usuário!", "bg-danger", 5000);
   } finally {
     hideLoading();
   }
 }
 
-async function changeStatus(moradorID) {
+async function changeStatus(usuarioID) {
   token.validateSecurity();
   showLoading();
   try {
     const response = await fetch(
-      `${baseUrl}/api/v1/morador/change-status/${moradorID}`,
+      `${baseUrl}/api/v1/users/change-status/${usuarioID}`,
       {
         method: "PUT",
         headers: {
@@ -634,7 +455,7 @@ async function changeStatus(moradorID) {
         bootstrap.Modal.getInstance(modalElement) ||
         new bootstrap.Modal(modalElement);
       modalInstance.hide();
-      await getMoradores();
+      await getUsuario();
       showToast("Sucesso", "Status alterado com sucesso!", "bg-success", 5000);
       return;
     }
@@ -652,7 +473,7 @@ async function changeStatus(moradorID) {
 }
 
 function buildTable(data) {
-  const container = document.getElementById("moradores-container");
+  const container = document.getElementById("usuarios-container");
   const table = document.createElement("table");
   table.className = "table table-striped table-hover";
   table.innerHTML = `
@@ -661,8 +482,6 @@ function buildTable(data) {
         <th scope="col">ID</th>
         <th scope="col">Nome</th>
         <th scope="col">Email</th>
-        <th scope="col">Apartamento</th>
-        <th scope="col">Bloco</th>
         <th scope="col">Status</th>
         <th scope="col" colspan="1" class="text-center">Ações</th>
       </tr>
@@ -679,8 +498,6 @@ function buildTable(data) {
     row.insertCell().textContent = morad.id;
     row.insertCell().textContent = morad.nomeCompleto;
     row.insertCell().textContent = morad.email;
-    row.insertCell().textContent = morad.apartamento;
-    row.insertCell().textContent = morad.bloco;
     row.insertCell().textContent = morad.status ? "Ativo" : "Inativo";
 
     const actionCell = row.insertCell();
@@ -722,72 +539,39 @@ function buildTable(data) {
   container.appendChild(div);
 }
 
-async function changeModalEdit(moradorID) {
-  clearModalEdotar();
+async function changeModalEdit(usuarioID) {
+  clearModalEditar();
   clearErrors();
-  let morador = await getMorador(moradorID);
-  const nome = morador.nomeCompleto.split(" ");
-  const sobrenome = nome.pop();
-  const cpf = morador.cpf.replace(
-    /(\d{3})(\d{3})(\d{3})(\d{2})/,
-    "$1.$2.$3-$4"
-  );
-  const rg = morador.rg.replace(/(\d{2})(\d{3})(\d{3})(\d{1})/, "$1.$2.$3-$4");
+  let usuario = await getusuario(usuarioID);
 
-  morador = {
-    ...morador,
+  console.log(usuario);
+  const nome = usuario.nomeCompleto.split(" ");
+  const sobrenome = nome.pop();
+
+  usuario = {
+    ...usuario,
     nome: nome.join(" "),
     sobrenome,
-    cpf,
-    rg,
   };
-  document.getElementById("id-morador-editar").value = morador.id;
-  document.getElementById("nome-editar").value = morador.nome;
-  document.getElementById("sobrenome-editar").value = morador.sobrenome;
-  document.getElementById("dataNascimento-editar").value =
-    morador.dataNascimento;
-  document.getElementById("cpf-editar").value = morador.cpf;
-  document.getElementById("rg-editar").value = morador.rg;
-  document.getElementById("email-editar").value = morador.email;
-  document.getElementById("apartamento-editar").value = morador.apartamento;
-  document.getElementById("bloco-editar").value = morador.bloco;
-  document.getElementById("torre-editar").value = morador.torre;
+  document.getElementById("id-usuario-editar").value = usuario.id;
+  document.getElementById("nome-editar").value = usuario.nome;
+  document.getElementById("sobrenome-editar").value = usuario.sobrenome;
+  document.getElementById("email-editar").value = usuario.email;
 }
 
 function clearModal() {
-  document.getElementById("nome").value = "";
-  document.getElementById("sobrenome").value = "";
-  document.getElementById("dataNascimento").value = "";
-  document.getElementById("cpf").value = "";
-  document.getElementById("rg").value = "";
-  document.getElementById("email").value = "";
-  document.getElementById("apartamento").value = "";
-  document.getElementById("bloco").value = "";
-  document.getElementById("torre").value = "";
-  document.getElementById("senha").value = "";
-  document.getElementById("confirmacaoSenha").value = "";
+  document.getElementById("create-usuario").reset();
 }
 
-function clearModalEdotar() {
-  document.getElementById("id-morador-editar").value = "";
-  document.getElementById("nome-editar").value = "";
-  document.getElementById("sobrenome-editar").value = "";
-  document.getElementById("dataNascimento-editar").value = "";
-  document.getElementById("cpf-editar").value = "";
-  document.getElementById("rg-editar").value = "";
-  document.getElementById("email-editar").value = "";
-  document.getElementById("apartamento-editar").value = "";
-  document.getElementById("bloco-editar").value = "";
-  document.getElementById("torre-editar").value = "";
-  document.getElementById("senha-editar").value = "";
-  document.getElementById("confirmacaoSenha-editar").value = "";
+function clearModalEditar() {
+  document.getElementById("editar-usuario").reset();
 }
 
 document
   .getElementById("bnt-change-status")
   .addEventListener("click", function (event) {
-    const moradorID = document.getElementById("id-status-change").value;
-    changeStatus(moradorID);
+    const usuarioID = document.getElementById("id-status-change").value;
+    changeStatus(usuarioID);
   });
 
 document.getElementById("btn-logout").addEventListener("click", token.logout);
@@ -822,4 +606,15 @@ function buildProfile() {
     imageDefault.style.display = "none";
     imageProfile.style.display = "block";
   }
+}
+
+function setdaDadosModalConfirmacao(titulo, mensagem) {
+  const modal = document.getElementById("confirme-modal");
+  const modalTitulo = modal.querySelector(".modal-title");
+  modalTitulo.innerHTML = titulo;
+  const modalBody = modal.querySelector(".modal-body");
+
+  modalBody.innerHTML = `
+      <h5 class="text-center" >${mensagem}</h5>
+    `;
 }

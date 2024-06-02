@@ -52,6 +52,7 @@ function showToast(titulo, message, clss = "bg-primary", time = 5000) {
   toast.show();
 }
 document.getElementById("btn-logout").addEventListener("click", token.logout);
+
 function buildProfile() {
   const user = token.getUser();
   const namePerson = document.getElementById("name-person");
@@ -62,6 +63,16 @@ function buildProfile() {
   li.className = "dropdown-item";
   li.innerHTML = `${user.email}`;
   ul.appendChild(li);
+
+  const li2 = document.createElement("li");
+  li2.className = "dropdown-item";
+  if (token.isLoggedAdmin()) {
+    li2.innerHTML = `<a href="/admin/alterar-senha.html">Alterar senha</a>`;
+  } else {
+    li2.innerHTML = `<a href="/morador/alterar-senha.html">Alterar senha</a>`;
+  }
+
+  ul.appendChild(li2);
 
   const imageProfile = document.getElementById("imagem-profile");
   if (user.image) {
