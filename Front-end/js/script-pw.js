@@ -152,10 +152,11 @@ async function updatePassword(data) {
     );
 
     if (response.ok) {
+      document.getElementById("updatePasswordForm").reset();
       showToast("Sucesso", "Senha alterada com sucesso!", "bg-success");
       setTimeout(() => {
         token.logout();
-      }, 3000);
+      }, 1500);
       return;
     }
     const data = await response.json();
