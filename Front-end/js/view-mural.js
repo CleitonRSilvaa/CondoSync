@@ -131,7 +131,7 @@ function buildMural(data, unicoAviso = false) {
         "mx-auto",
         "m-3"
       );
-      carouselCaption.style.opacity = 0.7;
+      carouselCaption.style.opacity = 0.9;
 
       const h5 = document.createElement("h4");
       h5.textContent = item.title;
