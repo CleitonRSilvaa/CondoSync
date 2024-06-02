@@ -44,7 +44,13 @@ public class MoradorController {
 
         var morador = moradorService.register(moradorDTO);
         if (morador == null) {
-            return new ResponseEntity<>(400, HttpStatus.BAD_REQUEST);
+
+            var responseDTO = new ResponseDTO();
+            responseDTO.setMessage("Erro ao registrar morador");
+            responseDTO.setError("Erro ao registrar morador");
+            responseDTO.setStatus(400);
+            return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
+
         }
         return new ResponseEntity<>(moradorDTO, HttpStatus.CREATED);
     }
