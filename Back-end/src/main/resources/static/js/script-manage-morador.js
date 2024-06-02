@@ -7,10 +7,6 @@ const baseUrl = "https://condosyn.eastus.cloudapp.azure.com:4433";
 document.addEventListener("DOMContentLoaded", function () {
   token.validateSecurity();
 
-  // if (!token.isLoggedAdmin()) {
-  //   window.location.href = "../home/index.html";
-  // }
-
   IMask(document.getElementById("cpf"), {
     mask: "000.000.000-00",
   });
@@ -219,8 +215,14 @@ document
         rg: zod.string().regex(/^\d{2}\.\d{3}\.\d{3}-[\dXx]$/, "RG inválido"),
         email: zod.string().email("E-mail inválido"),
         apartamento: zod.string().min(1, "Apartamento é obrigatório"),
-        bloco: zod.string().min(1, "Bloco é obrigatório"),
-        torre: zod.string().min(1, "Torre é obrigatória"),
+        bloco: zod.union([
+          zod.literal(""),
+          zod.string().min(1, "Bloco é obrigatório"),
+        ]),
+        torre: zod.union([
+          zod.literal(""),
+          zod.string().min(1, "Bloco é obrigatório"),
+        ]),
         senha: zod
           .string()
           .regex(
@@ -354,10 +356,13 @@ document
         rg: zod.string().regex(/^\d{2}\.\d{3}\.\d{3}-[\dXx]$/, "RG inválido"),
         email: zod.string().email("E-mail inválido"),
         apartamento: zod.string().min(1, "Apartamento é obrigatório"),
-        bloco: zod.string().min(1, "Bloco é obrigatório"),
+        bloco: zod.union([
+          zod.literal(""),
+          zod.string().min(1, "Bloco é obrigatório"),
+        ]),
         torre: zod.union([
           zod.literal(""),
-          zod.string().min(1, "Torre é obrigatória"),
+          zod.string().min(1, "Bloco é obrigatório"),
         ]),
         senha: zod.union([
           zod.literal(""),
