@@ -42,7 +42,7 @@ public class TokenService {
 		JwtClaimsSet claims = JwtClaimsSet.builder()
 				.issuer("CondSync-App")
 				.issuedAt(now)
-				.expiresAt(now.plus(duration))
+				.expiresAt(now.plus(Duration.ofMinutes(durationToExpire)))
 				.subject(user.getUsername())
 				.claim("id", id)
 				.claim("name", user.getFullName())
@@ -54,18 +54,25 @@ public class TokenService {
 
 	public String generateToken(User user) {
 		Instant now = Instant.now();
+
+		UUID id = moradorService.findByEmail(user.getUsername())
+				.map(Morador::getId)
+				.orElse(user.getId());
+
 		String roles = user.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(" "));
+
 		JwtClaimsSet claims = JwtClaimsSet.builder()
-				.issuer("self")
+				.issuer("CondSync-App")
 				.issuedAt(now)
-				.expiresAt(now.plus(Duration.ofMinutes(durationToExpire)))
+				.expiresAt(now.plus(duration))
 				.subject(user.getUsername())
+				.claim("id", id)
 				.claim("name", user.getFullName())
 				.claim("scope", roles)
+				.claim("passwordExpiration", user.isCredentialsExpired())
 				.build();
-
 		return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 	}
 
