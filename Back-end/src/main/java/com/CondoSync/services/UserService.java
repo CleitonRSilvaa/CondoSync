@@ -159,7 +159,6 @@ public class UserService implements UserDetailsService {
                     throw new IllegalArgumentException("As senhas não conferem");
                 }
 
-                user.setHashPassword(passwordEncoder.encode(userDto.getSenha()));
                 user.setHashPassword(passwordEncoder.encode(senha));
                 var pass = matchesPassword(senha, user.getHashPassword());
                 if (!pass) {
@@ -296,6 +295,7 @@ public class UserService implements UserDetailsService {
         return password;
     }
 
+    @Transactional
     public void updatePassword(UUID userId, UserUpdatePasswordDTO userUpdatePasswordDTO) {
         User user = usersRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
