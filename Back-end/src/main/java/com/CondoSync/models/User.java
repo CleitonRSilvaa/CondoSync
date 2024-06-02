@@ -1,6 +1,7 @@
 package com.CondoSync.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -31,11 +32,11 @@ public class User implements UserDetails {
     @Column(name = "user_id", updatable = false, nullable = false)
     private UUID id;
 
-    @NonNull
+    @NotBlank(message = "Full name is required")
     @Column(length = 150, nullable = false)
     private String fullName;
 
-    @NonNull
+    @NotBlank(message = "Username is required")
     @Column(length = 50, nullable = false, unique = true)
     private String userName;
 
