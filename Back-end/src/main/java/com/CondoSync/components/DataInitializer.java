@@ -40,10 +40,10 @@ public class DataInitializer implements ApplicationRunner {
                 }
             }
 
-            if (!userService.existsByUserName("admin")) {
+            if (!userService.existsByUserName("admin@condosync.com.br")) {
                 User user = new User();
                 user.setFullName("CondoSync Admin");
-                user.setUserName("admin");
+                user.setUserName("admin@condosync.com.br");
                 user.setHashPassword(passwordEncoder.encode("admin123"));
                 user.setStatus(true);
                 user.setInativa(false);
