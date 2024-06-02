@@ -226,3 +226,4 @@ function buildProfile() {
     imageProfile.style.display = "block";
   }
 }
+document.getElementById("btn-logout").addEventListener("click", token.logout);
