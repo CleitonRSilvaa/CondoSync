@@ -1,6 +1,7 @@
 package com.CondoSync.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -20,6 +21,9 @@ public class TokenService {
 
 	@Autowired
 	private JwtEncoder jwtEncoder;
+
+	@Value("${jwt.expiration}")
+	private int durationToExpire;
 
 	@Autowired
 	MoradorService moradorService;
@@ -43,6 +47,7 @@ public class TokenService {
 				.claim("id", id)
 				.claim("name", user.getFullName())
 				.claim("scope", roles)
+				.claim("passwordExpiration", user.isCredentialsExpired())
 				.build();
 		return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 	}
@@ -55,7 +60,7 @@ public class TokenService {
 		JwtClaimsSet claims = JwtClaimsSet.builder()
 				.issuer("self")
 				.issuedAt(now)
-				.expiresAt(now.plus(Duration.ofMinutes(30)))
+				.expiresAt(now.plus(Duration.ofMinutes(durationToExpire)))
 				.subject(user.getUsername())
 				.claim("name", user.getFullName())
 				.claim("scope", roles)
