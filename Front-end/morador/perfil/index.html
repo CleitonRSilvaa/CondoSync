@@ -1,177 +1,306 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/loading.css" />
+    <script defer type="module" src="/js/auth.js"></script>
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
-  <link rel="stylesheet" href="/css/loading.css" />
-  <script defer type="module" src="/js/auth.js"></script>
+    <script defer type="module" src="script.js"></script>
+    <title>CondoSync:: Perfil</title>
+  </head>
 
-  <script defer type="module" src="script.js"></script>
-  <title>CondoSync:: Perfil</title>
-</head>
-
-<body style="background-color: rgb(230, 219, 219)">
-  <div id="loading" class="loading-overlay" style="display: none">
-    <div class="d-flex justify-content-center align-items-center h-100">
-      <div class="spinner-border text-light" role="status">
-        <span class="sr-only"></span>
-      </div>
-    </div>
-  </div>
-  <div aria-live="polite" aria-atomic="true" class="position-relative">
-    <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3"></div>
-  </div>
-
-  <div class="container-fluid">
-    <div class="row flex-nowrap">
-      <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-          <img src="/imagens/logo2.png" alt="" class="img-fluid imgLogo" />
-          <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-            <li class="nav-item">
-              <a href="/morador/index.html" class="nav-link align-middle px-0">
-                <i class="fs-4 bi-house"></i>
-                <span class="ms-1 d-none d-sm-inline">Home</span>
-              </a>
-            </li>
-            <li>
-              <a href="/morador/mural/index.html" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-info-square"></i>
-                <span class="ms-1 d-none d-sm-inline">Mural informativo</span>
-              </a>
-            </li>
-            <li>
-              <a href="/morador/financeiro/index.html" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-cash-stack"></i>
-                <span class="ms-1 d-none d-sm-inline">Meu financeiro</span></a>
-            </li>
-            <li>
-              <a href="/morador/ocorrencia/index.html" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-tools"></i>
-                <span class="ms-1 d-none d-sm-inline">Minhas ocorrêcias</span></a>
-            </li>
-            <li>
-              <a href="/morador/espaco-agendamento/index.html" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-calendar-event"></i>
-                <span class="ms-1 d-none d-sm-inline">Minhas rerservas</span>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="/morador/perfil/index.html" class="nav-link align-middle text-center p-2 active">
-                <i class="fs-4 bi-person-lines-fill"></i>
-                <span class="ms-1 d-none d-sm-inline">Meus dados</span>
-              </a>
-            </li>
-            <li>
-              <a id="btn-logout" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-box-arrow-in-right"></i>
-                <span class="ms-1 d-none d-sm-inline">Sair</span>
-              </a>
-            </li>
-            <hr />
-            <div class="dropdown pb-4">
-              <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <i id="imagem-default" class="bi bi-person-circle fs-2" style="display:block"></i>
-                <img id="imagem-profile" width="30" height="30" class="rounded-circle" style="display:none" />
-                <span class="d-none d-sm-inline mx-1" id="name-person"></span>
-              </a>
-              <ul id="user-name" class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-              </ul>
-            </div>
-          </ul>
+  <body style="background-color: rgb(230, 219, 219)">
+    <div id="loading" class="loading-overlay" style="display: none">
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="spinner-border text-light" role="status">
+          <span class="sr-only"></span>
         </div>
       </div>
-      <div class="col py-3">
-        <div class="container-fluid">
-          <div class="row justify-content-center align-items-center">
-            <div class="col-lg-12 mt-3">
-              <div class="card border">
-                <div class="card-body mt-3">
-                  <!-- Conteúdo do card aqui -->
-                  <div class="container">
-                    <div class="row">
-                      <div class="col-lg-6 col-md-12">
-                        <div class="mt-4">
-                          <div class="mb-4 d-flex justify-content-center">
-                            <img id="selectedImage" src="https://mdbootstrap.com/img/Photos/Others/placeholder.jpg" alt="example placeholder" class="img-fluid" style="max-width: 100%; height: auto;" />
-                          </div>
-                          <div class="d-flex justify-content-center">
-                            <div data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-rounded">
-                              <label class="form-label text-white m-1" for="customFile1">Foto Perfil</label>
-                              <input type="file" class="form-control d-none" id="customFile1" onchange="displaySelectedImage(event, 'selectedImage')" />
+    </div>
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+      <div
+        id="toastContainer"
+        class="toast-container position-fixed top-0 end-0 p-3"
+      ></div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+          <div
+            class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100"
+          >
+            <img src="/imagens/logo2.png" alt="" class="img-fluid imgLogo" />
+            <ul
+              class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+              id="menu"
+            >
+              <li class="nav-item">
+                <a
+                  href="/morador/index.html"
+                  class="nav-link align-middle px-0"
+                >
+                  <i class="fs-4 bi-house"></i>
+                  <span class="ms-1 d-none d-sm-inline">Home</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/morador/mural/index.html"
+                  class="nav-link px-0 align-middle"
+                >
+                  <i class="fs-4 bi-info-square"></i>
+                  <span class="ms-1 d-none d-sm-inline">Mural informativo</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/morador/financeiro/index.html"
+                  class="nav-link px-0 align-middle"
+                >
+                  <i class="fs-4 bi-cash-stack"></i>
+                  <span class="ms-1 d-none d-sm-inline">Meu financeiro</span></a
+                >
+              </li>
+              <li>
+                <a
+                  href="/morador/ocorrencia/index.html"
+                  class="nav-link px-0 align-middle"
+                >
+                  <i class="fs-4 bi-tools"></i>
+                  <span class="ms-1 d-none d-sm-inline"
+                    >Minhas ocorrêcias</span
+                  ></a
+                >
+              </li>
+              <li>
+                <a
+                  href="/morador/espaco-agendamento/index.html"
+                  class="nav-link px-0 align-middle"
+                >
+                  <i class="fs-4 bi-calendar-event"></i>
+                  <span class="ms-1 d-none d-sm-inline">Minhas reservas</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  href="/morador/perfil/index.html"
+                  class="nav-link align-middle text-center p-2 active"
+                >
+                  <i class="fs-4 bi-person-lines-fill"></i>
+                  <span class="ms-1 d-none d-sm-inline">Meus dados</span>
+                </a>
+              </li>
+              <li>
+                <a id="btn-logout" class="nav-link px-0 align-middle">
+                  <i class="fs-4 bi-box-arrow-in-right"></i>
+                  <span class="ms-1 d-none d-sm-inline">Sair</span>
+                </a>
+              </li>
+              <hr />
+              <div class="dropdown pb-4">
+                <a
+                  href="#"
+                  class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                  id="dropdownUser1"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i
+                    id="imagem-default"
+                    class="bi bi-person-circle fs-2"
+                    style="display: block"
+                  ></i>
+                  <img
+                    id="imagem-profile"
+                    width="30"
+                    height="30"
+                    class="rounded-circle"
+                    style="display: none"
+                  />
+                  <span class="d-none d-sm-inline mx-1" id="name-person"></span>
+                </a>
+                <ul
+                  id="user-name"
+                  class="dropdown-menu dropdown-menu-dark text-small shadow"
+                  aria-labelledby="dropdownUser1"
+                ></ul>
+              </div>
+            </ul>
+          </div>
+        </div>
+        <div class="col py-3">
+          <div class="container-fluid">
+            <div class="row justify-content-center align-items-center">
+              <div class="col-lg-12 mt-3">
+                <div class="card border">
+                  <div class="card-body mt-3">
+                    <!-- Conteúdo do card aqui -->
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                          <div class="mt-4">
+                            <div class="mb-4 d-flex justify-content-center">
+                              <img
+                                id="selectedImage"
+                                src="https://mdbootstrap.com/img/Photos/Others/placeholder.jpg"
+                                alt="example placeholder"
+                                class="img-fluid"
+                                style="max-width: 100%; height: auto"
+                              />
+                            </div>
+                            <div class="d-flex justify-content-center">
+                              <div
+                                data-mdb-button-init
+                                data-mdb-ripple-init
+                                class="btn btn-primary btn-rounded"
+                              >
+                                <label
+                                  class="form-label text-white m-1"
+                                  for="customFile1"
+                                  >Foto Perfil</label
+                                >
+                                <input
+                                  type="file"
+                                  class="form-control d-none"
+                                  id="customFile1"
+                                  onchange="displaySelectedImage(event, 'selectedImage')"
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="col-lg-6 col-md-12">
-                        <div class="mb-3 input-group-lg">
-                          <label for="nome" class="form-label">Nome:</label>
-                          <input type="text" class="form-control" id="nome" placeholder="Thiago Soares" disabled />
-                        </div>
-                        <div class="mb-3 input-group-lg">
-                          <label for="email" class="form-label">Email:</label>
-                          <input type="text" class="form-control" id="email" placeholder="name@example.com" disabled />
-                        </div>
-                        <div class="mb-3 input-group-lg">
-                          <label for="cpf" class="form-label">CPF:</label>
-                          <input type="text" class="form-control" id="cpf" placeholder="111.111.111-11" disabled />
-                        </div>
-                        <div class="mb-3 input-group-lg">
-                          <label for="celular" class="form-label">Telefone:</label>
-                          <input type="text" class="form-control" id="celular" placeholder="(11) 1 1111 1111" disabled />
+                        <div class="col-lg-6 col-md-12">
+                          <div class="mb-3 input-group-lg">
+                            <label for="nome" class="form-label">Nome:</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="nome"
+                              placeholder="Thiago Soares"
+                              disabled
+                            />
+                          </div>
+                          <div class="mb-3 input-group-lg">
+                            <label for="email" class="form-label">Email:</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="email"
+                              placeholder="name@example.com"
+                              disabled
+                            />
+                          </div>
+                          <div class="mb-3 input-group-lg">
+                            <label for="cpf" class="form-label">CPF:</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="cpf"
+                              placeholder="111.111.111-11"
+                              disabled
+                            />
+                          </div>
+                          <div class="mb-3 input-group-lg">
+                            <label for="celular" class="form-label"
+                              >Telefone:</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="celular"
+                              placeholder="(11) 1 1111 1111"
+                              disabled
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="container mt-5">
-                    <div class="row">
-                      <div class="col">
-                        <h4 class="mb-3">Informações Apartamento</h4>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="mb-3 mb-3 input-group-lg">
-                          <label for="" class="form-label fs-5">Torre:
-                          </label>
-                          <input type="text" class="form-control" id="torre" placeholder="Grupo 18" disabled />
+                    <div class="container mt-5">
+                      <div class="row">
+                        <div class="col">
+                          <h4 class="mb-3">Informações Apartamento</h4>
                         </div>
                       </div>
-                      <div class="col-md-6">
-                        <div class="mb-3 mb-3 input-group-lg">
-                          <label for="" class="form-label fs-5">Bloco:</label>
-                          <input type="text" class="form-control" id="bloco" placeholder="Bloco B" disabled />
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="mb-3 mb-3 input-group-lg">
+                            <label for="" class="form-label fs-5"
+                              >Torre:
+                            </label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="torre"
+                              placeholder="Grupo 18"
+                              disabled
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="mb-3 mb-3 input-group-lg">
-                          <label for="" class="form-label fs-5">Andar:
-                          </label>
-                          <input type="text" class="form-control" id="andar" placeholder="20°" disabled />
+                        <div class="col-md-6">
+                          <div class="mb-3 mb-3 input-group-lg">
+                            <label for="" class="form-label fs-5">Bloco:</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="bloco"
+                              placeholder="Bloco B"
+                              disabled
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="mb-3 mb-3 input-group-lg">
-                          <label for="" class="form-label fs-5">Apartamento:
-                          </label>
-                          <input type="text" class="form-control" id="apartamento" placeholder="204" disabled />
+                        <div class="col-md-6">
+                          <div class="mb-3 mb-3 input-group-lg">
+                            <label for="" class="form-label fs-5"
+                              >Andar:
+                            </label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="andar"
+                              placeholder="20°"
+                              disabled
+                            />
+                          </div>
                         </div>
-                      </div>
+                        <div class="col-md-6">
+                          <div class="mb-3 mb-3 input-group-lg">
+                            <label for="" class="form-label fs-5"
+                              >Apartamento:
+                            </label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="apartamento"
+                              placeholder="204"
+                              disabled
+                            />
+                          </div>
+                        </div>
 
-                      <!-- <div class="col-md-6 mt-3">
+                        <!-- <div class="col-md-6 mt-3">
                                                 <div class="mb-3 mb-3 input-group-lg">
                                                     <label for="" class="form-label fs-5">Endereço:
                                                     </label>
                                                     <input type="text" class="form-control" id="" placeholder="Av. Estrada do São Judas, 190">
                                                 </div>
                                             </div> -->
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -181,38 +310,70 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ocorrência</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Titulo ocorrência:</label>
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="" />
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ocorrência</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
-          <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">Descrição:</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label"
+                >Titulo ocorrência:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="exampleFormControlInput1"
+                placeholder=""
+              />
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlTextarea1" class="form-label"
+                >Descrição:</label
+              >
+              <textarea
+                class="form-control"
+                id="exampleFormControlTextarea1"
+                rows="3"
+              ></textarea>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            Fechar
-          </button>
-          <button type="button" class="btn btn-primary">Gravar</button>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Fechar
+            </button>
+            <button type="button" class="btn btn-primary">Gravar</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <button onclick="topFunction()" id="backToTopBtn" title="Voltar ao topo"><i class="bi bi-arrow-up-square"></i></button>
-  <script src="/js/scroll.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-</body>
-
+    <button onclick="topFunction()" id="backToTopBtn" title="Voltar ao topo">
+      <i class="bi bi-arrow-up-square"></i>
+    </button>
+    <script src="/js/scroll.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
