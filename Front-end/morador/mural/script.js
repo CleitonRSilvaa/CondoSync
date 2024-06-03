@@ -107,7 +107,7 @@ function buildMural(data, unicoAviso = false) {
       indicator.setAttribute("aria-current", "true");
     }
     indicator.setAttribute("aria-label", `Slide ${index + 1}`);
-    muralIndicators.appendChild(indicator);
+    // muralIndicators.appendChild(indicator);
 
     const itemDiv = document.createElement("div");
     itemDiv.classList.add("carousel-item");
@@ -122,14 +122,14 @@ function buildMural(data, unicoAviso = false) {
     if (!unicoAviso) {
       const carouselCaption = document.createElement("div");
       carouselCaption.classList.add(
-        "carousel-caption",
         "d-none",
         "d-md-block",
-        "bg-dark",
+        "align-items-center",
+        "text-center",
         "text-white",
-        "rounded",
-        "mx-auto",
-        "m-3"
+        "bg-dark",
+        "mt-2",
+        "p-2"
       );
       carouselCaption.style.opacity = 0.7;
 

@@ -1,196 +1,317 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/loading.css" />
+    <script type="module" src="/js/auth.js"></script>
+    <script type="module" src="/js/registerServiceWorker.js"></script>
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
-  <link rel="stylesheet" href="/css/loading.css" />
-  <script type="module" src="/js/auth.js"></script>
-  <script type="module" src="/js/registerServiceWorker.js"></script>
+    <title>CondoSync:: Mural de Avisos</title>
 
-  <title>CondoSync:: Mural de Avisos</title>
-
-  <style>
-    #carouselMural .carousel-inner {
-      max-height: 480px;
-      min-height: 480px;
-
-      img {
-        max-height: 480px;
-        min-height: 480px;
-        max-width: 800px;
-        min-width: 800px;
+    <style>
+      #carouselMural .carousel-inner {
+        img {
+          max-height: 480px;
+          min-height: 480px;
+          max-width: 800px;
+          min-width: 800px;
+        }
       }
-    }
-  </style>
-</head>
+    </style>
+  </head>
 
-<body style="background-color: rgb(230, 219, 219)">
-  <div id="loading" class="loading-overlay" style="display: none">
-    <div class="d-flex justify-content-center align-items-center h-100">
-      <div class="spinner-border text-light" role="status">
-        <span class="sr-only"></span>
+  <body style="background-color: rgb(230, 219, 219)">
+    <div id="loading" class="loading-overlay" style="display: none">
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="spinner-border text-light" role="status">
+          <span class="sr-only"></span>
+        </div>
       </div>
     </div>
-  </div>
-  <div aria-live="polite" aria-atomic="true" class="position-relative">
-    <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3"></div>
-  </div>
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+      <div
+        id="toastContainer"
+        class="toast-container position-fixed top-0 end-0 p-3"
+      ></div>
+    </div>
 
-  <div class="container-fluid">
-    <div class="row flex-nowrap">
-      <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-          <a href="/admin/index.html" class="nav-link align-middle px-0">
-            <img src="../imagens/Logo_ADM.png" alt="" class="img-fluid imgLogo" />
-          </a>
-          <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-            <li class="nav-item">
-              <a href="/admin/index.html" class="nav-link align-middle p-2">
-                <i class="fs-4 bi-house"></i>
-                <span class="ms-1 d-none d-sm-inline">Home</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/admin/mural.html" class="nav-link align-middle p-2
-              active">
-                <i class="fs-4 bi-info-square"></i>
-                <span class="ms-1 d-none d-sm-inline">Mural</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/admin/gerenciar-mural.html" class="nav-link align-middle p-2">
-                <i class="fs-4 bi-info-circle"></i>
-                <span class="ms-1 d-none d-sm-inline">Gerencia mural</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="/admin/gerenciar-moradores.html" class="nav-link align-middle p-2 ">
-                <i class="fs-4 bi-people-fill"></i>
-                <span class="ms-1 d-none d-sm-inline">Moradores</span>
-              </a>
-            </li>
-            <li>
-              <a href="/admin/gerenciar-ocorrencias.html" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-tools"></i>
-                <span class="ms-1 d-none d-sm-inline">Ocorrências</span></a>
-            </li>
-            <li>
-              <a href="/admin/gerenciar-reservas.html" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-calendar-event"></i>
-                <span class="ms-1 d-none d-sm-inline">Agendamentos</span>
-              </a>
-            </li>
-            <li>
-              <a href="/admin/gerenciar-usuarios.html" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-gear"></i>
-                <span class="ms-1 d-none d-sm-inline">Usuários</span>
-              </a>
-            </li>
-            <li>
-              <a id="btn-logout" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-box-arrow-in-right"></i>
-                <span class="ms-1 d-none d-sm-inline">Sair</span>
-              </a>
-            </li>
-            <hr />
-            <div class="dropdown pb-4">
-              <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <i id="imagem-default" class="bi bi-person-circle fs-2" style="display:block"></i>
-                <img id="imagem-profile" width="30" height="30" class="rounded-circle" style="display:none" />
-                <span class="d-none d-sm-inline mx-1" id="name-person"></span>
-              </a>
-              <ul id="user-name" class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-              </ul>
-            </div>
-          </ul>
+    <div class="container-fluid">
+      <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+          <div
+            class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100"
+          >
+            <a href="/admin/index.html" class="nav-link align-middle px-0">
+              <img
+                src="../imagens/Logo_ADM.png"
+                alt=""
+                class="img-fluid imgLogo"
+              />
+            </a>
+            <ul
+              class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+              id="menu"
+            >
+              <li class="nav-item">
+                <a href="/admin/index.html" class="nav-link align-middle p-2">
+                  <i class="fs-4 bi-house"></i>
+                  <span class="ms-1 d-none d-sm-inline">Home</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="/admin/mural.html"
+                  class="nav-link align-middle p-2 active"
+                >
+                  <i class="fs-4 bi-info-square"></i>
+                  <span class="ms-1 d-none d-sm-inline">Mural</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="/admin/gerenciar-mural.html"
+                  class="nav-link align-middle p-2"
+                >
+                  <i class="fs-4 bi-info-circle"></i>
+                  <span class="ms-1 d-none d-sm-inline">Gerencia mural</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="/admin/gerenciar-moradores.html"
+                  class="nav-link align-middle p-2"
+                >
+                  <i class="fs-4 bi-people-fill"></i>
+                  <span class="ms-1 d-none d-sm-inline">Moradores</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/admin/gerenciar-ocorrencias.html"
+                  class="nav-link px-0 align-middle"
+                >
+                  <i class="fs-4 bi-tools"></i>
+                  <span class="ms-1 d-none d-sm-inline">Ocorrências</span></a
+                >
+              </li>
+              <li>
+                <a
+                  href="/admin/gerenciar-reservas.html"
+                  class="nav-link px-0 align-middle"
+                >
+                  <i class="fs-4 bi-calendar-event"></i>
+                  <span class="ms-1 d-none d-sm-inline">Agendamentos</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/admin/gerenciar-usuarios.html"
+                  class="nav-link px-0 align-middle"
+                >
+                  <i class="fs-4 bi-gear"></i>
+                  <span class="ms-1 d-none d-sm-inline">Usuários</span>
+                </a>
+              </li>
+              <li>
+                <a id="btn-logout" class="nav-link px-0 align-middle">
+                  <i class="fs-4 bi-box-arrow-in-right"></i>
+                  <span class="ms-1 d-none d-sm-inline">Sair</span>
+                </a>
+              </li>
+              <hr />
+              <div class="dropdown pb-4">
+                <a
+                  href="#"
+                  class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                  id="dropdownUser1"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i
+                    id="imagem-default"
+                    class="bi bi-person-circle fs-2"
+                    style="display: block"
+                  ></i>
+                  <img
+                    id="imagem-profile"
+                    width="30"
+                    height="30"
+                    class="rounded-circle"
+                    style="display: none"
+                  />
+                  <span class="d-none d-sm-inline mx-1" id="name-person"></span>
+                </a>
+                <ul
+                  id="user-name"
+                  class="dropdown-menu dropdown-menu-dark text-small shadow"
+                  aria-labelledby="dropdownUser1"
+                ></ul>
+              </div>
+            </ul>
+          </div>
         </div>
-
-      </div>
-      <div class="col py-3">
-        <div class="container-fluid">
-          <div class="row justify-content-center align-items-center">
-            <div class="col-lg-12 mt-3">
-              <div class="card border" style="background-color: #f9f9f9 !important">
-                <div class="card-body mt-3">
+        <div class="col py-3">
+          <div class="container-fluid">
+            <div class="row justify-content-center align-items-center">
+              <div class="col-lg-12 mt-3">
+                <div
+                  class="card border"
+                  style="background-color: #f9f9f9 !important"
+                >
                   <div class="card-body mt-3">
-                    <!-- Conteúdo do card aqui -->
-                    <div class="card text-white bg-warning py-1 text-center">
-                      <div class="card-body">
-                        <h3 class="text-white ">Quadro de avisos !!!</h3>
-                      </div>
-                    </div>
-                    <!-- Page Content-->
-                    <div class="container px-4 px-lg-5">
-                      <!-- Heading Row-->
-                      <div class="row gx-2 gx-lg-5 align-items-center my-5">
-                        <div id="carouselMural" class="carousel slide col-lg-12" data-bs-ride="carousel">
-                          <div id="carouselMural-indicators" class="carousel-indicators">
-
-                          </div>
-                          <div id="carouselMural-items" class="carousel-inner">
-
-                          </div>
-                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselMural" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon bg-dark " style="opacity: 0.9;" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                          </button>
-                          <button class="carousel-control-next" type="button" data-bs-target="#carouselMural" data-bs-slide="next">
-                            <span class="carousel-control-next-icon bg-dark " style="opacity: 0.9;" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                          </button>
+                    <div class="card-body mt-3">
+                      <!-- Conteúdo do card aqui -->
+                      <div class="card text-white bg-warning py-1 text-center">
+                        <div class="card-body">
+                          <h3 class="text-white">Quadro de avisos !!!</h3>
                         </div>
                       </div>
-                    </div>
-                    <!-- Call to Action-->
-                    <div class="card text-white bg-secondary my-5 py-1 text-center">
-                      <div class="card-body">
-                        <h3 class="text-white m-0">Outos de avisos</h3>
-                      </div>
-                    </div>
-                    <!-- Content Row-->
-                    <div class="row gx-4 gx-lg-5">
-                      <div class="col-md-4 mb-5">
-                        <div class="card h-100">
-                          <img src="/imagens/imagensMural/incendio.webp" class="card-img-top" alt="...">
-                          <div class="card-body">
-                            <h5 class="card-title">Auto de Vistoria do Corpo de Bombeiros - AVCB</h5>
-                            <p class="card-text">O Auto de Vistoria do Corpo de Bombeiros (AVCB) serve
-                              como prova de que diversas obrigações de segurança estão em dia no condomínio.</p>
-                            <a href="https://www.sindiconet.com.br/informese/auto-de-vistoria-do-corpo-de-bombeiros-avcb-administracao-condominios-novos" class="btn btn-primary">Mais informações</a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-4 mb-5">
-                        <div class="card h-100">
-                          <img src="/imagens/imagensMural/agua_limpa_destaque.webp" class="card-img-top" alt="...">
-                          <div class="card-body">
-                            <h5 class="card-title">Limpeza de caixas de água - Manutenção deve ser periódica</h5>
-                            <p class="card-text mt-3">Especialistas consultados nesta matéria também crêem, independente
-                              de lei, ser duas vezes por ano o necessário para manter o local em condições higiênicas adequadas..</p>
-                            <a href="https://www.sindiconet.com.br/informese/limpeza-de-caixas-dagua-manutencao-limpeza-de-caixas-dagua" class="btn btn-primary">Mais informações</a>
+                      <!-- Page Content-->
+                      <div class="container px-4 px-lg-5">
+                        <!-- Heading Row-->
+                        <div class="row gx-2 gx-lg-5 align-items-center my-5">
+                          <div
+                            id="carouselMural"
+                            class="carousel slide col-lg-12"
+                            data-bs-ride="carousel"
+                          >
+                            <div id="carouselMural-indicators"></div>
+                            <div
+                              id="carouselMural-items"
+                              class="carousel-inner"
+                            ></div>
+                            <button
+                              class="carousel-control-prev"
+                              type="button"
+                              data-bs-target="#carouselMural"
+                              data-bs-slide="prev"
+                            >
+                              <span
+                                class="carousel-control-prev-icon bg-dark"
+                                style="opacity: 0.9"
+                                aria-hidden="true"
+                              ></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button
+                              class="carousel-control-next"
+                              type="button"
+                              data-bs-target="#carouselMural"
+                              data-bs-slide="next"
+                            >
+                              <span
+                                class="carousel-control-next-icon bg-dark"
+                                style="opacity: 0.9"
+                                aria-hidden="true"
+                              ></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-4 mb-5">
-                        <div class="card h-100">
-                          <img src="/imagens/imagensMural/elevador_manutencao.jpg" class="card-img-top" alt="...">
-                          <div class="card-body">
-                            <h5 class="card-title">Conferindo a segurança do elevador - O que checar no equipamento.</h5>
-                            <p class="card-text">Mesmo sendo o meio de transporte mais seguro do mundo,
-                              acidentes com elevadores são mais frequentes do que se supõe. Os mais comuns são ocasionados pelo uso da chave.</p>
-                            <a href="https://www.sindiconet.com.br/informese/conferindo-a-seguranca-do-elevador-manutencao-elevadores" class="btn btn-primary">Mais informações</a>
+                      <!-- Call to Action-->
+                      <div
+                        class="card text-white bg-secondary my-5 py-1 text-center"
+                      >
+                        <div class="card-body">
+                          <h3 class="text-white m-0">Outos de avisos</h3>
+                        </div>
+                      </div>
+                      <!-- Content Row-->
+                      <div class="row gx-4 gx-lg-5">
+                        <div class="col-md-4 mb-5">
+                          <div class="card h-100">
+                            <img
+                              src="/imagens/imagensMural/incendio.webp"
+                              class="card-img-top"
+                              alt="..."
+                            />
+                            <div class="card-body">
+                              <h5 class="card-title">
+                                Auto de Vistoria do Corpo de Bombeiros - AVCB
+                              </h5>
+                              <p class="card-text">
+                                O Auto de Vistoria do Corpo de Bombeiros (AVCB)
+                                serve como prova de que diversas obrigações de
+                                segurança estão em dia no condomínio.
+                              </p>
+                              <a
+                                href="https://www.sindiconet.com.br/informese/auto-de-vistoria-do-corpo-de-bombeiros-avcb-administracao-condominios-novos"
+                                class="btn btn-primary"
+                                >Mais informações</a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-5">
+                          <div class="card h-100">
+                            <img
+                              src="/imagens/imagensMural/agua_limpa_destaque.webp"
+                              class="card-img-top"
+                              alt="..."
+                            />
+                            <div class="card-body">
+                              <h5 class="card-title">
+                                Limpeza de caixas de água - Manutenção deve ser
+                                periódica
+                              </h5>
+                              <p class="card-text mt-3">
+                                Especialistas consultados nesta matéria também
+                                crêem, independente de lei, ser duas vezes por
+                                ano o necessário para manter o local em
+                                condições higiênicas adequadas..
+                              </p>
+                              <a
+                                href="https://www.sindiconet.com.br/informese/limpeza-de-caixas-dagua-manutencao-limpeza-de-caixas-dagua"
+                                class="btn btn-primary"
+                                >Mais informações</a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-5">
+                          <div class="card h-100">
+                            <img
+                              src="/imagens/imagensMural/elevador_manutencao.jpg"
+                              class="card-img-top"
+                              alt="..."
+                            />
+                            <div class="card-body">
+                              <h5 class="card-title">
+                                Conferindo a segurança do elevador - O que
+                                checar no equipamento.
+                              </h5>
+                              <p class="card-text">
+                                Mesmo sendo o meio de transporte mais seguro do
+                                mundo, acidentes com elevadores são mais
+                                frequentes do que se supõe. Os mais comuns são
+                                ocasionados pelo uso da chave.
+                              </p>
+                              <a
+                                href="https://www.sindiconet.com.br/informese/conferindo-a-seguranca-do-elevador-manutencao-elevadores"
+                                class="btn btn-primary"
+                                >Mais informações</a
+                              >
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -198,13 +319,17 @@
         </div>
       </div>
     </div>
-    <button onclick="topFunction()" id="backToTopBtn" title="Voltar ao topo"><i class="bi bi-arrow-up-square"></i></button>
+    <button onclick="topFunction()" id="backToTopBtn" title="Voltar ao topo">
+      <i class="bi bi-arrow-up-square"></i>
+    </button>
     <script src="/js/scroll.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
     <script type="module" src="/js/auth.js"></script>
     <script type="module" src="/js/view-mural.js"></script>
     <script type="module" src="/js/registerServiceWorker.js"></script>
-
-</body>
-
+  </body>
 </html>
