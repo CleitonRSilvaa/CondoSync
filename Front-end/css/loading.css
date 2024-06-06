@@ -48,3 +48,9 @@
 #backToTopBtn:hover {
   background-color: #000; /* Cor de fundo ao passar o mouse */
 }
+
+
+
+#nav-link {
+  color: #C5EFF7 important;
+}
