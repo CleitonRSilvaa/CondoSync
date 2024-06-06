@@ -149,7 +149,6 @@ function buildTable(data) {
 
   const tbody = table.querySelector("tbody");
 
-  let count = 1;
   data.forEach((reserva) => {
     const row = tbody.insertRow();
     row.insertCell().textContent = reserva.id;
@@ -166,7 +165,8 @@ function buildTable(data) {
     actionCell.className = "text-center";
     if (
       reserva.status === StatusReserva.PENDENTE.toString() ||
-      reserva.status === StatusReserva.APROVADA.toString()
+      reserva.status === StatusReserva.APROVADA.toString() ||
+      dataIsAfter(reserva.data)
     ) {
       const button = document.createElement("button");
       button.classList.add("btn", "btn-warning", "btn-sm", "me-2");
@@ -183,6 +183,14 @@ function buildTable(data) {
   div.appendChild(table);
   container.innerHTML = "";
   container.appendChild(div);
+}
+
+function dataIsAfter(dateString) {
+  const [day, month, year] = dateString.split("/");
+  const date = new Date(`${year}-${month}-${day}`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return date > today;
 }
 
 function changeModalEdit(reserva) {

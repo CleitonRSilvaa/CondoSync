@@ -173,10 +173,9 @@ function buildTable(data) {
 
   const tbody = table.querySelector("tbody");
 
-  let count = 1;
   data.forEach((ocorrencia) => {
     const row = tbody.insertRow();
-    row.insertCell().textContent = count++;
+    row.insertCell().textContent = ocorrencia.id;
     row.insertCell().textContent = ocorrencia.title;
     //  row.insertCell().textContent = ocorrencia.description;
     row.insertCell().textContent = ocorrencia.status;

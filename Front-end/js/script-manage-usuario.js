@@ -494,8 +494,10 @@ function buildTable(data) {
 
   let count = 1;
   data.forEach((morad) => {
+    const [p1, p2, p3] = morad.id.toString().split("-");
+
     const row = tbody.insertRow();
-    row.insertCell().textContent = morad.id;
+    row.insertCell().textContent = p1;
     row.insertCell().textContent = morad.nomeCompleto;
     row.insertCell().textContent = morad.email;
     row.insertCell().textContent = morad.status ? "Ativo" : "Inativo";

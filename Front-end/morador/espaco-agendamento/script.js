@@ -151,10 +151,9 @@ function buildTable(data) {
 
   const tbody = table.querySelector("tbody");
 
-  let count = 1;
   data.forEach((reserva) => {
     const row = tbody.insertRow();
-    row.insertCell().textContent = count++;
+    row.insertCell().textContent = reserva.id;
     row.insertCell().textContent = reserva.area;
     row.insertCell().textContent = reserva.morador;
     row.insertCell().textContent = reserva.data;
