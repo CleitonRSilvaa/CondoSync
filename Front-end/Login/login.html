@@ -1,84 +1,152 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+  <head>
+    <title>CondoSync Login</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
-<head>
-  <title>CondoSync Login</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"
+      rel="stylesheet"
+    />
 
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"></script>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="/css/loading.css" />
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
-  <link rel="stylesheet" href="/css/loading.css" />
+    <!-- ico -->
+    <link rel="icon" href="../imagens/ico.ico" type="image/x-icon" />
 
-  <!-- ico -->
-  <link rel="icon" href="../imagens/ico.ico" type="image/x-icon" />
-</head>
+    <style>
+      .position-relative {
+        position: relative;
+      }
 
-<body class="img js-fullheight d-block w-auto img-fluid  rounded mx-auto" style="background-image: url(../imagens/3.png)">
-  <div id="loading" class="loading-overlay" style="display: none">
-    <div class="d-flex justify-content-center align-items-center h-100">
-      <div class="spinner-border text-light" role="status">
-        <span class="sr-only"></span>
-      </div>
-    </div>
-  </div>
-  <div aria-live="polite" aria-atomic="true" class="position-relative">
-    <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3"></div>
-  </div>
-  <!-- Overlay de Loading -->
+      .field-icon {
+        position: absolute;
+        right: 10px; /* Ajuste conforme necessário */
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #000; /* Ajuste a cor conforme necessário */
+      }
+    </style>
+  </head>
 
-  <section class="ftco-section">
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-6 text-center mb-5">
-
+  <body
+    class="img js-fullheight d-block w-auto img-fluid rounded mx-auto"
+    style="background-image: url(../imagens/3.png)"
+  >
+    <div id="loading" class="loading-overlay" style="display: none">
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="spinner-border text-light" role="status">
+          <span class="sr-only"></span>
         </div>
       </div>
-      <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-6 px-3 py-5 rounded" style="background-color: rgba(0, 0, 0, 0.822) !important">
+    </div>
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+      <div
+        id="toastContainer"
+        class="toast-container position-fixed top-0 end-0 p-3"
+      ></div>
+    </div>
+    <!-- Overlay de Loading -->
 
-          <div class="login-wrap p-0">
-            <h1 class=" text-center text-white">
-              <a href="/index.html" class="text-white">
-                <img src="/imagens/logo2.png" alt="logo" style="width: 250px" />
-              </a>
-            </h1>
-            <div id="divPaiForms" class="text-center"></div>
-            <form id="forms-login" class="signin-form">
-              <div class="form-group mt-4 input-group-lg">
-                <input autocomplete="username" id="email" type="text" class="form-control border border-dark" placeholder="E-mail" required />
-              </div>
-              <div class="form-group mt-4 input-group-lg">
-                <input autocomplete="current-password" id="password-field" type="password" class="form-control border border-dark" placeholder="Senha" required />
-                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-              </div>
-              <div class="form-group mt-4">
-                <button type="submit" id="btn-login" class="form-control btn btn-primary submit px-3" style="
+    <section class="ftco-section">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5"></div>
+        </div>
+        <div class="row justify-content-center">
+          <div
+            class="col-md-6 col-lg-6 px-3 py-5 rounded"
+            style="background-color: rgba(0, 0, 0, 0.822) !important"
+          >
+            <div class="login-wrap p-0">
+              <h1 class="text-center text-white">
+                <a href="/index.html" class="text-white">
+                  <img
+                    src="/imagens/logo2.png"
+                    alt="logo"
+                    style="width: 250px"
+                  />
+                </a>
+              </h1>
+              <div id="divPaiForms" class="text-center"></div>
+              <form id="forms-login" class="signin-form">
+                <div class="form-group mt-4 input-group-lg">
+                  <input
+                    autocomplete="username"
+                    id="email"
+                    type="text"
+                    class="form-control border border-dark"
+                    placeholder="E-mail"
+                    required
+                  />
+                </div>
+                <div class="form-group mt-4 input-group-lg position-relative">
+                  <input
+                    autocomplete="current-password"
+                    id="password-field"
+                    type="password"
+                    class="form-control border border-dark"
+                    placeholder="Senha"
+                    required
+                  />
+                  <span
+                    toggle="#password-field"
+                    class="fa fa-fw fa-eye field-icon toggle-password position-absolute"
+                  ></span>
+                </div>
+                <div class="form-group mt-4">
+                  <button
+                    type="submit"
+                    id="btn-login"
+                    class="form-control btn btn-primary submit px-3"
+                    style="
                       background-color: #4169e1 !important;
                       border: none !important;
                       color: white !important;
-                    ">
-                  Entrar
-                </button>
-              </div>
-            </form>
+                    "
+                  >
+                    Entrar
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-  <button onclick="topFunction()" id="backToTopBtn" title="Voltar ao topo"><i class="bi bi-arrow-up-square"></i></button>
-  <script src="/js/scroll.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  <script type="module" src="/js/auth.js"></script>
-  <link rel="stylesheet" href="/css/loading.css" />
+    </section>
+    <button onclick="topFunction()" id="backToTopBtn" title="Voltar ao topo">
+      <i class="bi bi-arrow-up-square"></i>
+    </button>
+    <script src="/js/scroll.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="/js/auth.js"></script>
+    <link rel="stylesheet" href="/css/loading.css" />
 
-  <script type="module" src="/js/main.js"></script>
-</body>
-
+    <script type="module" src="/js/main.js"></script>
+  </body>
 </html>
