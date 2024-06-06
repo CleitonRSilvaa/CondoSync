@@ -191,6 +191,18 @@ public class ReservaMoradorService {
 
         reservaMoradorRepository.save(reservaMorador);
 
+        var subs = userSubscriptionService.findSubscriptionsByUserStatusAndRole("ADMIN");
+
+        var payload = new ApiPushManagerService.Payload();
+
+        payload.setTitle("Nova Reserva registrada");
+        payload.setBody("Nova Reserva: em  nome de " + morador.getNome() + " para a área " + area.getName() + " no dia "
+                + reserva.getData() + " das " + reserva.getHoraInicio() + " às " + reserva.getHoraFim());
+        payload.setIcon("https://condo-sync.vercel.app/imagens/logo2.png");
+        payload.setUrl("https://condo-sync.vercel.app/admin/gerenciar-reservas.html");
+
+        apiPushManagerService.sendNotification(subs, payload);
+
         return ResponseEntity.ok().build();
 
     }
