@@ -51,6 +51,13 @@
 
 
 
-#nav-link {
-  color: #C5EFF7  !important;
-} 
+
+
+/* Seletor descendente */
+#menu .nav-link {
+  color: #C5EFF7 ; /* Cor desejada */
+}
+
+#menu .nav-link:hover {
+  color: #0056b3; /* Cor desejada ao passar o mouse */
+}
